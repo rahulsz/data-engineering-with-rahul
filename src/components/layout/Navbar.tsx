@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { UserButton } from "@clerk/nextjs";
-import { Search, Menu, Moon, Sun } from "lucide-react";
+import { Search, PanelLeft, Moon, Sun, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { SITE_CONFIG } from "@/config/site-config";
@@ -27,11 +27,13 @@ export default function Navbar({ onMobileSidebarToggle, toggleDarkMode, isDark }
         className="fixed top-0 left-0 w-full z-50 h-14 backdrop-blur-md bg-white/80 dark:bg-zinc-950/80 border-b border-zinc-200 dark:border-zinc-800 px-4 flex items-center justify-between"
       >
         <div className="flex items-center gap-3">
-          <button className="md:hidden p-1 text-zinc-600 dark:text-zinc-400 cursor-pointer" onClick={onMobileSidebarToggle}>
-            <Menu className="w-5 h-5" />
+          <button className="md:hidden p-1 text-zinc-600 dark:text-zinc-400 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors" onClick={onMobileSidebarToggle}>
+            <PanelLeft className="w-5 h-5" />
           </button>
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-brand-400 to-brand-600" />
+            <div className="w-6 h-6 rounded bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center">
+              <Sparkles className="w-3.5 h-3.5 text-white" />
+            </div>
             <span className="font-semibold text-zinc-900 dark:text-zinc-100 hidden sm:inline-block">
               {SITE_CONFIG.shortName}
             </span>
@@ -52,10 +54,10 @@ export default function Navbar({ onMobileSidebarToggle, toggleDarkMode, isDark }
         </div>
 
         <div className="flex items-center gap-3">
-          <button onClick={toggleDarkMode} className="p-1.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md cursor-pointer">
+          <button onClick={toggleDarkMode} className="p-1.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md cursor-pointer transition-colors">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <button className="md:hidden p-1.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md cursor-pointer" onClick={() => setIsSearchOpen(true)}>
+          <button className="md:hidden p-1.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md cursor-pointer transition-colors" onClick={() => setIsSearchOpen(true)}>
             <Search className="w-5 h-5" />
           </button>
           <UserButton />

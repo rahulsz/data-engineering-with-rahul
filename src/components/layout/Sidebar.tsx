@@ -6,7 +6,7 @@ import { useProgressStore } from "@/store/progressStore";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle2, Circle, ChevronDown, Lock } from "lucide-react";
+import { CircleCheckBig, CircleDashed, ChevronDown, LockKeyhole, GraduationCap } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import ProgressRing from "@/components/ui/ProgressRing";
 import { cn } from "@/lib/cn";
@@ -32,7 +32,10 @@ export default function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-4">
         <ProgressRing percentage={completionPercentage} size={48} strokeWidth={4} color="#6366f1" />
         <div>
-          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">Course Progress</h3>
+          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm flex items-center gap-1.5">
+            <GraduationCap className="w-4 h-4 text-brand-500" />
+            Course Progress
+          </h3>
           <p className="text-xs text-zinc-500">{completedWeeks.length} / 14 weeks</p>
         </div>
       </div>
@@ -50,7 +53,7 @@ export default function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-zinc-400">{phase.weeks.length} modules</span>
-                <ChevronDown className={cn("w-4 h-4 text-zinc-400 transition-transform", openPhases[phase.phase] ? "rotate-180" : "")} />
+                <ChevronDown className={cn("w-4 h-4 text-zinc-400 transition-transform duration-200", openPhases[phase.phase] ? "rotate-180" : "")} />
               </div>
             </button>
 
@@ -79,7 +82,7 @@ export default function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
                               </Badge>
                               <span className="truncate max-w-[130px]">{week.title}</span>
                             </div>
-                            <Lock className="w-4 h-4" />
+                            <LockKeyhole className="w-4 h-4" />
                           </div>
                         );
                       }
@@ -102,7 +105,7 @@ export default function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
                             </Badge>
                             <span className="truncate max-w-[130px]">{week.title}</span>
                           </div>
-                          {isCompleted ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Circle className="w-4 h-4 text-zinc-300 dark:text-zinc-700" />}
+                          {isCompleted ? <CircleCheckBig className="w-4 h-4 text-emerald-500" /> : <CircleDashed className="w-4 h-4 text-zinc-300 dark:text-zinc-700" />}
                         </Link>
                       );
                     })}

@@ -269,13 +269,20 @@ function PhaseOverview() {
             <motion.div
               key={phase.id}
               variants={fadeUp}
+              whileHover={{ y: -8, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className={cn(
                 "snap-center shrink-0 w-[280px] lg:w-auto",
-                "bg-home-surface border border-home-border p-6 rounded-xl flex flex-col relative group transition-all duration-300",
-                "hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.15)]"
+                "bg-home-surface/50 backdrop-blur-xl border border-home-border p-6 rounded-2xl flex flex-col relative group transition-all duration-500",
+                "shadow-2xl shadow-black/80 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.3)] box-border overflow-hidden"
               )}
             >
-              <div className="flex items-start justify-between mb-8">
+              <div className={cn(
+                "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-2xl border z-10",
+                phase.accent
+              )} />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="flex items-start justify-between mb-8 relative z-20">
                 <span className="font-mono text-sm text-home-text-secondary">PHASE {phase.id}</span>
                 <Icon className={cn("w-10 h-10 transition-colors", phase.glow)} />
               </div>
@@ -363,10 +370,10 @@ function WeekProgressStrip() {
               return (
                 <div key={weekItem} className="relative z-10 flex flex-col items-center group">
                   <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-mono transition-all duration-500",
-                    isCompleted ? "bg-home-primary text-white shadow-[0_0_15px_rgba(249,115,22,0.5)] border border-home-primary" :
-                    isCurrent ? "bg-home-bg border-2 border-home-primary text-home-primary ring-4 ring-home-glow animate-pulse" :
-                    "bg-[#11151A] border border-home-border text-home-text-secondary"
+                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-mono transition-all duration-500 relative z-10",
+                    isCompleted ? "bg-home-primary text-white shadow-[0_0_20px_rgba(249,115,22,0.7)] border border-home-primary/80" :
+                    isCurrent ? "bg-home-surface border-[3px] border-home-primary text-home-primary shadow-[0_0_25px_rgba(249,115,22,0.4)] animate-pulse" :
+                    "bg-[#05080A] shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] border border-home-border/50 text-home-text-secondary/50 group-hover:text-home-text-secondary"
                   )}>
                     {isCompleted ? <Check className="w-4 h-4" /> : weekItem}
                   </div>
@@ -396,32 +403,35 @@ function FeatureHighlights() {
     <section className="w-full max-w-7xl mx-auto py-24 px-6 relative">
       <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid md:grid-cols-3 gap-6">
 
-        <motion.div variants={scaleUp} className="bg-home-surface border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-home-primary/50 transition-colors">
-          <div className="w-12 h-12 rounded-full bg-home-primary/10 flex items-center justify-center mb-6">
+        <motion.div variants={scaleUp} whileHover={{ y: -5 }} className="bg-home-surface/60 backdrop-blur-md border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-home-primary/60 transition-all duration-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-home-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="w-12 h-12 rounded-full bg-home-primary/10 flex items-center justify-center mb-6 relative z-10 border border-home-primary/20 group-hover:scale-110 transition-transform duration-500">
             <Search className="w-6 h-6 text-home-primary" />
           </div>
-          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3">Fuzzy Search</h3>
-          <p className="font-ui text-home-text-secondary leading-relaxed">
+          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3 relative z-10">Fuzzy Search</h3>
+          <p className="font-ui text-home-text-secondary leading-relaxed relative z-10">
             Instantly find any concept, code snippet, or week across all 60+ topics. Powered by an optimized Fuse.js command palette.
           </p>
         </motion.div>
 
-        <motion.div variants={scaleUp} className="bg-home-surface border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-[#58A6FF]/50 transition-colors">
-          <div className="w-12 h-12 rounded-full bg-[#58A6FF]/10 flex items-center justify-center mb-6">
+        <motion.div variants={scaleUp} whileHover={{ y: -5 }} className="bg-home-surface/60 backdrop-blur-md border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-[#58A6FF]/60 transition-all duration-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#58A6FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="w-12 h-12 rounded-full bg-[#58A6FF]/10 flex items-center justify-center mb-6 relative z-10 border border-[#58A6FF]/20 group-hover:scale-110 transition-transform duration-500">
             <FileText className="w-6 h-6 text-[#58A6FF]" />
           </div>
-          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3">MDX-Powered Notes</h3>
-          <p className="font-ui text-home-text-secondary leading-relaxed">
+          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3 relative z-10">MDX-Powered Notes</h3>
+          <p className="font-ui text-home-text-secondary leading-relaxed relative z-10">
             Every week rendered from MDX with full syntax highlighting, architectural callouts, and embedded concept diagrams.
           </p>
         </motion.div>
 
-        <motion.div variants={scaleUp} className="bg-home-surface border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-[#3FB950]/50 transition-colors">
-          <div className="w-12 h-12 rounded-full bg-[#3FB950]/10 flex items-center justify-center mb-6">
+        <motion.div variants={scaleUp} whileHover={{ y: -5 }} className="bg-home-surface/60 backdrop-blur-md border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-[#3FB950]/60 transition-all duration-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#3FB950]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="w-12 h-12 rounded-full bg-[#3FB950]/10 flex items-center justify-center mb-6 relative z-10 border border-[#3FB950]/20 group-hover:scale-110 transition-transform duration-500">
             <CheckCircle2 className="w-6 h-6 text-[#3FB950]" />
           </div>
-          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3">Progress Tracking</h3>
-          <p className="font-ui text-home-text-secondary leading-relaxed">
+          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3 relative z-10">Progress Tracking</h3>
+          <p className="font-ui text-home-text-secondary leading-relaxed relative z-10">
             Mark weeks complete, track your streak, and see your mastery visually map across all phases backed by robust state.
           </p>
         </motion.div>
@@ -490,15 +500,19 @@ export default function Home() {
     <main className="relative min-h-screen bg-home-bg overflow-x-hidden selection:bg-home-primary/30 text-home-text-primary pb-0">
 
       {/* Background atmosphere */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transform-gpu">
-        <div className="absolute inset-0 bg-noise opacity-[0.04]" />
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Noise and Grid are fixed but lightweight */}
+        <div className="fixed inset-0 bg-noise opacity-[0.04]" />
         <div
-          className="absolute inset-0 opacity-[0.03] animate-drift"
+          className="fixed inset-0 opacity-[0.03] animate-drift"
           style={{ backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)', backgroundSize: '40px 40px' }}
         />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-home-glow rounded-full blur-[120px] transform-gpu" />
-        <div className="absolute top-[5%] right-[-10%] w-[500px] h-[500px] bg-[#58A6FF]/[0.08] rounded-full blur-[100px] transform-gpu" />
-        <div className="absolute top-[40%] left-[45%] w-[300px] h-[300px] bg-[#BC8CFF]/[0.05] rounded-full blur-[90px] transform-gpu" />
+        {/* Heavy blurs are isolated to the top of the page so they don't break scrolling performance */}
+        <div className="absolute top-0 left-0 right-0 h-[150vh] overflow-hidden">
+          <div className="absolute top-[80%] left-[-5%] w-[600px] h-[600px] bg-home-glow rounded-full blur-[120px]" />
+          <div className="absolute top-[5%] right-[-10%] w-[500px] h-[500px] bg-[#58A6FF]/[0.08] rounded-full blur-[100px]" />
+          <div className="absolute top-[40%] left-[45%] w-[300px] h-[300px] bg-[#BC8CFF]/[0.05] rounded-full blur-[90px]" />
+        </div>
       </div>
 
       {/* Navbar */}
@@ -557,7 +571,7 @@ export default function Home() {
               </p>
             </div>
 
-            <h1 className="font-display font-[800] text-[48px] lg:text-[72px] leading-[1.05] text-home-text-primary mb-6 flex flex-col items-start overflow-hidden">
+            <h1 className="font-display font-[800] text-[52px] lg:text-[80px] leading-[1.05] mb-6 flex flex-col items-start overflow-hidden">
               <div className="flex flex-wrap gap-x-4">
                 {h1Title.map((word, i) => (
                   <motion.span
@@ -566,6 +580,7 @@ export default function Home() {
                     custom={i}
                     initial="hidden"
                     animate="visible"
+                    className="bg-clip-text text-transparent bg-gradient-to-br from-white via-zinc-100 to-zinc-400 drop-shadow-sm pb-2"
                   >
                     {word}
                   </motion.span>
@@ -579,11 +594,12 @@ export default function Home() {
                     custom={h1Title.length + i}
                     initial="hidden"
                     animate="visible"
+                    className="bg-clip-text text-transparent bg-gradient-to-br from-home-primary via-orange-400 to-orange-600 drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] pb-2"
                   >
                     {word.includes(".") ? (
                       <span>
                         {word.replace(".", "")}
-                        <span className="text-home-primary">.</span>
+                        <span className="text-white">.</span>
                       </span>
                     ) : word}
                   </motion.span>
@@ -595,7 +611,7 @@ export default function Home() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="font-ui text-lg text-home-text-secondary max-w-md mb-10 leading-relaxed"
+              className="font-ui text-lg text-home-text-secondary max-w-md mb-10 leading-relaxed font-light"
             >
               A structured 15-week curriculum covering Python, SQL, PySpark, Databricks, dbt, Azure, and Power BI — with interactive notes, progress tracking, and real supply chain capstone projects.
             </motion.p>
@@ -604,22 +620,26 @@ export default function Home() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="flex flex-col sm:flex-row items-center gap-5 w-full"
+              className="flex flex-col sm:flex-row items-center gap-5 w-full relative z-20"
             >
               {!isLoaded ? null : !userId ? (
                 <SignInButton mode="modal">
-                  <button className="w-full sm:w-auto px-8 py-3.5 bg-home-primary hover:bg-orange-500 hover:scale-105 active:scale-95 transition-all text-white font-medium rounded-lg flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.4)]">
-                    Begin Week 0 <ArrowRight className="w-4 h-4" />
+                  <button className="relative w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-home-primary to-orange-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 overflow-hidden group shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all hover:scale-105 active:scale-95">
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                    <span className="relative z-10">Begin Week 0</span>
+                    <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </SignInButton>
               ) : (
-                <Link href="/curriculum" className="w-full sm:w-auto px-8 py-3.5 bg-home-primary hover:bg-orange-500 hover:scale-105 active:scale-95 transition-all text-white font-medium rounded-lg flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.4)]">
-                  Resume Pipeline <ArrowRight className="w-4 h-4" />
+                <Link href="/curriculum" className="relative w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-home-primary to-orange-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 overflow-hidden group shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all hover:scale-105 active:scale-95">
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                  <span className="relative z-10">Resume Pipeline</span>
+                  <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                 </Link>
               )}
 
-              <Link href="#curriculum" className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-home-border text-home-text-primary font-medium rounded-lg hover:border-home-text-secondary transition-colors text-center">
-                View Curriculum
+              <Link href="#curriculum" className="w-full sm:w-auto px-8 py-3.5 bg-home-surface/50 backdrop-blur-md border border-home-border/80 text-home-text-primary font-medium rounded-xl hover:bg-home-surface transition-all text-center group overflow-hidden shadow-xl">
+                <span className="group-hover:text-white transition-colors relative z-10">View Curriculum</span>
               </Link>
             </motion.div>
 
