@@ -1,0 +1,47 @@
+---
+title: "Week 1 — Python + Git + Jira"
+description: "Master Python fundamentals, version control with Git, and project tracking using Jira."
+weekNumber: 1
+phase: "phase-1-foundations"
+tags: ["Python", "Git", "Jira", "Control Flow"]
+estimatedMinutes: 60
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Master Python fundamentals, version control with Git, and project tracking using Jira to establish robust and scalable engineering workflows.
+
+## 🧠 Key Concepts
+- **Variables & Types** — The fundamental building blocks of Python (lists, dicts, tuples, sets).
+- **Control Flow** — Directing execution paths using if/elif/else and loops.
+- **Functions** — Reusable blocks of code that perform specific tasks.
+- **Git Basics** — Version control commands (init, add, commit, push, pull).
+- **Scrum/Agile (Jira)** — Frameworks for tracking user stories and managing sprints.
+
+## 💻 Code Examples
+```bash
+# Git Workflow
+git checkout -b feature/data-ingestion
+git add script.py
+git commit -m "feat: initial python ingestion script"
+git push origin feature/data-ingestion
+```
+
+```python
+# Python Data Structures
+def process_shipments(shipments: list[dict]) -> dict:
+    summary = {"total_weight": 0, "status_count": {}}
+    for shipment in shipments:
+        summary["total_weight"] += shipment.get("weight", 0)
+        status = shipment.get("status", "unknown")
+        summary["status_count"][status] = summary["status_count"].get(status, 0) + 1
+    return summary
+```
+
+## 🏭 Real-World Application
+In an e-commerce platform, the data team uses Git to version control the Python pipelines pulling daily sales data. They track the development phase of adding a new 'Returns' data source using a Jira Kanban board.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Write a Python function that loops through a list of numbers and returns only the evens.
+- 🟡 Intermediate: Create a local Git repository, commit a file, create a branch, and merge it.
+- 🔴 Advanced: Write a Python script that parses a local JSON file of mock Jira tickets and prints the 'In Progress' ones.

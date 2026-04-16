@@ -1,0 +1,44 @@
+---
+title: "Week 9 — Legacy Analytics: Excel & KPIs"
+description: "Understanding legacy reporting tools and defining critical Key Performance Indicators."
+weekNumber: 9
+phase: "phase-3-analytics"
+tags: ["Excel", "KPIs", "VLOOKUP", "Pivot Tables"]
+estimatedMinutes: 45
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Understanding legacy reporting tools, spreadsheets, and defining critical Key Performance Indicators before transitioning to modern BI tools.
+
+## 🧠 Key Concepts
+- **VLOOKUP / XLOOKUP** — Finding and retrieving data from specific columns in a table array.
+- **Pivot Tables** — Interactive tools to quickly summarize large amounts of data.
+- **KPI (Key Performance Indicator)** — A quantifiable measure used to evaluate success in meeting objectives.
+- **Power Query** — Data connection technology that enables data discovery and transformation in Excel.
+- **Dashboarding Basics** — Layout and visual hierarchy principles for static reports.
+
+## 💻 Code Examples
+```excel
+=XLOOKUP(A2, 'EmployeeData'!A:A, 'EmployeeData'!C:C, "Not Found")
+
+=SUMIFS(Sales[Amount], Sales[Region], "North", Sales[Date], ">="&DATE(2025,1,1))
+```
+
+```m
+// Power Query M Formula for transforming column types
+let
+    Source = Csv.Document(File.Contents("C:\\data\\sales.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+    ChangedType = Table.TransformColumnTypes(PromotedHeaders,{{"Date", type date}, {"Revenue", type number}})
+in
+    ChangedType
+```
+
+## 🏭 Real-World Application
+Before migrating to the cloud, the finance department relies on massive Excel workbooks. A data analyst uses Power Query to automate the ingestion of weekly CSV sales dumps, using Pivot Tables to render the Monthly Recurring Revenue (MRR) KPI.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Create a Pivot Table from a raw dataset that sums revenue by product category.
+- 🟡 Intermediate: Use XLOOKUP to combine a sales transaction table with a regional manager lookup table.
+- 🔴 Advanced: Unpivot a heavily cross-tabulated Excel dataset using Power Query M language.

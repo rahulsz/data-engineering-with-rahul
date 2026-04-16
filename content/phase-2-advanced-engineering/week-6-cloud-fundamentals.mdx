@@ -1,0 +1,53 @@
+---
+title: "Week 6 — Cloud Fundamentals"
+description: "Introduction to Azure cloud services, networking, and cloud storage concepts for data pipelines."
+weekNumber: 6
+phase: "phase-2-advanced-engineering"
+tags: ["Azure", "ADLS", "Key Vault", "IAM"]
+estimatedMinutes: 60
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+An introduction to Azure cloud services, networking, and cloud storage concepts that form the backbone of modern enterprise data architectures.
+
+## 🧠 Key Concepts
+- **Azure Data Lake Storage (ADLS Gen2)** — Hierarchical namespace storage highly optimized for big data analytics.
+- **IAM (Identity & Access Management)** — Controlling who has access to which cloud resources.
+- **Azure Key Vault** — Securely storing and managing secrets, keys, and certificates.
+- **Resource Groups** — Logical containers for grouping related Azure resources.
+- **Managed Identities** — Providing an identity for applications to use when connecting to resources.
+
+## 💻 Code Examples
+```bash
+# Azure CLI: Create a storage account
+az storage account create \
+  --name datalakegen2acct \
+  --resource-group myResourceGroup \
+  --location eastus \
+  --sku Standard_LRS \
+  --kind StorageV2 \
+  --enable-hierarchical-namespace true
+```
+
+```python
+# Mounting ADLS to Databricks using secret scopes
+configs = {"fs.azure.account.auth.type": "OAuth",
+          "fs.azure.account.oauth.provider.type": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
+          "fs.azure.account.oauth2.client.id": dbutils.secrets.get(scope="key-vault-secrets", key="client-id"),
+          "fs.azure.account.oauth2.client.secret": dbutils.secrets.get(scope="key-vault-secrets", key="client-secret"),
+          "fs.azure.account.oauth2.client.endpoint": "https://login.microsoftonline.com/DIRECTORY_ID/oauth2/token"}
+
+dbutils.fs.mount(
+  source = "abfss://container-name@storageaccount.dfs.core.windows.net/",
+  mount_point = "/mnt/adls",
+  extra_configs = configs)
+```
+
+## 🏭 Real-World Application
+A healthcare startup must comply with HIPAA. They use Azure IAM to strictly limit who can access the ADLS Gen2 storage container containing raw patient data, and use Azure Key Vault to ensure passwords are never stored in plain text inside Databricks notebooks.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Create an Azure Resource Group and an ADLS Gen2 Storage Account via the Azure Portal.
+- 🟡 Intermediate: Upload a CSV file to the storage account and generate a SAS token with read-only permissions.
+- 🔴 Advanced: Configure a Service Principal in Entra ID, assign it Blob Data Reader access to the storage account, and mount it in Databricks.

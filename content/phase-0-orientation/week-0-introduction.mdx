@@ -1,0 +1,42 @@
+---
+title: "Week 0 — Intro to Data Engineering & Setup"
+description: "An introduction to the data engineering landscape, the role of a data engineer vs analyst, and setting up the core environment."
+weekNumber: 0
+phase: "phase-0-orientation"
+tags: ["Databricks", "Environment", "Data Engineering vs Analytics", "Supply Chain Case Study"]
+estimatedMinutes: 45
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+An introduction to the data engineering landscape, the role of a data engineer vs analyst, and setting up the core environment. Understanding these concepts is crucial for building robust data architectures.
+
+## 🧠 Key Concepts
+- **ETL/ELT** — Extract, Transform, Load (or Extract, Load, Transform) paradigms.
+- **Data Lake** — Storage repository that holds a vast amount of raw data in its native format.
+- **Data Warehouse** — Central repository of integrated data from one or more disparate sources.
+- **Compute vs Storage** — Modern cloud separation allowing scalable processing independently from data holding.
+- **Databricks** — Unified analytics platform built around Apache Spark.
+
+## 💻 Code Examples
+```bash
+# Setting up your local environment
+python -m venv .venv
+source .venv/bin/activate
+pip install outline pandas pyspark
+```
+
+```python
+# Simple validation script
+import sys
+print(f"Running Python version: {sys.version}")
+print("Environment successfully initialized!")
+```
+
+## 🏭 Real-World Application
+At a global logistics company, you'll need to ingest millions of tracking events daily. You set up a scalable environment separating your raw transit data (storage) from the intensive processing tasks like route optimization (compute) using Databricks.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Create a Databricks Community Edition account and spin up a basic cluster.
+- 🟡 Intermediate: Write a Python script to print your system's PATH and active Python version.
+- 🔴 Advanced: Set up a local Jupyter lab alongside a local Spark instance using Docker.

@@ -1,0 +1,50 @@
+---
+title: "Week 5 — PySpark"
+description: "Distributed data processing using Apache Spark's Python API."
+weekNumber: 5
+phase: "phase-1-foundations"
+tags: ["PySpark", "Distributed Computing", "DataFrames", "Spark SQL"]
+estimatedMinutes: 120
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Distributed data processing using Apache Spark's Python API to tackle Big Data effectively.
+
+## 🧠 Key Concepts
+- **Resilient Distributed Datasets (RDDs)** — Spark's fundamental data structure (mostly abstracted away now).
+- **Spark DataFrames** — Distributed collection of data organized into named columns.
+- **Lazy Evaluation** — Transformations are not executed until an Action (like show or count) is called.
+- **Transformations vs Actions** — filter/select (transformations) vs count/collect (actions).
+- **Broadcasting & Caching** — Optimizing performance for large joins and iterative algorithms.
+
+## 💻 Code Examples
+```python
+from pyspark.sql.functions import col, sum, when
+
+# Lazy Evaluation: This defines the transform, but does not execute it
+df_filtered = df.filter(col('status') == 'DELIVERED') \
+                .withColumn('is_late', when(col('days_taken') > 5, 1).otherwise(0))
+
+# Action: This triggers the execution
+late_count = df_filtered.select(sum('is_late')).collect()[0][0]
+print(f"Total late deliveries: {late_count}")
+```
+
+```python
+# Broadcast Join
+from pyspark.sql.functions import broadcast
+
+small_lookup_df = spark.read.csv("country_codes.csv")
+large_facts_df = spark.read.parquet("user_activity/")
+
+joined_df = large_facts_df.join(broadcast(small_lookup_df), "country_code")
+```
+
+## 🏭 Real-World Application
+A telecom provider processes 2 TB of call detail records per day. Using PySpark, an engineer distributes the processing across a 50-node cluster, filtering out dropped calls and aggregating total minutes per user using map-reduce paradigms under the hood.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Create a simple PySpark DataFrame from a hardcoded list of tuples and show() the results.
+- 🟡 Intermediate: Read a Parquet file, group by a category column, aggregate a sum, and write the result back as a Delta table.
+- 🔴 Advanced: Identify a data skew in a join operation and rewrite the PySpark code using a broadcast join to fix it.

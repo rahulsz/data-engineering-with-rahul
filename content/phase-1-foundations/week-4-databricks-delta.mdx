@@ -1,0 +1,56 @@
+---
+title: "Week 4 — Databricks & Delta Lake"
+description: "Understanding the Spark ecosystem, Delta Lake architecture, and modern data table formats."
+weekNumber: 4
+phase: "phase-1-foundations"
+tags: ["Databricks", "Delta Lake", "ACID", "Time Travel"]
+estimatedMinutes: 60
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Understand the Databricks Spark ecosystem, Delta Lake architecture, and modern big data table storage paradigms that bring reliability to massive pipelines.
+
+## 🧠 Key Concepts
+- **Delta Lake** — Open-source storage framework that brings ACID transactions to Apache Spark.
+- **ACID Transactions** — Atomicity, Consistency, Isolation, Durability for big data workloads.
+- **Time Travel** — Ability to query previous versions of a Delta table.
+- **Medallion Architecture** — Bronze (raw), Silver (cleansed), Gold (curated) data design pattern.
+- **Optimize & Z-Order** — Techniques to compact files and colocate related data for faster queries.
+
+## 💻 Code Examples
+```sql
+-- Creating a Delta Table
+CREATE TABLE user_events (
+  event_id STRING,
+  user_id STRING,
+  event_type STRING,
+  event_time TIMESTAMP
+) USING DELTA;
+
+-- Time Travel Query
+SELECT COUNT(*) FROM user_events TIMESTAMP AS OF '2025-01-01T00:00:00.000Z';
+```
+
+```python
+# Upserting (MERGE) with DeltaTable in PySpark
+from delta.tables import *
+
+deltaTable = DeltaTable.forName(spark, "gold_layer.customers")
+
+deltaTable.alias("target").merge(
+    updatesDF.alias("updates"),
+    "target.customer_id = updates.customer_id"
+) \
+  .whenMatchedUpdateAll() \
+  .whenNotMatchedInsertAll() \
+  .execute()
+```
+
+## 🏭 Real-World Application
+A streaming service uses Delta Lake's ACID transactions to safely ingest concurrent streams of user watch-history without corrupting the historical table. They use Time Travel to audit changes if a faulty pipeline accidentally deletes data.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Write the SQL command to create a basic Delta table.
+- 🟡 Intermediate: Implement a MERGE INTO SQL statement that updates an existing record or inserts a new one.
+- 🔴 Advanced: Write a PySpark script to run OPTIMIZE and ZORDER on an existing Delta table based on a 'date' column.

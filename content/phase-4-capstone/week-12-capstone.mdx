@@ -1,0 +1,59 @@
+---
+title: "Week 12-14 — Supply Chain Capstone Project"
+description: "Build an end-to-end data pipeline processing simulated logistics IoT events into a Power BI dashboard."
+weekNumber: 12
+phase: "phase-4-capstone"
+tags: ["Capstone", "End-to-End", "IoT", "Architecture"]
+estimatedMinutes: 240
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Build an end-to-end data pipeline processing simulated logistics IoT events into a Power BI dashboard using everything you have learned.
+
+## 🧠 Key Concepts
+- **Architecture Design** — Drafting the flow from data generation to reporting.
+- **Ingestion Simulation** — Generating mock IoT truck telemetry data via Python scripts.
+- **Medallion Implementation** — Building the Bronze, Silver, and Gold Delta tables in Databricks.
+- **Orchestration Integration** — Tying notebooks together with ADF.
+- **Data Visualization** — Providing executive insights through a fully published Power BI report.
+
+## 💻 Code Examples
+```python
+# Mock IoT Data Generator Snippet
+import json
+import time
+import random
+from datetime import datetime
+
+while True:
+    payload = {
+        "truck_id": f"TRK-{random.randint(100,999)}",
+        "speed_mph": random.uniform(45.0, 75.0),
+        "engine_temp": random.uniform(180.0, 220.0),
+        "timestamp": datetime.now().isoformat()
+    }
+    # Write to local file/stream simulator...
+    print(json.dumps(payload))
+    time.sleep(1)
+```
+
+```sql
+-- Final Capstone Dashboard requirement query check
+SELECT 
+    t.truck_id,
+    AVG(f.speed_mph) as avg_speed,
+    MAX(f.engine_temp) as max_temp
+FROM gold.fact_telemetry f
+JOIN gold.dim_trucks t ON f.truck_key = t.truck_key
+GROUP BY t.truck_id
+HAVING max_temp > 210;
+```
+
+## 🏭 Real-World Application
+Acting as the Lead Data Engineer, you are responsible for ingesting live JSON strings from long-haul trucks, parsing the telemetry data through Silver cleansing, and aggregating warning thresholds in the Gold layer to alert the dispatch dashboard.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Define the schema arrays for your Bronze, Silver, and Gold tables on a whiteboard.
+- 🟡 Intermediate: Write the PySpark logic to unnest the complex JSON payload into discrete Silver columns.
+- 🔴 Advanced: Complete the entire pipeline from generation to the final published Power BI workspace report.

@@ -1,26 +1,88 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-900: #1e1b4b;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-home-bg: #080C10;
+  --color-home-surface: #0D1117;
+  --color-home-surface-elevated: #161B22;
+  --color-home-border: #21262D;
+  --color-home-primary: #F97316;
+  --color-home-glow: rgba(249, 115, 22, 0.15);
+  --color-home-text-primary: #E6EDF3;
+  --color-home-text-secondary: #8B949E;
+  --color-home-text-accent: #F97316;
+  --color-home-syntax-green: #3FB950;
+  --color-home-syntax-blue: #58A6FF;
+  --color-home-syntax-purple: #BC8CFF;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --font-sans: var(--font-dm-sans), var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), var(--font-geist-mono), monospace;
+  --font-display: var(--font-syne), sans-serif;
+  --font-ui: var(--font-dm-sans), sans-serif;
+
+  --animate-shimmer: shimmer 2s infinite linear;
+  --animate-fade-in: fadeIn 0.4s ease forwards;
+  --animate-drift: drift 4s linear infinite;
+  --animate-rotate-border: rotateBorder 3s ease infinite;
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes drift {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+  }
+  @keyframes rotateBorder {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --border: 240 5.9% 90%;
+  --brand: 239 84% 67%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --brand: 239 84% 67%;
+}
+
+/* Prose dark mode overrides */
+.dark .prose {
+  --tw-prose-body: var(--color-zinc-300);
+  --tw-prose-headings: var(--color-zinc-100);
+  --tw-prose-code: var(--color-brand-400);
+  --tw-prose-pre-bg: var(--color-zinc-900);
+  --tw-prose-links: var(--color-brand-400);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #4338ca; border-radius: 3px; }
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
 }

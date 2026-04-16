@@ -1,0 +1,50 @@
+---
+title: "Week 2 — Python + Pandas"
+description: "Deep dive into data manipulation, cleaning, and exploratory data analysis using Pandas."
+weekNumber: 2
+phase: "phase-1-foundations"
+tags: ["Pandas", "EDA", "Data Cleaning", "DataFrames"]
+estimatedMinutes: 90
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Deep dive into data manipulation, cleaning, and exploratory data analysis using Pandas to prepare analytical datasets. 
+
+## 🧠 Key Concepts
+- **DataFrame** — 2-dimensional labeled data structure.
+- **Series** — 1-dimensional labeled array.
+- **Filtering & Selection** — Using .loc[] and .iloc[].
+- **Aggregation** — Grouping data using .groupby().
+- **Handling Missing Data** — Strategies for dealing with NaN values (dropna, fillna).
+
+## 💻 Code Examples
+```python
+import pandas as pd
+
+# Load and clean data
+df = pd.read_csv('orders.csv')
+df['shipping_cost'] = df['shipping_cost'].fillna(df['shipping_cost'].mean())
+
+# Aggregation operations
+summary = df.groupby('warehouse_id').agg({
+    'order_id': 'count',
+    'total_amount': 'sum'
+}).rename(columns={'order_id': 'total_orders'})
+
+print(summary)
+```
+
+```python
+# Merging Datasets
+customers = pd.DataFrame({'customer_id': [1, 2], 'name': ['Alice', 'Bob']})
+merged = pd.merge(df, customers, on='customer_id', how='left')
+```
+
+## 🏭 Real-World Application
+A retail company receives inventory logs in messy CSV files. Using Pandas, an engineer drops corrupted rows, applies a forward-fill to missing dates, and merges it with a supplier dictionary to identify which warehouse has the lowest stock.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Read a CSV file into a Pandas DataFrame and print the first 5 rows and data types.
+- 🟡 Intermediate: Group a sales dataset by 'region' and calculate the mean and median revenue.
+- 🔴 Advanced: Write a function that takes a DataFrame, automatically identifies columns with more than 50% missing values, and drops them.

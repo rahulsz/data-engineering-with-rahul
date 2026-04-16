@@ -1,0 +1,71 @@
+---
+title: "Week 8 — ETL/ELT & CI/CD Pipelines"
+description: "Orchestrating workflows and automating code deployments using Azure Data Factory and GitHub Actions."
+weekNumber: 8
+phase: "phase-2-advanced-engineering"
+tags: ["ADF", "CI/CD", "GitHub Actions", "Orchestration"]
+estimatedMinutes: 90
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Orchestrating workflows and automating code deployments using Azure Data Factory and GitHub Actions for continuous delivery of data products.
+
+## 🧠 Key Concepts
+- **Orchestration** — Managing the scheduling, execution, and monitoring of complex pipeline tasks.
+- **Azure Data Factory (ADF)** — Cloud-based data integration service that allows creating data-driven workflows.
+- **Continuous Integration (CI)** — Automating code testing and building upon every repository commit.
+- **Continuous Deployment (CD)** — Automating the release and deployment of code to production.
+- **Linked Services & Datasets** — ADF concepts bridging connection details to actual data stores.
+
+## 💻 Code Examples
+```yaml
+# GitHub Actions CI Workflow for Databricks
+name: Lint and Test PySpark Code
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        pip install pyspark pytest flake8
+    - name: Run Linter
+      run: flake8 src/
+    - name: Run Tests
+      run: pytest tests/
+```
+
+```json
+// ADF Pipeline Trigger Definition snippet
+{
+    "name": "Daily_Bronze_To_Silver",
+    "properties": {
+        "activities": [
+            {
+                "name": "RunDatabricksNotebook",
+                "type": "DatabricksNotebook",
+                "linkedServiceName": { "referenceName": "DatabricksLinkedService", "type": "LinkedServiceReference" },
+                "typeProperties": { "notebookPath": "/Shared/ETL/bronze_to_silver" }
+            }
+        ]
+    }
+}
+```
+
+## 🏭 Real-World Application
+A data engineer develops a new fraud detection aggregation logic. They push the code to GitHub, which triggers a CI pipeline to run PyTest on dummy data. Once merged, Azure Data Factory picks up the deployed Databricks notebook and orchestrates running it every hour.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Create a basic GitHub Actions workflow file that prints 'Hello World' on push.
+- 🟡 Intermediate: Build an Azure Data Factory pipeline that contains a Copy Activity to move a CSV from one folder to another.
+- 🔴 Advanced: Set up a Git-integrated Azure Data Factory instance, create a feature branch, build a pipeline, and create a Pull Request to merge the ADF ARM templates.

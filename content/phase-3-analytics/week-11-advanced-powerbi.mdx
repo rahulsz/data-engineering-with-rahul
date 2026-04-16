@@ -1,0 +1,51 @@
+---
+title: "Week 11 — Power BI + DAX (Part 2)"
+description: "Advanced DAX, Row-Level Security, performance optimization, and publishing to the service."
+weekNumber: 11
+phase: "phase-3-analytics"
+tags: ["Advanced DAX", "RLS", "Power BI Service", "Performance"]
+estimatedMinutes: 90
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Dive into advanced DAX functions, implement Row-Level Security, optimize report performance, and publish to the Power BI service.
+
+## 🧠 Key Concepts
+- **Row-Level Security (RLS)** — Restricting data access for given users based on filters applied at the model layer.
+- **Filter Context vs Row Context** — The core fundamentals of how DAX evaluates iterative loops.
+- **Iterator Functions (SUMX, AVERAGEX)** — Iterating through a table row-by-row before aggregating.
+- **Variables in DAX (VAR..RETURN)** — Storing intermediary calculation results for performance and readability.
+- **Power BI Service Workspaces** — Collaborative environments for deploying semantic models and reports.
+
+## 💻 Code Examples
+```dax
+// Advanced DAX using iterating functions and variables
+Profitability Category = 
+VAR Margin = [Total Profit] / [Total Revenue]
+RETURN
+  SWITCH(
+      TRUE(),
+      Margin > 0.2, "High Profit",
+      Margin > 0.1, "Medium Profit",
+      "Low Profit"
+  )
+```
+
+```dax
+// Setting up RLS filter expression for a 'Manager' role
+[RegionID] = 
+LOOKUPVALUE(
+    SecurityTable[RegionID], 
+    SecurityTable[Email], 
+    USERPRINCIPALNAME()
+)
+```
+
+## 🏭 Real-World Application
+Deploying a global sales dashboard, the team must ensure European managers cannot see American data. They implement RLS using the USERPRINCIPALNAME() function. They also use DAX variables to optimize a slow-running SUMX expression.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Use a DAX variable in a measure to calculate Gross Margin.
+- 🟡 Intermediate: Write a SUMX iterator function that multiplies Quantity by Price for each row on a table that lacks a LineTotal column.
+- 🔴 Advanced: Configure static Row-Level Security within Power BI Desktop and test it using the 'View As' feature.

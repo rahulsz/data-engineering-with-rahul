@@ -1,0 +1,49 @@
+---
+title: "Week 10 — Power BI + DAX (Part 1)"
+description: "Connecting Power BI to data sources and writing fundamental DAX formulas."
+weekNumber: 10
+phase: "phase-3-analytics"
+tags: ["Power BI", "DAX", "Data Visualization", "Calculated Columns"]
+estimatedMinutes: 90
+lastUpdated: "2025-01-15"
+---
+
+## 🗺️ Overview
+Connecting Power BI to data sources and writing fundamental DAX formulas to build dynamic, interactive dashboards for business stakeholders.
+
+## 🧠 Key Concepts
+- **Import vs DirectQuery** — Caching data in memory vs querying the source system dynamically.
+- **Relationships** — Cross-filtering direction (single vs both) and cardinality (1:N, M:N).
+- **DAX (Data Analysis Expressions)** — The formula language used in Power BI.
+- **Calculated Columns vs Measures** — Row-by-row static evaluation vs dynamic aggregate evaluation.
+- **CALCULATE()** — The most important DAX function, used to modify the filter context.
+
+## 💻 Code Examples
+```dax
+// Creating a basic measure
+Total Sales = SUM(FactSales[SalesAmount])
+
+// Using CALCULATE to override filter context
+Total Sales (East Region) = 
+  CALCULATE(
+      [Total Sales],
+      DimGeography[RegionName] = "East"
+  )
+```
+
+```dax
+// Time Intelligence Measure
+Sales YTD = 
+  TOTALYTD(
+      [Total Sales],
+      'DimDate'[Date]
+  )
+```
+
+## 🏭 Real-World Application
+A business analyst imports the Gold Layer sales table from Databricks into Power BI Desktop. They write DAX measures using CALCULATE and Time Intelligence to show Year-To-Date (YTD) sales compared to the previous year.
+
+## 🎯 Practice Exercises
+- 🟢 Beginner: Load a CSV into Power BI and create a clustered bar chart of Sales by Category.
+- 🟡 Intermediate: Write a DAX measure that calculates the Profit Margin % and display it on a KPI card.
+- 🔴 Advanced: Setup a star schema matching a Fact table to 3 Dimension tables, ensuring 1:Many relationships are properly filtered in a matrix visual.
