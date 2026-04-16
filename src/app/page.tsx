@@ -24,7 +24,7 @@ function highlightLine(line: string): string {
   const tokens: Record<string, string> = {};
 
   let result = line.replace(/(["'].*?["'])/g, (m) => {
-    const tok = `\x00${counter++}\x00`;
+    const tok = `___TOK${counter++}___`;
     tokens[tok] = `<span class="text-[#A5D6FF]">${escapeHtml(m)}</span>`;
     return tok;
   });
@@ -179,9 +179,9 @@ function TerminalBlock() {
   const snippet = precomputedSnippets[active];
 
   return (
-    <div className="flex flex-col w-full h-full lg:max-w-xl self-center justify-self-center lg:justify-self-end mt-12 lg:mt-0 relative group">
-      <div className="absolute -inset-0.5 bg-home-glow rounded-[14px] blur-xl opacity-60 group-hover:opacity-100 transition duration-1000" />
-      <div className="relative bg-home-surface border border-home-border rounded-xl shadow-2xl overflow-hidden flex flex-col hover:border-home-primary/50 transition-colors duration-500 min-h-[420px]">
+    <div className="flex flex-col w-full h-full lg:max-w-xl self-center justify-self-center lg:justify-self-end mt-12 lg:mt-0 relative group transform-gpu">
+      <div className="absolute -inset-0.5 bg-home-glow rounded-[14px] blur-xl opacity-60 group-hover:opacity-100 transition duration-1000 will-change-opacity" />
+      <div className="relative bg-home-surface border border-home-border rounded-xl shadow-2xl overflow-hidden flex flex-col hover:border-home-primary/50 transition-colors duration-500 min-h-[420px] transform-gpu">
 
         {/* Chrome bar */}
         <div className="h-10 border-b border-home-border flex items-center px-4 bg-[#11151A] shrink-0">
@@ -490,15 +490,15 @@ export default function Home() {
     <main className="relative min-h-screen bg-home-bg overflow-x-hidden selection:bg-home-primary/30 text-home-text-primary pb-0">
 
       {/* Background atmosphere */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transform-gpu">
         <div className="absolute inset-0 bg-noise opacity-[0.04]" />
         <div
           className="absolute inset-0 opacity-[0.03] animate-drift"
           style={{ backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)', backgroundSize: '40px 40px' }}
         />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-home-glow rounded-full blur-[120px]" />
-        <div className="absolute top-[5%] right-[-10%] w-[500px] h-[500px] bg-[#58A6FF]/[0.08] rounded-full blur-[100px]" />
-        <div className="absolute top-[40%] left-[45%] w-[300px] h-[300px] bg-[#BC8CFF]/[0.05] rounded-full blur-[90px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-home-glow rounded-full blur-[120px] transform-gpu" />
+        <div className="absolute top-[5%] right-[-10%] w-[500px] h-[500px] bg-[#58A6FF]/[0.08] rounded-full blur-[100px] transform-gpu" />
+        <div className="absolute top-[40%] left-[45%] w-[300px] h-[300px] bg-[#BC8CFF]/[0.05] rounded-full blur-[90px] transform-gpu" />
       </div>
 
       {/* Navbar */}
