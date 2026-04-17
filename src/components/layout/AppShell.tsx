@@ -36,11 +36,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const isHome = pathname === "/";
+  const isFullscreenRoute = pathname === "/" || pathname.startsWith("/dashboard");
 
   return (
-    <div className={`flex min-h-screen transition-colors ${isHome ? 'bg-home-bg dark text-home-text-primary' : 'bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100'}`}>
-      {!isHome && (
+    <div className={`flex min-h-screen transition-colors ${isFullscreenRoute ? 'bg-home-bg dark text-home-text-primary' : 'bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100'}`}>
+      {!isFullscreenRoute && (
         <>
           <Navbar 
             onMobileSidebarToggle={() => setIsMobileOpen(true)} 
@@ -53,7 +53,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           />
         </>
       )}
-      <main className={`flex-1 w-full flex flex-col ${isHome ? '' : 'md:pl-64 pt-14'}`}>
+      <main className={`flex-1 w-full flex flex-col ${isFullscreenRoute ? '' : 'md:pl-64 pt-14'}`}>
         {children}
       </main>
     </div>

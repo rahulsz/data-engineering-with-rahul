@@ -3,152 +3,192 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { useAuth, UserButton, SignInButton } from "@clerk/nextjs";
+import { useAuth, SignInButton, UserButton } from "@clerk/nextjs";
 import {
   Code2, ArrowRight, Compass, Database, GitBranch, BarChart3, Rocket,
-  Search, FileText, CheckCircle2, Zap, Package, Flame, Check
+  Search, FileText, CheckCircle2, Check
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useProgressStore } from "@/store/progressStore";
 import CommandPalette from "@/components/search/CommandPalette";
 
-// ─── SYNTAX HIGHLIGHTER (pure function, no React) ───
+// ─── EFFECTS ───
+function BackgroundEffects() {
+  return (
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden>
+      {/* Animated grid */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(#ffffff 1px, transparent 1px),
+            linear-gradient(90deg, #ffffff 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+          animation: "gridPan 25s linear infinite",
+        }}
+      />
 
-function highlightLine(line: string): string {
-  if (line.startsWith("# ") || line.startsWith("-- ")) {
-    return `<span class="text-[#8B949E]">${escapeHtml(line)}</span>`;
-  }
+      {/* Orange orb — bottom left */}
+      <div
+        className="absolute -bottom-32 -left-32 w-[600px] h-[600px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%)",
+        }}
+      />
 
-  // Tokenize strings first to protect them from keyword replacement
-  let counter = 0;
-  const tokens: Record<string, string> = {};
+      {/* Cyan orb — top right */}
+      <div
+        className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%)",
+        }}
+      />
 
-  let result = line.replace(/(["'].*?["'])/g, (m) => {
-    const tok = `___TOK${counter++}___`;
-    tokens[tok] = `<span class="text-[#A5D6FF]">${escapeHtml(m)}</span>`;
-    return tok;
-  });
+      {/* Purple orb — center */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full"
+        style={{
+          background:
+            "radial-gradient(ellipse, rgba(139,92,246,0.04) 0%, transparent 70%)",
+        }}
+      />
 
-  // Keywords
-  result = result.replace(
-    /\b(from|import|def|return|class|if|else|while|for|in|as)\b/g,
-    '<span class="text-[#FF7B72]">$1</span>'
+      {/* Noise grain overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: "repeat",
+          backgroundSize: "128px 128px",
+        }}
+      />
+    </div>
   );
-
-  // SQL / DAX keywords
-  result = result.replace(
-    /\b(SELECT|FROM|WHERE|SUM|OVER|PARTITION|BY|ORDER|ROWS|BETWEEN|PRECEDING|AND|CURRENT|ROW|RANK|DESC|AS|DIVIDE|CALCULATE|AVERAGEX|CALENDAR|MIN|MAX)\b/gi,
-    '<span class="text-[#FF7B72]">$&</span>'
-  );
-
-  // Numbers
-  result = result.replace(
-    /\b(\d+)\b/g,
-    '<span class="text-[#F8C555]">$1</span>'
-  );
-
-  // Builtins
-  result = result.replace(
-    /\b(col|to_date|dropDuplicates|getOrCreate|SparkSession|builder|read|format|load|filter|withColumn|write|mode|save)\b/g,
-    '<span class="text-[#D2A8FF]">$1</span>'
-  );
-
-  // Restore protected string tokens
-  for (const [tok, html] of Object.entries(tokens)) {
-    result = result.replace(tok, html);
-  }
-
-  return `<span class="text-[#E6EDF3]">${result}</span>`;
 }
 
-function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-// ─── TERMINAL SNIPPETS (static data) ───
-
-const terminalSnippets = [
+// ─── TERMINAL SNIPPETS ───
+const SNIPPETS = [
   {
-    title: "pipeline.py — data-eng-notes",
-    code: `# Week 5 · PySpark ETL Pipeline
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, to_date
-
-spark = SparkSession.builder \\
-    .appName("SupplyChainETL") \\
-    .getOrCreate()
-
-df = spark.read.format("delta") \\
-    .load("/mnt/bronze/orders")
-
-silver_df = df \\
-    .filter(col("status") == "COMPLETE") \\
-    .withColumn("order_date", to_date(col("created_at"))) \\
-    .dropDuplicates(["order_id"])
-
-silver_df.write.format("delta") \\
-    .mode("overwrite") \\
-    .save("/mnt/silver/orders_clean")`
+    label: "Week 5 · PySpark ETL",
+    lang: "python",
+    lines: [
+      { type: "comment", text: "# Week 5 · PySpark ETL Pipeline" },
+      { type: "keyword", text: "from ", rest: "pyspark.sql ", suffix: "import ", tail: "SparkSession" },
+      { type: "keyword", text: "from ", rest: "pyspark.sql.functions ", suffix: "import ", tail: "col, to_date" },
+      { type: "blank" },
+      { type: "default", text: "spark = SparkSession.builder \\" },
+      { type: "default", text: '    .appName("SupplyChainETL") \\' },
+      { type: "default", text: "    .getOrCreate()" },
+      { type: "blank" },
+      { type: "default", text: 'df = spark.read.format("delta") \\' },
+      { type: "default", text: '    .load("/mnt/bronze/orders")' },
+      { type: "blank" },
+      { type: "default", text: "silver_df = df \\" },
+      { type: "default", text: '    .filter(col("status") == "COMPLETE") \\' },
+      { type: "default", text: '    .withColumn("order_date", to_date(col("created_at"))) \\' },
+      { type: "default", text: '    .dropDuplicates(["order_id"])' },
+    ],
   },
   {
-    title: "analysis.sql — data-eng-notes",
-    code: `-- Week 3 · Advanced SQL: Window Functions
-SELECT
-    product_id,
-    order_date,
-    quantity,
-    SUM(quantity) OVER (
-        PARTITION BY product_id
-        ORDER BY order_date
-        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-    ) AS rolling_7d_qty,
-    RANK() OVER (
-        PARTITION BY category
-        ORDER BY revenue DESC
-    ) AS revenue_rank
-FROM supply_chain.fact_orders
-WHERE order_date >= '2024-01-01';`
+    label: "Week 3 · SQL Window Functions",
+    lang: "sql",
+    lines: [
+      { type: "comment", text: "-- Week 3 · Advanced SQL: Window Functions" },
+      { type: "keyword", text: "SELECT" },
+      { type: "default", text: "    product_id," },
+      { type: "default", text: "    order_date," },
+      { type: "default", text: "    quantity," },
+      { type: "function", text: "    SUM", suffix: "(quantity) ", keyword: "OVER", rest: " (" },
+      { type: "default", text: "        PARTITION BY product_id" },
+      { type: "default", text: "        ORDER BY order_date" },
+      { type: "default", text: "        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW" },
+      { type: "default", text: "    ) AS rolling_7d_qty," },
+      { type: "function", text: "    RANK", suffix: "() ", keyword: "OVER", rest: " (" },
+      { type: "default", text: "        PARTITION BY category" },
+      { type: "default", text: "        ORDER BY revenue DESC" },
+      { type: "default", text: "    ) AS revenue_rank" },
+      { type: "keyword", text: "FROM ", rest: "supply_chain.fact_orders" },
+    ],
   },
   {
-    title: "measures.dax — data-eng-notes",
-    code: `-- Week 10 · Power BI: DAX Measures
-Inventory Turns = 
-DIVIDE(
-    [Total COGS],
-    CALCULATE(
-        AVERAGEX(
-            CALENDAR(MIN(Dates[Date]), MAX(Dates[Date])),
-            [Avg Inventory Value]
-        )
-    ),
-    0
-)
-
-Fill Rate % = 
-DIVIDE([Orders Fulfilled], [Orders Total], 0)`
-  }
+    label: "Week 10 · Power BI DAX",
+    lang: "dax",
+    lines: [
+      { type: "comment", text: "-- Week 10 · Power BI: DAX Measures" },
+      { type: "blank" },
+      { type: "function", text: "Inventory Turns", suffix: " = " },
+      { type: "function", text: "DIVIDE", suffix: "(" },
+      { type: "default", text: "    [Total COGS]," },
+      { type: "function", text: "    CALCULATE", suffix: "(" },
+      { type: "function", text: "        AVERAGEX", suffix: "(" },
+      { type: "function", text: "            CALENDAR", suffix: "(" },
+      { type: "default", text: "                MIN(Dates[Date]), MAX(Dates[Date])" },
+      { type: "default", text: "            )," },
+      { type: "default", text: "            [Avg Inventory Value]" },
+      { type: "default", text: "        )" },
+      { type: "default", text: "    ), 0" },
+      { type: "default", text: ")" },
+    ],
+  },
 ];
 
-// Pre-compute highlighted HTML at module level — avoids SSR/client mismatch
-const precomputedSnippets = terminalSnippets.map((s) => ({
-  title: s.title,
-  lines: s.code.split("\n").map((line) => highlightLine(line)),
-}));
+const COLOR = {
+  comment:  "#8B949E",
+  keyword:  "#FF7B72",
+  function: "#D2A8FF",
+  string:   "#A5D6FF",
+  default:  "#E6EDF3",
+  suffix:   "#E6EDF3",
+  rest:     "#79C0FF",
+  tail:     "#D2A8FF",
+};
+
+function Line({ line }: { line: any }) {
+  if (line.type === "blank") return <div className="h-3" />;
+  if (line.type === "comment")
+    return <div><span style={{ color: COLOR.comment }}>{line.text}</span></div>;
+  if (line.type === "keyword")
+    return (
+      <div>
+        <span style={{ color: COLOR.keyword }}>{line.text}</span>
+        {line.rest && <span style={{ color: COLOR.rest }}>{line.rest}</span>}
+        {line.suffix && <span style={{ color: COLOR.keyword }}>{line.suffix}</span>}
+        {line.tail && <span style={{ color: COLOR.tail }}>{line.tail}</span>}
+      </div>
+    );
+  if (line.type === "function")
+    return (
+      <div>
+        <span style={{ color: COLOR.function }}>{line.text}</span>
+        {line.suffix && <span style={{ color: COLOR.suffix }}>{line.suffix}</span>}
+        {line.keyword && <span style={{ color: COLOR.keyword }}>{line.keyword}</span>}
+        {line.rest && <span style={{ color: COLOR.rest }}>{line.rest}</span>}
+      </div>
+    );
+  return <div><span style={{ color: COLOR.default }}>{line.text}</span></div>;
+}
 
 // ─── ANIMATION VARIANTS ───
-
 const navVariant: Variants = {
   hidden: { y: -20, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
 };
 
-const heroWordVariant: Variants = {
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+  initial: {},
+  animate: { transition: { staggerChildren: 0.1 } },
+};
+
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
-  }),
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
+  initial: { opacity: 0, y: 40 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
 };
 
 const fadeUp: Variants = {
@@ -166,72 +206,110 @@ const scaleUp: Variants = {
   visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
 };
 
-// ─── TERMINAL BLOCK ───
-
-function TerminalBlock() {
+function TerminalCard() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setActive((p) => (p + 1) % precomputedSnippets.length), 4000);
+    const id = setInterval(() => {
+      setActive((prev) => (prev + 1) % SNIPPETS.length);
+    }, 4500);
     return () => clearInterval(id);
   }, []);
 
-  const snippet = precomputedSnippets[active];
+  const snippet = SNIPPETS[active];
 
   return (
     <div className="flex flex-col w-full h-full lg:max-w-xl self-center justify-self-center lg:justify-self-end mt-12 lg:mt-0 relative group transform-gpu">
       <div className="absolute -inset-0.5 bg-home-glow rounded-[14px] blur-xl opacity-60 group-hover:opacity-100 transition duration-1000 will-change-opacity" />
-      <div className="relative bg-home-surface border border-home-border rounded-xl shadow-2xl overflow-hidden flex flex-col hover:border-home-primary/50 transition-colors duration-500 min-h-[420px] transform-gpu">
-
-        {/* Chrome bar */}
-        <div className="h-10 border-b border-home-border flex items-center px-4 bg-[#11151A] shrink-0">
-          <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
-            <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-            <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
+      <div
+        className={cn(
+          "relative rounded-xl overflow-hidden shadow-2xl flex flex-col transform-gpu min-h-[420px]",
+          "border border-[#21262D]",
+          "bg-[#0D1117]",
+          "shadow-[0_0_60px_rgba(0,0,0,0.6)]"
+        )}
+      >
+        {/* Window chrome */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#21262D] shrink-0">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+            <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+            <span className="w-3 h-3 rounded-full bg-[#28C840]" />
           </div>
-          <p className="flex-1 text-center text-xs font-mono text-home-text-secondary">
-            {snippet.title}
-          </p>
+          <span className="text-xs text-[#8B949E] font-mono">
+            pipeline.py — data-eng-notes
+          </span>
+          <div className="flex items-center gap-2">
+            {SNIPPETS.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                className={cn(
+                  "w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer",
+                  i === active
+                    ? "bg-[#F97316] scale-125"
+                    : "bg-[#21262D] hover:bg-[#8B949E]"
+                )}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Tab bar */}
+        <div className="flex border-b border-[#21262D] px-4 shrink-0">
+          {SNIPPETS.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={cn(
+                "text-[10px] font-mono px-3 py-2 border-b-2 transition-all duration-200 cursor-pointer",
+                i === active
+                  ? "border-[#F97316] text-[#F97316]"
+                  : "border-transparent text-[#8B949E] hover:text-[#E6EDF3]"
+              )}
+            >
+              {s.label}
+            </button>
+          ))}
         </div>
 
         {/* Code body */}
-        <div className="p-6 overflow-hidden flex-1 relative font-mono text-sm leading-relaxed">
+        <div className="p-5 flex-1 w-full overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 p-6 flex flex-col"
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.25 }}
+              className="font-mono text-[12px] leading-[1.75] space-y-0"
             >
-              {snippet.lines.map((html, i) => (
-                <div
-                  key={i}
-                  className="min-h-[1.5em]"
-                  suppressHydrationWarning
-                  dangerouslySetInnerHTML={{ __html: html }}
-                />
+              {snippet.lines.map((line, i) => (
+                <Line key={i} line={line} />
               ))}
             </motion.div>
           </AnimatePresence>
         </div>
-      </div>
 
-      {/* Stat pills */}
-      <div className="flex justify-center flex-wrap gap-3 mt-6">
-        <div className="flex items-center gap-2 px-3 py-1.5 border border-home-border bg-home-surface rounded-full text-xs font-mono text-home-text-secondary">
-          <Zap className="text-home-primary w-3 h-3" />
-          <span>15 Weeks</span>
-        </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 border border-home-border bg-home-surface rounded-full text-xs font-mono text-home-text-secondary">
-          <Package className="text-home-primary w-3 h-3" />
-          <span>4 Phases</span>
-        </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 border border-home-border bg-home-surface rounded-full text-xs font-mono text-home-text-secondary">
-          <Flame className="text-home-primary w-3 h-3" />
-          <span>60+ Topics</span>
+        {/* Footer stat pills */}
+        <div className="flex items-center gap-3 px-5 py-3 border-t border-[#21262D] shrink-0">
+          {[
+            { icon: "⚡", label: "15 Weeks" },
+            { icon: "📦", label: "4 Phases" },
+            { icon: "🔥", label: "60+ Topics" },
+          ].map(({ icon, label }) => (
+            <span
+              key={label}
+              className={cn(
+                "flex items-center gap-1.5 text-[10px] font-mono",
+                "px-2.5 py-1 rounded-md",
+                "border border-[#21262D] text-[#8B949E]"
+              )}
+            >
+              <span className="text-[#F97316]">{icon}</span>
+              {label}
+            </span>
+          ))}
         </div>
       </div>
     </div>
@@ -239,21 +317,28 @@ function TerminalBlock() {
 }
 
 // ─── PHASE OVERVIEW ───
+const PHASE_ACCENTS: Record<string, string> = {
+  "PHASE 0": "#64748B",  // slate
+  "PHASE 1": "#F97316",  // orange
+  "PHASE 2": "#22D3EE",  // cyan
+  "PHASE 3": "#A855F7",  // purple
+  "PHASE 4": "#4ADE80",  // green
+};
 
 const curriculumPhases = [
-  { id: 0, title: "Orientation", weeks: "1 week", icon: Compass, accent: "border-zinc-500", glow: "text-zinc-400", topics: ["Environment Setup", "VS Code Mastery", "Git Basics"] },
-  { id: 1, title: "DE Foundations", weeks: "Weeks 1–5", icon: Database, accent: "border-home-primary", glow: "text-home-primary", topics: ["Python Data Structures", "SQL Deep Dive", "Cloud Warehousing"] },
-  { id: 2, title: "Advanced Engineering", weeks: "Weeks 6–8", icon: GitBranch, accent: "border-[#58A6FF]", glow: "text-[#58A6FF]", topics: ["PySpark & Databricks", "Delta Lake", "Airflow & Orchestration"] },
-  { id: 3, title: "Data Analytics", weeks: "Weeks 9–11", icon: BarChart3, accent: "border-[#BC8CFF]", glow: "text-[#BC8CFF]", topics: ["Power BI Models", "DAX Formulas", "Visualization Patterns"] },
-  { id: 4, title: "Capstone + AI", weeks: "Weeks 12–15", icon: Rocket, accent: "border-[#3FB950]", glow: "text-[#3FB950]", topics: ["Supply Chain Build", "OpenAI Integrations", "Resume Prep"] },
+  { id: 0, title: "Orientation", weeks: "1 week", phase: "PHASE 0", icon: Compass, accent: "border-slate-500", glow: "text-[#64748B]", topics: ["Environment Setup", "VS Code Mastery", "Git Basics"] },
+  { id: 1, title: "DE Foundations", weeks: "Weeks 1–5", phase: "PHASE 1", icon: Database, accent: "border-home-primary", glow: "text-[#F97316]", topics: ["Python Data Structures", "SQL Deep Dive", "Cloud Warehousing"] },
+  { id: 2, title: "Advanced Engineering", weeks: "Weeks 6–8", phase: "PHASE 2", icon: GitBranch, accent: "border-[#22D3EE]", glow: "text-[#22D3EE]", topics: ["Cloud Fundamentals (Azure/AWS/GCP)", "Data Modelling & Warehousing", "ETL/ELT + CI/CD Pipelines"] },
+  { id: 3, title: "Data Analytics", weeks: "Weeks 9–11", phase: "PHASE 3", icon: BarChart3, accent: "border-[#A855F7]", glow: "text-[#A855F7]", topics: ["Power BI Models", "DAX Formulas", "Visualization Patterns"] },
+  { id: 4, title: "Capstone + AI", weeks: "Weeks 12–15", phase: "PHASE 4", icon: Rocket, accent: "border-[#4ADE80]", glow: "text-[#4ADE80]", topics: ["Supply Chain Build", "OpenAI Integrations", "Resume Prep"] },
 ];
 
 function PhaseOverview() {
   return (
-    <section id="curriculum" className="w-full max-w-7xl mx-auto py-32 px-6">
+    <section id="curriculum" className="w-full max-w-7xl mx-auto py-32 px-6 relative z-10">
       <div className="flex flex-col items-center mb-16 text-center">
-        <p className="text-home-text-secondary font-mono tracking-widest text-sm mb-4">STRUCTURED LEARNING PATH</p>
-        <h2 className="font-display text-4xl lg:text-5xl text-home-text-primary font-bold">Four Phases. One Pipeline.</h2>
+        <p className="text-[#8B949E] font-mono tracking-widest text-sm mb-4">STRUCTURED LEARNING PATH</p>
+        <h2 className="font-display text-4xl lg:text-5xl text-[#E6EDF3] font-bold">Four Phases. One Pipeline.</h2>
       </div>
 
       <motion.div
@@ -271,29 +356,32 @@ function PhaseOverview() {
               variants={fadeUp}
               whileHover={{ y: -8, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className={cn(
-                "snap-center shrink-0 w-[280px] lg:w-auto",
-                "bg-home-surface/50 backdrop-blur-xl border border-home-border p-6 rounded-2xl flex flex-col relative group transition-all duration-500",
-                "shadow-2xl shadow-black/80 hover:shadow-[0_0_40px_-10px_rgba(249,115,22,0.3)] box-border overflow-hidden"
-              )}
+              className="group relative p-6 rounded-xl bg-[#0D1117] border border-[#21262D] transition-all duration-300 cursor-pointer snap-center shrink-0 w-[280px] lg:w-auto overflow-hidden flex flex-col"
+              style={{
+                "--phase-accent": PHASE_ACCENTS[phase.phase],
+              } as React.CSSProperties}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = PHASE_ACCENTS[phase.phase] + "60";
+                (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 30px ${PHASE_ACCENTS[phase.phase]}18`;
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = "#21262D";
+                (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+              }}
             >
-              <div className={cn(
-                "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-2xl border z-10",
-                phase.accent
-              )} />
               <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-start justify-between mb-8 relative z-20">
-                <span className="font-mono text-sm text-home-text-secondary">PHASE {phase.id}</span>
-                <Icon className={cn("w-10 h-10 transition-colors", phase.glow)} />
+                <span className="font-mono text-[10px] text-[#8B949E]">{phase.phase}</span>
+                <Icon className={cn("w-8 h-8 transition-colors", phase.glow)} />
               </div>
 
-              <h3 className="font-display text-xl font-bold text-home-text-primary mb-2 group-hover:text-white transition-colors">{phase.title}</h3>
-              <p className="font-mono text-xs text-home-text-secondary mb-6">{phase.weeks}</p>
+              <h3 className="font-display text-lg font-bold text-[#E6EDF3] mb-2 group-hover:text-white transition-colors">{phase.title}</h3>
+              <p className="font-mono text-xs text-[#8B949E] mb-6">{phase.weeks}</p>
 
               <ul className="mb-8 space-y-3 flex-1">
                 {phase.topics.map((t, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[#8B949E]">
-                    <span className="text-home-text-primary/30 mt-0.5">•</span>
+                  <li key={i} className="flex items-start gap-2 text-xs text-[#8B949E]">
+                    <span className="text-home-primary/30 mt-0.5">•</span>
                     {t}
                   </li>
                 ))}
@@ -315,52 +403,51 @@ function PhaseOverview() {
 }
 
 // ─── WEEK PROGRESS STRIP ───
-
 function WeekProgressStrip() {
   const { completedWeeks } = useProgressStore();
-  const { userId, isLoaded } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const { userId, isLoaded } = useAuth();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const totalWeeks = 16;
-  const timelineNodes = useMemo(() => Array.from({ length: totalWeeks }, (_, i) => i), []);
+  const totalWeeks = 15;
+  const timelineNodes = useMemo(() => Array.from({ length: totalWeeks + 1 }, (_, i) => i), []); // Weeks 0-15 = 16 nodes
   const safeCompletedWeeks = mounted ? completedWeeks : [];
   const maxCompleted = Math.max(-1, ...safeCompletedWeeks);
   const currentWeek = maxCompleted + 1;
 
   return (
-    <section className="w-full max-w-5xl mx-auto py-24 px-6 relative">
+    <section className="w-full max-w-5xl mx-auto py-24 px-6 relative z-10">
       <div className="absolute inset-0 flex justify-center pointer-events-none">
         <div className="w-[800px] h-full bg-home-glow opacity-30 blur-3xl rounded-full" />
       </div>
 
       <div className="relative text-center mb-12">
-        <h2 className="font-display text-3xl font-bold text-home-text-primary">Your Learning Journey</h2>
+        <h2 className="font-display text-3xl font-bold text-[#E6EDF3]">Your Learning Journey</h2>
       </div>
 
-      <div className="relative bg-home-surface border border-home-border p-8 rounded-2xl overflow-hidden">
+      <div className="relative bg-[#0D1117] border border-[#21262D] p-8 rounded-2xl overflow-hidden shadow-xl">
 
-        {mounted && !userId && (
-          <div className="absolute inset-0 z-10 backdrop-blur-md bg-home-bg/40 flex flex-col items-center justify-center p-6 text-center border border-home-border rounded-2xl">
-            <Compass className="w-8 h-8 text-home-text-secondary mb-4" />
-            <p className="font-display text-lg mb-4 text-home-text-primary">Ready to track your progress?</p>
-            <SignInButton mode="modal">
-              <button className="px-6 py-2.5 bg-white text-home-bg font-medium rounded-lg hover:bg-zinc-200 transition-colors">
-                Sign in to track progress
-              </button>
-            </SignInButton>
-          </div>
-        )}
+        {!isLoaded ? null : !userId && mounted ? (
+            <div className="absolute inset-0 z-20 backdrop-blur-md bg-[#080C10]/60 flex flex-col items-center justify-center p-6 text-center border border-[#21262D] rounded-2xl">
+              <Compass className="w-8 h-8 text-[#8B949E] mb-4" />
+              <p className="font-display text-lg mb-4 text-[#E6EDF3]">Ready to track your progress?</p>
+              <SignInButton mode="modal">
+                <button className="px-6 py-2.5 bg-white text-[#080C10] font-medium rounded-lg hover:bg-zinc-200 transition-colors cursor-pointer">
+                  Sign in to track progress
+                </button>
+              </SignInButton>
+            </div>
+        ) : null}
 
-        <div className="relative w-full overflow-x-auto pb-6 scrollbar-hide shrink-0">
-          <div className="flex items-center justify-between min-w-[800px] relative px-4">
-            <div className="absolute top-1/2 left-8 right-8 h-[2px] bg-home-border -translate-y-1/2 z-0" />
+        <div className="relative w-full overflow-hidden pb-8 pt-4 shrink-0 group px-2 lg:px-4">
+          <div className="flex items-center justify-between w-full relative">
+            <div className="absolute top-1/2 left-5 right-5 lg:left-6 lg:right-6 h-[2px] bg-[#21262D] -translate-y-1/2 z-0" />
             <div
-              className="absolute top-1/2 left-8 h-[2px] bg-home-primary -translate-y-1/2 z-0 transition-all duration-1000 ease-out"
-              style={{ width: `${Math.max(0, (maxCompleted / (totalWeeks - 1)) * 100 - 4)}%` }}
+              className="absolute top-1/2 left-5 lg:left-6 h-[2px] bg-[#F97316] -translate-y-1/2 z-0 transition-all duration-1000 ease-out"
+              style={{ width: `${Math.max(0, (maxCompleted / (timelineNodes.length - 1)) * 100 - 3)}%` }}
             />
 
             {timelineNodes.map((weekItem) => {
@@ -368,16 +455,16 @@ function WeekProgressStrip() {
               const isCurrent = weekItem === currentWeek;
 
               return (
-                <div key={weekItem} className="relative z-10 flex flex-col items-center group">
+                <div key={weekItem} className="relative z-10 flex flex-col items-center group/node">
                   <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-xs font-mono transition-all duration-500 relative z-10",
-                    isCompleted ? "bg-home-primary text-white shadow-[0_0_20px_rgba(249,115,22,0.7)] border border-home-primary/80" :
-                    isCurrent ? "bg-home-surface border-[3px] border-home-primary text-home-primary shadow-[0_0_25px_rgba(249,115,22,0.4)] animate-pulse" :
-                    "bg-[#05080A] shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] border border-home-border/50 text-home-text-secondary/50 group-hover:text-home-text-secondary"
+                    "w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-sm lg:text-base font-mono transition-all duration-500 relative z-10",
+                    isCompleted ? "bg-[#F97316] text-[#080C10] shadow-[0_0_20px_rgba(249,115,22,0.7)] border border-[#F97316]/80" :
+                    isCurrent ? "bg-[#0D1117] border-[3px] border-[#F97316] text-[#F97316] shadow-[0_0_25px_rgba(249,115,22,0.4)] animate-pulse" :
+                    "bg-[#080C10] shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] border border-[#21262D] text-[#8B949E]/50 group-hover/node:text-[#8B949E]"
                   )}>
-                    {isCompleted ? <Check className="w-4 h-4" /> : weekItem}
+                    {isCompleted ? <Check className="w-5 h-5 lg:w-6 lg:h-6 text-[#080C10]" /> : weekItem}
                   </div>
-                  <div className="absolute -bottom-8 whitespace-nowrap text-[10px] font-mono text-home-text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute -bottom-8 whitespace-nowrap text-[10px] lg:text-xs font-mono text-[#8B949E] opacity-0 group-hover/node:opacity-100 transition-opacity">
                     Week {weekItem}
                   </div>
                 </div>
@@ -386,9 +473,9 @@ function WeekProgressStrip() {
           </div>
         </div>
 
-        <div className="text-center mt-4 border-t border-home-border/50 pt-4">
-          <p className="font-mono text-xs text-home-text-secondary">
-            Week {safeCompletedWeeks.length} of {totalWeeks} complete <span className="text-home-primary mx-2">·</span> Est. {Math.max(0, totalWeeks - safeCompletedWeeks.length)} weeks remaining
+        <div className="text-center mt-4 border-t border-[#21262D] pt-4">
+          <p className="font-mono text-xs text-[#8B949E]">
+            Week {safeCompletedWeeks.length} of {totalWeeks} complete <span className="text-[#F97316] mx-2">·</span> Est. {Math.max(0, totalWeeks - safeCompletedWeeks.length)} weeks remaining
           </p>
         </div>
       </div>
@@ -397,44 +484,78 @@ function WeekProgressStrip() {
 }
 
 // ─── FEATURE HIGHLIGHTS ───
+const FEATURES = [
+  {
+    icon: Search,
+    accent: "#F97316",
+    title: "Fuzzy Search",
+    body: "Instantly find any concept, code snippet, or week across all 60+ topics. Powered by an optimized Fuse.js command palette.",
+    shortcut: "⌘K",
+  },
+  {
+    icon: FileText,
+    accent: "#22D3EE",
+    title: "MDX-Powered Notes",
+    body: "Every week rendered from MDX with full syntax highlighting, architectural callouts, and embedded concept diagrams.",
+  },
+  {
+    icon: CheckCircle2,
+    accent: "#4ADE80",
+    title: "Progress Tracking",
+    body: "Mark weeks complete, track your streak, and see your mastery visually map across all phases backed by robust state.",
+  },
+];
 
 function FeatureHighlights() {
   return (
-    <section className="w-full max-w-7xl mx-auto py-24 px-6 relative">
+    <section className="w-full max-w-7xl mx-auto py-24 px-6 relative z-10">
       <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid md:grid-cols-3 gap-6">
 
-        <motion.div variants={scaleUp} whileHover={{ y: -5 }} className="bg-home-surface/60 backdrop-blur-md border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-home-primary/60 transition-all duration-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] shadow-xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-home-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <div className="w-12 h-12 rounded-full bg-home-primary/10 flex items-center justify-center mb-6 relative z-10 border border-home-primary/20 group-hover:scale-110 transition-transform duration-500">
-            <Search className="w-6 h-6 text-home-primary" />
-          </div>
-          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3 relative z-10">Fuzzy Search</h3>
-          <p className="font-ui text-home-text-secondary leading-relaxed relative z-10">
-            Instantly find any concept, code snippet, or week across all 60+ topics. Powered by an optimized Fuse.js command palette.
-          </p>
-        </motion.div>
+        {FEATURES.map((f) => (
+          <motion.div
+            key={f.title}
+            variants={scaleUp}
+            whileHover={{ y: -5 }}
+            className={cn(
+              "group relative p-6 rounded-xl",
+              "bg-[#0D1117] border border-[#21262D]",
+              "hover:border-[#21262D]/0",
+              "transition-all duration-300",
+              "before:absolute before:inset-0 before:rounded-xl before:p-[1px]",
+              "before:bg-gradient-to-br before:from-transparent before:via-transparent",
+              "before:to-transparent before:opacity-0",
+              "hover:before:opacity-100",
+              "overflow-hidden shadow-xl"
+            )}
+            style={{
+              "--accent": f.accent,
+            } as React.CSSProperties}
+          >
+            {/* Icon circle */}
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110"
+              style={{ background: `${f.accent}18`, border: `1px solid ${f.accent}30` }}
+            >
+              <f.icon className="w-5 h-5" style={{ color: f.accent }} />
+            </div>
 
-        <motion.div variants={scaleUp} whileHover={{ y: -5 }} className="bg-home-surface/60 backdrop-blur-md border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-[#58A6FF]/60 transition-all duration-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] shadow-xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#58A6FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <div className="w-12 h-12 rounded-full bg-[#58A6FF]/10 flex items-center justify-center mb-6 relative z-10 border border-[#58A6FF]/20 group-hover:scale-110 transition-transform duration-500">
-            <FileText className="w-6 h-6 text-[#58A6FF]" />
-          </div>
-          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3 relative z-10">MDX-Powered Notes</h3>
-          <p className="font-ui text-home-text-secondary leading-relaxed relative z-10">
-            Every week rendered from MDX with full syntax highlighting, architectural callouts, and embedded concept diagrams.
-          </p>
-        </motion.div>
+            <h3 className="font-syne font-semibold text-[#E6EDF3] mb-2 flex items-center gap-2">
+              {f.title}
+              {f.shortcut && (
+                <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[#21262D] text-[#8B949E]">
+                  {f.shortcut}
+                </kbd>
+              )}
+            </h3>
+            <p className="text-sm text-[#8B949E] leading-relaxed">{f.body}</p>
 
-        <motion.div variants={scaleUp} whileHover={{ y: -5 }} className="bg-home-surface/60 backdrop-blur-md border border-home-border rounded-2xl p-8 relative overflow-hidden group hover:border-[#3FB950]/60 transition-all duration-500 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] shadow-xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#3FB950]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <div className="w-12 h-12 rounded-full bg-[#3FB950]/10 flex items-center justify-center mb-6 relative z-10 border border-[#3FB950]/20 group-hover:scale-110 transition-transform duration-500">
-            <CheckCircle2 className="w-6 h-6 text-[#3FB950]" />
-          </div>
-          <h3 className="font-display text-2xl font-bold text-home-text-primary mb-3 relative z-10">Progress Tracking</h3>
-          <p className="font-ui text-home-text-secondary leading-relaxed relative z-10">
-            Mark weeks complete, track your streak, and see your mastery visually map across all phases backed by robust state.
-          </p>
-        </motion.div>
+            {/* Hover glow accent */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: `linear-gradient(90deg, transparent, ${f.accent}60, transparent)` }}
+            />
+          </motion.div>
+        ))}
 
       </motion.div>
     </section>
@@ -442,36 +563,44 @@ function FeatureHighlights() {
 }
 
 // ─── FOOTER ───
+const footerCurriculumLinks = [
+  { label: "Phase 0: Orientation",            href: "/curriculum" },
+  { label: "Phase 1: DE Foundations",         href: "/curriculum" },
+  { label: "Phase 2: Advanced Engineering",   href: "/curriculum" },
+  { label: "Phase 3: Data Analytics",         href: "/curriculum" },
+  { label: "Phase 4: Capstone + AI",          href: "/curriculum" },
+];
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#05080A] border-t border-home-primary/20 pt-16 pb-8 px-6 mt-12 relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-home-primary to-transparent opacity-50" />
+    <footer className="w-full bg-[#05080A] border-t border-[#F97316]/20 pt-16 pb-8 px-6 mt-12 relative overflow-hidden z-10">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[#F97316] to-transparent opacity-50" />
 
       <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 mb-16">
         <div className="col-span-1">
           <div className="flex items-center gap-2 mb-4">
-            <Code2 className="w-6 h-6 text-home-primary" />
+            <Code2 className="w-6 h-6 text-[#F97316]" />
             <span className="font-display font-bold text-xl text-white">DE Notes</span>
           </div>
-          <p className="font-ui text-home-text-secondary max-w-xs text-sm">
+          <p className="font-ui text-[#8B949E] max-w-xs text-sm">
             A premium interactive knowledge base to master modern Data Engineering pipelines and analytics.
           </p>
         </div>
 
         <div className="col-span-1">
           <h4 className="font-mono text-xs text-white mb-6 tracking-widest">CURRICULUM</h4>
-          <ul className="space-y-3 font-ui text-sm text-home-text-secondary">
-            <li><Link href="/curriculum" className="hover:text-home-primary transition-colors">Phase 1: Foundations</Link></li>
-            <li><Link href="/curriculum" className="hover:text-home-primary transition-colors">Phase 2: Spark &amp; Delta</Link></li>
-            <li><Link href="/curriculum" className="hover:text-home-primary transition-colors">Phase 3: DAX &amp; Analytics</Link></li>
-            <li><Link href="/curriculum" className="hover:text-home-primary transition-colors">Phase 4: Copilot &amp; Capstone</Link></li>
+          <ul className="space-y-3 font-ui text-sm text-[#8B949E]">
+            {footerCurriculumLinks.map(link => (
+              <li key={link.label}>
+                <Link href={link.href} className="hover:text-[#F97316] transition-colors">{link.label}</Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         <div className="col-span-1">
           <h4 className="font-mono text-xs text-white mb-6 tracking-widest">LEGAL</h4>
-          <ul className="space-y-3 font-ui text-sm text-home-text-secondary">
+          <ul className="space-y-3 font-ui text-sm text-[#8B949E]">
             <li><Link href="/" className="hover:text-white transition-colors">Privacy Policy</Link></li>
             <li><Link href="/" className="hover:text-white transition-colors">Terms of Service</Link></li>
             <li><a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub Repository</a></li>
@@ -479,79 +608,87 @@ function Footer() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto border-t border-home-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="font-mono text-xs text-home-text-secondary">Built for data engineers</p>
-        <p className="font-mono text-xs text-home-text-secondary">© 2025 Data Engineering Notes</p>
+      <div className="max-w-7xl mx-auto border-t border-[#21262D] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="font-mono text-xs text-[#8B949E]">Built for data engineers</p>
+        <p className="font-mono text-xs text-[#8B949E]">© 2025 Data Engineering Notes</p>
       </div>
     </footer>
   );
 }
 
 // ─── MAIN PAGE ───
-
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { userId, isLoaded } = useAuth();
 
-  const h1Title = ["Master", "Data"];
-  const h1Sub = ["Engineering."];
-
   return (
-    <main className="relative min-h-screen bg-home-bg overflow-x-hidden selection:bg-home-primary/30 text-home-text-primary pb-0">
+    <main className="relative min-h-screen bg-[#080C10] overflow-x-hidden selection:bg-[#F97316]/30 text-[#E6EDF3] pb-0">
 
       {/* Background atmosphere */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Noise and Grid are fixed but lightweight */}
-        <div className="fixed inset-0 bg-noise opacity-[0.04]" />
-        <div
-          className="fixed inset-0 opacity-[0.03] animate-drift"
-          style={{ backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)', backgroundSize: '40px 40px' }}
-        />
-        {/* Heavy blurs are isolated to the top of the page so they don't break scrolling performance */}
-        <div className="absolute top-0 left-0 right-0 h-[150vh] overflow-hidden">
-          <div className="absolute top-[80%] left-[-5%] w-[600px] h-[600px] bg-home-glow rounded-full blur-[120px]" />
-          <div className="absolute top-[5%] right-[-10%] w-[500px] h-[500px] bg-[#58A6FF]/[0.08] rounded-full blur-[100px]" />
-          <div className="absolute top-[40%] left-[45%] w-[300px] h-[300px] bg-[#BC8CFF]/[0.05] rounded-full blur-[90px]" />
-        </div>
-      </div>
+      <BackgroundEffects />
 
       {/* Navbar */}
       <motion.nav
         variants={navVariant}
         initial="hidden"
         animate="visible"
-        className="fixed top-0 left-0 w-full z-50 h-16 backdrop-blur-md bg-home-bg/80 border-b border-home-border px-6 flex items-center justify-between"
+        className="fixed top-0 left-0 w-full z-50 h-16 backdrop-blur-md bg-[#080C10]/80 border-b border-[#21262D] px-6 flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
-          <Code2 className="w-5 h-5 text-home-primary" />
+          <Code2 className="w-5 h-5 text-[#F97316]" />
           <span className="font-display font-bold text-lg text-white tracking-wide">DE Notes</span>
         </div>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-ui text-home-text-secondary">
+        <div className="hidden md:flex items-center gap-8 text-sm font-ui text-[#8B949E]">
           <Link href="/curriculum" className="hover:text-white transition-colors">Curriculum</Link>
           <Link href="#curriculum" className="hover:text-white transition-colors">Phases</Link>
-          <button onClick={() => setIsSearchOpen(true)} className="flex items-center gap-2 hover:text-white transition-colors">
+          <Link href="/progress" className="hover:text-white transition-colors">Progress</Link>
+          <button onClick={() => setIsSearchOpen(true)} className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
             Search
-            <kbd className="px-1.5 py-0.5 rounded bg-home-border text-[10px] font-mono text-home-text-secondary border border-zinc-700">⌘K</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-[#21262D] text-[10px] font-mono text-[#8B949E] border border-zinc-700">⌘K</kbd>
           </button>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {!isLoaded ? null : !userId ? (
             <>
               <SignInButton mode="modal">
-                <button className="text-sm font-ui text-home-text-secondary hover:text-white transition-colors">Sign In</button>
+                <button
+                  className={cn(
+                    "text-sm text-[#8B949E] hover:text-[#E6EDF3] transition-colors duration-150",
+                    "px-3 py-1.5 rounded-lg border border-[#21262D]",
+                    "hover:border-[#F97316]/30 hover:bg-[#F97316]/5 cursor-pointer hidden sm:flex text-center items-center justify-center whitespace-nowrap"
+                  )}
+                >
+                  Sign In
+                </button>
               </SignInButton>
-              <Link href="/curriculum" className="text-sm font-medium bg-home-primary text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors shadow-[0_0_15px_rgba(249,115,22,0.3)]">
-                Start Learning &rarr;
-              </Link>
+              <SignInButton mode="modal">
+                <button
+                  className={cn(
+                    "text-sm font-medium px-4 py-1.5 rounded-lg border-transparent",
+                    "bg-[#F97316] text-[#080C10] hover:bg-[#fb923c]",
+                    "transition-all duration-150 hover:scale-[1.02]",
+                    "shadow-[0_0_20px_rgba(249,115,22,0.25)] cursor-pointer hidden sm:flex text-center items-center justify-center whitespace-nowrap"
+                  )}
+                >
+                  Start Learning →
+                </button>
+              </SignInButton>
             </>
           ) : (
             <>
-              <Link href="/curriculum" className="text-sm font-medium bg-home-surface border border-home-border text-white px-4 py-1.5 rounded-md hover:border-home-primary transition-colors mr-2">
-                Dashboard &rarr;
+              <Link
+                href="/dashboard"
+                className={cn(
+                  "text-sm font-medium px-4 py-1.5 rounded-lg border-transparent",
+                  "bg-[#F97316] text-[#080C10] hover:bg-[#fb923c]",
+                  "transition-all duration-150 cursor-pointer hidden sm:flex text-center items-center justify-center whitespace-nowrap mr-2"
+                )}
+              >
+                Dashboard →
               </Link>
-              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8" } }} />
+              <UserButton />
             </>
           )}
         </div>
@@ -560,58 +697,42 @@ export default function Home() {
       <CommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
       {/* Hero */}
-      <section className="relative z-10 w-full max-w-7xl mx-auto pt-40 pb-20 px-6 min-h-screen flex flex-col justify-center">
+      <section className="relative z-10 w-full max-w-7xl mx-auto pt-40 pb-20 px-6 min-h-[90vh] flex flex-col justify-center">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
 
           <div className="flex flex-col items-start max-w-2xl">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-2 h-2 rounded-full bg-[#3FB950] animate-[ping_2s_infinite]" />
-              <p className="font-mono text-xs tracking-[0.2em] text-home-primary">
+              <p className="font-mono text-xs tracking-[0.2em] text-[#F97316]">
                 [ COHORT 2025 · 15 WEEKS ]
               </p>
             </div>
 
-            <h1 className="font-display font-[800] text-[52px] lg:text-[80px] leading-[1.05] mb-6 flex flex-col items-start overflow-hidden">
-              <div className="flex flex-wrap gap-x-4">
-                {h1Title.map((word, i) => (
-                  <motion.span
-                    key={word}
-                    variants={heroWordVariant}
-                    custom={i}
-                    initial="hidden"
-                    animate="visible"
-                    className="bg-clip-text text-transparent bg-gradient-to-br from-white via-zinc-100 to-zinc-400 drop-shadow-sm pb-2"
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-x-4">
-                {h1Sub.map((word, i) => (
-                  <motion.span
-                    key={word}
-                    variants={heroWordVariant}
-                    custom={h1Title.length + i}
-                    initial="hidden"
-                    animate="visible"
-                    className="bg-clip-text text-transparent bg-gradient-to-br from-home-primary via-orange-400 to-orange-600 drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] pb-2"
-                  >
-                    {word.includes(".") ? (
-                      <span>
-                        {word.replace(".", "")}
-                        <span className="text-white">.</span>
-                      </span>
-                    ) : word}
-                  </motion.span>
-                ))}
-              </div>
-            </h1>
+            <motion.h1
+              className="flex flex-wrap gap-x-[0.25em] leading-[1.05] font-display font-[800] text-[52px] lg:text-[80px] mb-6"
+              variants={staggerContainer}
+              initial="initial"
+              animate="animate"
+            >
+              {["Master", "Data", "Engineering."].map((word) => (
+                <motion.span
+                  key={word}
+                  variants={fadeInUp}
+                  className={cn(
+                    "inline-block",
+                    word === "Engineering." ? "text-[#F97316] drop-shadow-[0_0_15px_rgba(249,115,22,0.3)]" : "text-[#E6EDF3]"
+                  )}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </motion.h1>
 
             <motion.p
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="font-ui text-lg text-home-text-secondary max-w-md mb-10 leading-relaxed font-light"
+              className="font-ui text-lg text-[#8B949E] max-w-md mb-10 leading-relaxed font-light"
             >
               A structured 15-week curriculum covering Python, SQL, PySpark, Databricks, dbt, Azure, and Power BI — with interactive notes, progress tracking, and real supply chain capstone projects.
             </motion.p>
@@ -620,40 +741,67 @@ export default function Home() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="flex flex-col sm:flex-row items-center gap-5 w-full relative z-20"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-4 w-full"
             >
               {!isLoaded ? null : !userId ? (
                 <SignInButton mode="modal">
-                  <button className="relative w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-home-primary to-orange-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 overflow-hidden group shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all hover:scale-105 active:scale-95">
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                    <span className="relative z-10">Begin Week 0</span>
-                    <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                  <button
+                    className={cn(
+                      "group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 rounded-xl",
+                      "bg-[#F97316] text-[#080C10] font-medium text-sm border-transparent",
+                      "hover:bg-[#fb923c] transition-all duration-150",
+                      "shadow-[0_0_30px_rgba(249,115,22,0.3)]",
+                      "hover:shadow-[0_0_40px_rgba(249,115,22,0.45)]",
+                      "hover:scale-[1.02] cursor-pointer w-full sm:w-auto text-center"
+                    )}
+                  >
+                    Begin Week 0
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
                 </SignInButton>
               ) : (
-                <Link href="/curriculum" className="relative w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-home-primary to-orange-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 overflow-hidden group shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all hover:scale-105 active:scale-95">
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                  <span className="relative z-10">Resume Pipeline</span>
-                  <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    "group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 rounded-xl",
+                    "bg-[#F97316] text-[#080C10] font-medium text-sm border-transparent",
+                    "hover:bg-[#fb923c] transition-all duration-150",
+                    "shadow-[0_0_30px_rgba(249,115,22,0.3)] cursor-pointer w-full sm:w-auto text-center"
+                  )}
+                >
+                  Continue Learning
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               )}
 
-              <Link href="#curriculum" className="w-full sm:w-auto px-8 py-3.5 bg-home-surface/50 backdrop-blur-md border border-home-border/80 text-home-text-primary font-medium rounded-xl hover:bg-home-surface transition-all text-center group overflow-hidden shadow-xl">
-                <span className="group-hover:text-white transition-colors relative z-10">View Curriculum</span>
+              <Link
+                href="#curriculum"
+                className={cn(
+                  "flex items-center justify-center sm:justify-start gap-2 px-5 py-3 rounded-xl text-sm",
+                  "border border-[#21262D] text-[#8B949E]",
+                  "hover:border-[#F97316]/30 hover:text-[#E6EDF3]",
+                  "transition-all duration-150 w-full sm:w-auto text-center"
+                )}
+              >
+                View Curriculum
               </Link>
             </motion.div>
 
-            <motion.div
+            <motion.p
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-8 font-mono text-xs text-home-text-secondary flex items-center gap-2"
+              className="flex items-center gap-2 text-xs font-mono text-[#8B949E] mt-6"
             >
-              15 weeks <span className="text-home-primary">·</span> 4 phases <span className="text-home-primary">·</span> 60+ topics covered
-            </motion.div>
+              <span>15 weeks</span>
+              <span className="text-[#F97316]">·</span>
+              <span>4 phases</span>
+              <span className="text-[#F97316]">·</span>
+              <span>60+ topics covered</span>
+            </motion.p>
           </div>
 
-          <TerminalBlock />
+          <TerminalCard />
 
         </div>
       </section>
