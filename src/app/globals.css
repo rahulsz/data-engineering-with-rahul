@@ -90,3 +90,11 @@
   opacity: 0.04;
   pointer-events: none;
 }
+
+/* highlight.js Next.js specific overrides */
+.hljs-keyword, .hljs-built_in { color: #F97316; }   /* Orange */
+.hljs-title.function_, .hljs-title { color: #38bdf8; }            /* Cyan */
+.hljs-string { color: #22c55e; }                    /* Green */
+.hljs-comment { color: #6B7280; font-style: italic; } /* Gray */
+.hljs-number, .hljs-literal { color: #818cf8; }     /* Indigo */
+.hljs-params, .hljs-variable { color: #D1D5DB; }    /* Light Gray */

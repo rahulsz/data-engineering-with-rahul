@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Syne, IBM_Plex_Mono, DM_Sans } from "next/font/googl
 import { ClerkProvider } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
 import { SITE_CONFIG } from "@/config/site-config";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -37,12 +38,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" suppressHydrationWarning>
         <head />
         <body className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} ${ibmPlexMono.variable} ${dmSans.variable} font-sans antialiased`}>
-          <script
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: `try{if(localStorage.theme==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(_){}`
-            }}
-          />
           <AppShell>
             {children}
           </AppShell>

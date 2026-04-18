@@ -1,0 +1,53 @@
+---
+title: "Week 3 — SQL Fundamentals"
+description: "Core SQL concepts for creating tables, writing queries, using joins, and aggregating data."
+weekNumber: 3
+phase: "foundations"
+tags: ["SQL", "DDL", "DML", "Joins", "Aggregation"]
+estimatedMinutes: 75
+lastUpdated: "2026-04-18"
+---
+
+## Overview
+Core SQL concepts for creating tables, writing queries, using joins, and aggregating data. These queries are foundational for downstream transformations.
+
+## Key Concepts
+- **DDL / DML** — Data Definition Language (`CREATE`/`DROP`) vs Data Manipulation Language (`INSERT`/`UPDATE`).
+- **JOINs** — Combining rows from tables: `INNER`, `LEFT`, `RIGHT`, `FULL`.
+- **GROUP BY & HAVING** — Aggregating data with post-aggregation filtering.
+- **Window Functions** — Calculations across a set of rows related to the current row.
+- **CTEs** — Common Table Expressions to break down complex queries.
+
+## Code Examples
+
+```sql
+-- Creating tables and inserting data
+CREATE TABLE shipments (
+    shipment_id INT PRIMARY KEY,
+    carrier VARCHAR(50),
+    cost DECIMAL(10,2),
+    delivery_date DATE
+);
+
+INSERT INTO shipments VALUES (1, 'FedEx', 15.50, '2025-01-20');
+```
+
+```sql
+-- CTE and Window Function
+WITH RankedShipments AS (
+    SELECT 
+        carrier,
+        cost,
+        ROW_NUMBER() OVER(PARTITION BY carrier ORDER BY cost DESC) as rank
+    FROM shipments
+)
+SELECT * FROM RankedShipments WHERE rank = 1;
+```
+
+## Real-World Application
+At an analytics platform, analysts join `users` with `page_views` to find the top 10 most active users. `GROUP BY` aggregates the views, while a Window Function limits results by region.
+
+## Practice Exercises
+- **Beginner**: Write a `SELECT` to find all employees hired after 2020.
+- **Intermediate**: `INNER JOIN` Orders and Customers, calculating total spent per customer.
+- **Advanced**: Use a CTE with `DENSE_RANK()` to find the second highest paid employee per department.

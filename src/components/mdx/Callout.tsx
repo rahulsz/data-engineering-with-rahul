@@ -10,19 +10,19 @@ interface CalloutProps {
 const config = {
   info: {
     icon: InfoIcon,
-    styles: "border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-900 dark:text-blue-200",
+    styles: "border-blue-500 bg-[#16202D] text-blue-400",
   },
   warning: {
     icon: TriangleAlert,
-    styles: "border-amber-500 bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200",
+    styles: "border-amber-500 bg-[#211A16] text-amber-500",
   },
   tip: {
     icon: Lightbulb,
-    styles: "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-200",
+    styles: "border-[#F97316] bg-[#1a1f26] text-zinc-300",
   },
   danger: {
     icon: ShieldAlert,
-    styles: "border-rose-500 bg-rose-50 dark:bg-rose-950/30 text-rose-900 dark:text-rose-200",
+    styles: "border-rose-500 bg-[#251619] text-rose-500",
   },
 };
 
@@ -30,12 +30,12 @@ export default function Callout({ type, title, children }: CalloutProps) {
   const { icon: Icon, styles } = config[type];
 
   return (
-    <aside className={cn("my-6 rounded-r-lg border-l-4 p-4", styles)}>
+    <aside className={cn("my-8 rounded-r-xl border-l-[3px] p-6", styles)}>
       <div className="flex items-start gap-4">
-        <Icon className="mt-0.5 h-5 w-5 shrink-0" />
+        <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", type === "tip" ? "text-[#F97316]" : "")} />
         <div className="flex-1">
-          {title && <h5 className="mb-2 font-semibold leading-none tracking-tight">{title}</h5>}
-          <div className="prose-sm dark:prose-invert max-w-none">
+          {title && <h5 className={cn("mb-2 font-bold text-[15px] leading-none", type === "tip" ? "text-white" : "")}>{title}</h5>}
+          <div className="prose-sm text-[#9CA3AF] max-w-none prose-p:leading-relaxed">
             {children}
           </div>
         </div>

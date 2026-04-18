@@ -23,8 +23,10 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery("");
-      setSelectedIndex(0);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedIndex(0);
       fetch("/api/search")
         .then(res => res.json())
         .then(data => setNotes(data))
@@ -64,6 +66,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
   }, [isOpen, results, selectedIndex, onClose, router]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0);
   }, [query]);
 

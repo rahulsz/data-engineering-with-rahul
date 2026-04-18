@@ -11,6 +11,7 @@ interface ProgressState {
   isComplete: (week: number) => boolean;
   getCompletionPercentage: () => number;
   resetProgress: () => void;
+  hydrateFromServer: (weeks: number[]) => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -45,7 +46,9 @@ export const useProgressStore = create<ProgressState>()(
         return Math.round(raw * 10) / 10;
       },
       
-      resetProgress: () => set({ completedWeeks: [] })
+      resetProgress: () => set({ completedWeeks: [] }),
+      
+      hydrateFromServer: (weeks: number[]) => set({ completedWeeks: weeks })
     }),
     {
       name: "de-rahul-progress"

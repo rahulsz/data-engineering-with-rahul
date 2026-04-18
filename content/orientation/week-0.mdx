@@ -1,0 +1,58 @@
+---
+title: "Week 0 — Intro to Data Engineering & Setup"
+description: "An introduction to the data engineering landscape and setting up your development environment."
+weekNumber: 0
+phase: "orientation"
+tags: ["Environment", "Data Engineering", "Setup"]
+estimatedMinutes: 15
+lastUpdated: "2026-04-18"
+---
+
+## Welcome
+
+You're about to start a 16-week journey into production-grade Data Engineering. This orientation gets your environment ready and introduces the core landscape.
+
+> Before we write a single pipeline, let's make sure your machine can talk to Python.
+
+## What is Data Engineering?
+
+Data Engineering is the discipline of building the **infrastructure** that lets data flow from raw sources into actionable insights.
+
+| Role | Focus | Core Tools |
+|------|-------|------------|
+| **Data Engineer** | Pipelines, ETL, infrastructure | Python, SQL, Spark |
+| **Data Analyst** | Reports, dashboards | Excel, Power BI, SQL |
+| **Data Scientist** | Models, ML | Python, R, TensorFlow |
+
+## Key Concepts
+
+- **ETL/ELT** — Extract, Transform, Load paradigms. The backbone of every pipeline.
+- **Data Lake** — Raw, unstructured storage at scale.
+- **Data Warehouse** — Structured, optimized storage for analytical queries.
+- **Compute vs Storage** — Modern cloud separation enabling independent scaling.
+- **Databricks** — Unified analytics platform built on Apache Spark.
+
+## Verify Your Environment
+
+Run this directly in your browser to confirm the Python engine is operational:
+
+```python
+import sys
+print(f"Python {sys.version.split()[0]} — WebAssembly OK")
+print("Your browser-based engine is ready.")
+```
+
+## Local Setup
+
+```bash
+# Create and activate a virtual environment
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1   # Windows
+pip install pandas pyspark jupyter
+```
+
+## Practice Exercises
+
+- Create a [Databricks Community Edition](https://community.cloud.databricks.com) account.
+- Write a local Python script that prints your system PATH.
+- Set up Jupyter Lab with Docker Compose.

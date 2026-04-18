@@ -2,23 +2,23 @@
 title: "Week 7 — Data Modelling & Medallion Architecture"
 description: "Designing scalable data models using Star Schema and the Bronze/Silver/Gold Databricks Medallion approach."
 weekNumber: 7
-phase: "phase-2-advanced-engineering"
+phase: "advanced"
 tags: ["Data Modelling", "Medallion Architecture", "Star Schema", "Slowly Changing Dimensions"]
 estimatedMinutes: 90
 lastUpdated: "2025-01-15"
 ---
 
-## 🗺️ Overview
+## Overview
 Designing scalable data models using Star Schema and the Bronze/Silver/Gold Databricks Medallion approach to structure business intelligence efficiently.
 
-## 🧠 Key Concepts
+## Key Concepts
 - **Bronze Layer** — Raw, unmodified data loaded as-is (often JSON, CSV, or raw Parquet).
 - **Silver Layer** — Filtered, cleansed, and augmented data represented as tables.
 - **Gold Layer** — Business-level aggregated data, highly refined and modeled (often a Star Schema).
 - **Fact vs Dimension Tables** — Facts hold measurable metrics (sales), Dimensions hold context strings (dates, stores).
 - **Slowly Changing Dimensions (SCD Type 2)** — Tracking historical changes in dimension records over time.
 
-## 💻 Code Examples
+## Code Examples
 ```sql
 -- Creating a Gold Layer Fact Table
 CREATE TABLE gold.fact_sales (
@@ -44,10 +44,10 @@ WHEN NOT MATCHED THEN
   VALUES (source.emp_id, source.name, source.department, TRUE, current_date(), NULL);
 ```
 
-## 🏭 Real-World Application
+## Real-World Application
 A fintech app streams live transaction logs into a Bronze Delta table. The nightly pipeline cleanses timestamps and unifies currency formats into the Silver table, and finally aggregates data into a Gold Star Schema exposing Daily Active Users to the BI team.
 
-## 🎯 Practice Exercises
-- 🟢 Beginner: Draw a rudimentary Star Schema for a library (Books, Members, Authors -> Checkouts fact table).
-- 🟡 Intermediate: Write a SQL query to transform JSON strings in a Bronze table into structured columns for a Silver table.
-- 🔴 Advanced: Implement an SCD Type 2 pipeline using a PySpark DeltaTable `merge` operation.
+## Practice Exercises
+- **Beginner**: Draw a rudimentary Star Schema for a library (Books, Members, Authors -> Checkouts fact table).
+- **Intermediate**: Write a SQL query to transform JSON strings in a Bronze table into structured columns for a Silver table.
+- **Advanced**: Implement an SCD Type 2 pipeline using a PySpark DeltaTable `merge` operation.

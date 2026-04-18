@@ -1,0 +1,60 @@
+---
+title: "Week 2 — Python + Pandas"
+description: "Data manipulation at scale with Pandas DataFrames, Series, and real-world data cleaning."
+weekNumber: 2
+phase: "foundations"
+tags: ["Python", "Pandas", "DataFrames", "Data Cleaning"]
+estimatedMinutes: 60
+lastUpdated: "2026-04-18"
+---
+
+## Overview
+Pandas is the backbone of Python-based data engineering. Learn to read, clean, transform, and analyze tabular data using DataFrames and Series.
+
+## Key Concepts
+- **Series vs DataFrame** — 1D labeled array vs 2D labeled table structure.
+- **Reading Data** — `pd.read_csv()`, `pd.read_json()`, `pd.read_excel()` for ingestion.
+- **Filtering & Selection** — `.loc[]`, `.iloc[]`, boolean indexing for precise access.
+- **GroupBy & Aggregation** — Split-apply-combine for summary statistics.
+- **Handling Missing Data** — `.isna()`, `.fillna()`, `.dropna()` strategies.
+
+## Code Examples
+
+```python
+import pandas as pd
+
+# Read and inspect
+df = pd.read_csv("shipments.csv")
+print(df.shape)
+print(df.dtypes)
+```
+
+```python
+# Clean and transform
+df["delivery_date"] = pd.to_datetime(df["delivery_date"])
+df["cost"] = df["cost"].fillna(0)
+
+# Aggregate by carrier
+summary = df.groupby("carrier").agg(
+    total_cost=("cost", "sum"),
+    avg_cost=("cost", "mean"),
+    shipment_count=("shipment_id", "count")
+).reset_index()
+
+print(summary)
+```
+
+```python
+# List comprehension vs Pandas vectorization
+# Slow: [row["cost"] * 1.1 for _, row in df.iterrows()]
+# Fast:
+df["cost_with_tax"] = df["cost"] * 1.1
+```
+
+## Real-World Application
+At a logistics company, the data team uses Pandas to clean 500K+ daily tracking records — fixing null carrier fields, normalizing date formats, and computing per-region delivery KPIs before loading into the warehouse.
+
+## Practice Exercises
+- **Beginner**: Read a CSV into a DataFrame and print the first 5 rows and column types.
+- **Intermediate**: Filter a DataFrame to rows where `cost > 100`, then group by `carrier` and compute the mean.
+- **Advanced**: Write a data cleaning pipeline that handles nulls, deduplicates, and exports to Parquet.

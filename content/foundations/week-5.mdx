@@ -2,23 +2,23 @@
 title: "Week 5 — PySpark"
 description: "Distributed data processing using Apache Spark's Python API."
 weekNumber: 5
-phase: "phase-1-foundations"
+phase: "foundations"
 tags: ["PySpark", "Distributed Computing", "DataFrames", "Spark SQL"]
 estimatedMinutes: 120
 lastUpdated: "2025-01-15"
 ---
 
-## 🗺️ Overview
+## Overview
 Distributed data processing using Apache Spark's Python API to tackle Big Data effectively.
 
-## 🧠 Key Concepts
+## Key Concepts
 - **Resilient Distributed Datasets (RDDs)** — Spark's fundamental data structure (mostly abstracted away now).
 - **Spark DataFrames** — Distributed collection of data organized into named columns.
 - **Lazy Evaluation** — Transformations are not executed until an Action (like show or count) is called.
 - **Transformations vs Actions** — filter/select (transformations) vs count/collect (actions).
 - **Broadcasting & Caching** — Optimizing performance for large joins and iterative algorithms.
 
-## 💻 Code Examples
+## Code Examples
 ```python
 from pyspark.sql.functions import col, sum, when
 
@@ -41,10 +41,10 @@ large_facts_df = spark.read.parquet("user_activity/")
 joined_df = large_facts_df.join(broadcast(small_lookup_df), "country_code")
 ```
 
-## 🏭 Real-World Application
+## Real-World Application
 A telecom provider processes 2 TB of call detail records per day. Using PySpark, an engineer distributes the processing across a 50-node cluster, filtering out dropped calls and aggregating total minutes per user using map-reduce paradigms under the hood.
 
-## 🎯 Practice Exercises
-- 🟢 Beginner: Create a simple PySpark DataFrame from a hardcoded list of tuples and show() the results.
-- 🟡 Intermediate: Read a Parquet file, group by a category column, aggregate a sum, and write the result back as a Delta table.
-- 🔴 Advanced: Identify a data skew in a join operation and rewrite the PySpark code using a broadcast join to fix it.
+## Practice Exercises
+- **Beginner**: Create a simple PySpark DataFrame from a hardcoded list of tuples and show() the results.
+- **Intermediate**: Read a Parquet file, group by a category column, aggregate a sum, and write the result back as a Delta table.
+- **Advanced**: Identify a data skew in a join operation and rewrite the PySpark code using a broadcast join to fix it.

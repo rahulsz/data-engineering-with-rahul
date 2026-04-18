@@ -2,13 +2,17 @@ import { notFound } from "next/navigation";
 import { getAllSlugs, getNoteBySlug } from "@/data/mdx-utils";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import CodeBlock from "@/components/mdx/CodeBlock";
 import Callout from "@/components/mdx/Callout";
-import CompleteButton from "./_components/CompleteButton";
+import BottomNavPipeline from "./_components/BottomNavPipeline";
 import { CURRICULUM } from "@/config/site-config";
-import { Clock, CalendarDays, Tag, ChevronLeft, ChevronRight, BookOpen, Layers } from "lucide-react";
+import { Clock, CalendarDays, Tag, ChevronLeft, ChevronRight, BookOpen, Layers, Map, Brain, Code2, Factory, Target, Rocket, Wrench, CheckSquare, Lightbulb, type LucideIcon } from "lucide-react";
+
+import LivePythonBlock from "@/components/mdx/LivePythonBlock";
+import SidebarHydrator from "@/components/layout/SidebarHydrator";
 
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
@@ -27,6 +31,13 @@ export default async function NotePage({
     notFound();
   }
 
+  // Parse H2s for Sidebar TOC dynamically
+  const h2Matches = [...note.content.matchAll(/^##\s+(.*)/gm)];
+  const headings = h2Matches.map(m => ({ 
+    title: m[1], 
+    id: String(m[1]).toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') 
+  }));
+
   const allFlattenedWeeks = CURRICULUM.flatMap(p => 
     p.weeks.map(w => ({ ...w, phaseSlug: p.slug }))
   );
@@ -36,69 +47,55 @@ export default async function NotePage({
   const nextWeek = ctxIdx < allFlattenedWeeks.length - 1 ? allFlattenedWeeks[ctxIdx + 1] : null;
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-6 lg:px-8 pb-32">
+    <div className="max-w-3xl mx-auto py-10 px-8 lg:px-12 pb-32">
+      <SidebarHydrator headings={headings} />
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
-        <div className="flex-1">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-5 text-sm font-medium">
-            <Link href="/curriculum" className="flex items-center gap-1.5 text-brand-600 dark:text-brand-400 hover:text-brand-500 dark:hover:text-brand-300 transition-colors">
-              <Layers className="w-3.5 h-3.5" />
-              Curriculum
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-zinc-300 dark:text-zinc-700" />
-            <span className="text-zinc-500 dark:text-zinc-400">{note.phase}</span>
-          </div>
-
-          {/* Title */}
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 mb-6 leading-[1.1]">
-            {note.title}
-          </h1>
-          
-          {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
-            <div className="flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-800/60 px-3 py-1.5 rounded-full">
-              <Clock className="w-3.5 h-3.5 text-brand-500" />
-              <span>{note.estimatedMinutes || note.readingTime} min read</span>
-            </div>
-            <div className="flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-800/60 px-3 py-1.5 rounded-full">
-              <CalendarDays className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Updated {note.lastUpdated || "Recently"}</span>
-            </div>
-            <div className="flex items-center gap-1.5 bg-zinc-100 dark:bg-zinc-800/60 px-3 py-1.5 rounded-full">
-              <BookOpen className="w-3.5 h-3.5 text-amber-500" />
-              <span>Week {note.weekNumber}</span>
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col gap-6 mb-10">
         
-        <div className="shrink-0 flex self-start md:mt-10">
-          <CompleteButton weekId={note.weekNumber} />
+        {/* Module Pill */}
+        <div className="flex items-center self-start gap-2 bg-[#211713] text-[#F97316] border border-[#F97316]/30 px-3 py-1.5 rounded-full text-xs font-bold tracking-wider">
+          🎓 Module {note.weekNumber}.0
         </div>
+
+        {/* Title */}
+        <h1 className="text-4xl sm:text-[42px] font-bold tracking-tight text-white leading-tight">
+          {note.title}
+        </h1>
+        
+        {/* Description */}
+        <p className="text-[#9CA3AF] text-lg leading-relaxed">
+          {note.description}
+        </p>
+
       </div>
 
-      {/* Tags */}
-      {note.tags && note.tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 mb-10">
-          <Tag className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
-          {note.tags.map((tag: string) => (
-            <Badge key={tag} className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-300 border-none">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
-
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent mb-10" />
+      <div className="h-px bg-[#1C2532] mb-12" />
 
       {/* Article */}
-      <article className="prose prose-zinc dark:prose-invert prose-brand max-w-none prose-headings:scroll-mt-20 prose-a:text-brand-600 dark:prose-a:text-brand-400 hover:prose-a:text-brand-500">
+      <article className="prose prose-zinc dark:prose-invert max-w-none prose-p:text-[#D1D5DB] prose-p:leading-relaxed prose-a:text-[#F97316] prose-strong:text-white pb-6">
         <MDXRemote
           source={note.content}
           options={{
             mdxOptions: {
               remarkPlugins: [remarkGfm],
+              rehypePlugins: [
+                () => (tree: any) => {
+                  const visit = require('unist-util-visit').visit;
+                  visit(tree, 'element', (node: any) => {
+                    if (node.tagName === 'pre' && node.children?.[0]?.tagName === 'code') {
+                      const codeNode = node.children[0];
+                      let rawCode = '';
+                      visit(codeNode, 'text', (textNode: any) => {
+                        rawCode += textNode.value;
+                      });
+                      node.properties = node.properties || {};
+                      node.properties.rawCode = rawCode;
+                    }
+                  });
+                },
+                rehypeHighlight as any
+              ],
             },
           }}
           components={{
@@ -107,48 +104,102 @@ export default async function NotePage({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             Callout: Callout as any,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            pre: ({ children }: any) => <>{children}</>,
+            pre: ({ children, className, rawCode, ...props }: any) => {
+              const childClassName = children?.props?.className || "";
+              const isPython = childClassName.includes("language-python");
+              
+              if (isPython && rawCode) {
+                return (
+                  <LivePythonBlock code={rawCode}>
+                    {children.props.children}
+                  </LivePythonBlock>
+                );
+              }
+
+              return (
+                <div className="my-8 overflow-hidden rounded-xl bg-[#0B111A] border border-[#1e293b]/50 relative">
+                  <div className="overflow-x-auto p-6 pt-6 text-[13px] leading-loose text-zinc-300 font-mono">
+                    <pre {...props} className={className}>
+                      {children}
+                    </pre>
+                  </div>
+                </div>
+              );
+            },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             code: (props: any) => {
               const { className, children } = props;
-              const isInline = !className;
+              const isInline = !className || !className.includes('hljs');
               if (isInline) {
-                return <code className="px-1.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-brand-600 dark:text-brand-400 text-sm font-mono">{children}</code>;
+                return <code className="px-1.5 py-0.5 rounded bg-[#141B23] text-[#F97316] border border-[#1e293b] text-sm font-mono">{children}</code>;
               }
-              const language = className?.replace("language-", "");
-              return <CodeBlock language={language}>{children}</CodeBlock>;
+              return <code className={className}>{children}</code>;
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            h2: (props: any) => <h2 className="text-3xl font-bold mt-12 mb-6 border-b border-zinc-100 dark:border-zinc-800/50 pb-2" {...props} />
+            h2: (props: any) => {
+              const text = typeof props.children === 'string' ? props.children : '';
+              const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+              const lower = text.toLowerCase();
+              const iconMap: [string[], LucideIcon][] = [
+                [['overview', 'welcome'], Map],
+                [['concept', 'key'], Brain],
+                [['code', 'example', 'verify', 'environment'], Code2],
+                [['real-world', 'application', 'context'], Factory],
+                [['practice', 'exercise'], Target],
+                [['setup', 'local', 'install'], Wrench],
+                [['checklist', 'check'], CheckSquare],
+                [['architecture', 'core'], Lightbulb],
+                [['what is', 'data engineering'], Rocket],
+              ];
+              let HeadingIcon: LucideIcon = BookOpen;
+              for (const [keywords, icon] of iconMap) {
+                if (keywords.some(k => lower.includes(k))) { HeadingIcon = icon; break; }
+              }
+              return (
+                <h2 id={id} className="flex items-center gap-3 text-[22px] font-bold mt-14 mb-6 text-[#F97316] tracking-tight scroll-mt-20">
+                  <HeadingIcon className="w-5 h-5 text-[#F97316]/70 shrink-0" />
+                  {props.children}
+                </h2>
+              );
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            h3: (props: any) => <h3 className="text-lg font-bold mt-10 mb-4 text-white" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            p: (props: any) => <p className="text-[#D1D5DB] leading-relaxed mb-6" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ul: (props: any) => <ul className="space-y-3 mb-6 list-disc list-outside ml-5 text-[#D1D5DB]" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ol: (props: any) => <ol className="space-y-3 mb-6 list-decimal list-outside ml-5 text-[#D1D5DB]" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            li: (props: any) => <li className="pl-2" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            blockquote: (props: any) => (
+              <blockquote className="border-l-4 border-[#F97316]/50 bg-[#F97316]/5 pl-6 pr-4 py-4 my-8 rounded-r-lg text-[#D1D5DB] italic" {...props} />
+            ),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            table: (props: any) => (
+              <div className="my-8 overflow-x-auto rounded-xl border border-[#253141]">
+                <table className="w-full text-sm" {...props} />
+              </div>
+            ),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            thead: (props: any) => <thead className="bg-[#19222E] text-left" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            th: (props: any) => <th className="px-5 py-3 text-[11px] font-mono font-bold tracking-widest uppercase text-[#9CA3AF] border-b border-[#253141]" {...props} />,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            td: (props: any) => <td className="px-5 py-3.5 text-[#D1D5DB] border-b border-[#1e293b]/50" {...props} />,
           }}
         />
       </article>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent my-16" />
+      <div className="h-px bg-[#1C2532] my-12" />
 
-      {/* Navigation */}
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        {prevWeek && prevWeek.status === 'available' ? (
-          <Link href={`/curriculum/${prevWeek.phaseSlug}/${prevWeek.slug}`} className="flex-1 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all group hover:shadow-lg">
-            <div className="flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400 mb-2">
-              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Previous Week
-            </div>
-            <div className="font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{prevWeek.title}</div>
-          </Link>
-        ) : <div className="flex-1" />}
-        
-        {nextWeek && nextWeek.status === 'available' ? (
-          <Link href={`/curriculum/${nextWeek.phaseSlug}/${nextWeek.slug}`} className="flex-1 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all group text-right hover:shadow-lg">
-            <div className="flex items-center justify-end gap-1.5 text-sm text-zinc-500 dark:text-zinc-400 mb-2">
-              Next Week
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-            <div className="font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{nextWeek.title}</div>
-          </Link>
-        ) : <div className="flex-1" />}
-      </div>
+      {/* Navigation Footer Pipeline */}
+      <BottomNavPipeline 
+        weekId={note.weekNumber} 
+        nextLesson={nextWeek}
+      />
     </div>
   );
 }

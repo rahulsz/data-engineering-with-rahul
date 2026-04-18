@@ -2,23 +2,23 @@
 title: "Week 4 — Databricks & Delta Lake"
 description: "Understanding the Spark ecosystem, Delta Lake architecture, and modern data table formats."
 weekNumber: 4
-phase: "phase-1-foundations"
+phase: "foundations"
 tags: ["Databricks", "Delta Lake", "ACID", "Time Travel"]
 estimatedMinutes: 60
 lastUpdated: "2025-01-15"
 ---
 
-## 🗺️ Overview
+## Overview
 Understand the Databricks Spark ecosystem, Delta Lake architecture, and modern big data table storage paradigms that bring reliability to massive pipelines.
 
-## 🧠 Key Concepts
+## Key Concepts
 - **Delta Lake** — Open-source storage framework that brings ACID transactions to Apache Spark.
 - **ACID Transactions** — Atomicity, Consistency, Isolation, Durability for big data workloads.
 - **Time Travel** — Ability to query previous versions of a Delta table.
 - **Medallion Architecture** — Bronze (raw), Silver (cleansed), Gold (curated) data design pattern.
 - **Optimize & Z-Order** — Techniques to compact files and colocate related data for faster queries.
 
-## 💻 Code Examples
+## Code Examples
 ```sql
 -- Creating a Delta Table
 CREATE TABLE user_events (
@@ -47,10 +47,10 @@ deltaTable.alias("target").merge(
   .execute()
 ```
 
-## 🏭 Real-World Application
+## Real-World Application
 A streaming service uses Delta Lake's ACID transactions to safely ingest concurrent streams of user watch-history without corrupting the historical table. They use Time Travel to audit changes if a faulty pipeline accidentally deletes data.
 
-## 🎯 Practice Exercises
-- 🟢 Beginner: Write the SQL command to create a basic Delta table.
-- 🟡 Intermediate: Implement a MERGE INTO SQL statement that updates an existing record or inserts a new one.
-- 🔴 Advanced: Write a PySpark script to run OPTIMIZE and ZORDER on an existing Delta table based on a 'date' column.
+## Practice Exercises
+- **Beginner**: Write the SQL command to create a basic Delta table.
+- **Intermediate**: Implement a MERGE INTO SQL statement that updates an existing record or inserts a new one.
+- **Advanced**: Write a PySpark script to run OPTIMIZE and ZORDER on an existing Delta table based on a 'date' column.
