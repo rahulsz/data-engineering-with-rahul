@@ -2,7 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, GitBranch, XCircle, CheckCircle2 } from "lucide-react";
+import { GitBranch, XCircle, CheckCircle2 } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import InteractiveGitGraph from "./InteractiveGitGraph";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } };
@@ -117,51 +119,18 @@ export default function W1Section7Git() {
         </motion.div>
       </div>
 
-      {/* Branch Diagram */}
-      <motion.div variants={fadeUp} className="bg-[#0B111A] border border-[#253141] rounded-xl p-5 overflow-x-auto">
-        <h4 className="text-[#9CA3AF] text-xs tracking-widest uppercase font-sans mb-4">Branching Strategy</h4>
-        <div className="flex flex-col gap-4 min-w-[400px]">
-          {/* main branch */}
-          <div className="flex items-center gap-1">
-            <span className="text-[#22c55e] font-mono font-bold text-xs w-12 shrink-0">main</span>
-            <div className="h-1 flex-1 rounded-full bg-gradient-to-r from-[#22c55e] to-[#22c55e]/60 relative">
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#22c55e] border-2 border-[#0B111A]" />
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#22c55e] border-2 border-[#0B111A]" />
-            </div>
-            <span className="text-[#22c55e] text-xs">▶</span>
-          </div>
-          {/* branch split */}
-          <div className="flex items-center gap-1 pl-12 ml-8">
-            <span className="text-[#c084fc] font-mono text-[10px] w-auto shrink-0">feature/GDP-12</span>
-            <div className="h-1 flex-1 rounded-full bg-gradient-to-r from-[#c084fc] to-[#c084fc]/40 relative">
-              <div className="absolute left-[20%] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#c084fc]" />
-              <div className="absolute left-[50%] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#c084fc]" />
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[#c084fc] text-[10px]">PR → merge ↑</div>
-            </div>
-          </div>
-        </div>
+      <motion.div variants={fadeUp}>
+        <InteractiveGitGraph />
       </motion.div>
 
       {/* Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={scaleIn} className="border border-[#22c55e]/30 bg-[#22c55e]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-[#22c55e]" />
-            <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">Pro Tip</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Commit early, commit often. A commit every 30–60 minutes of work is healthy. Small commits are easier to review, easier to revert, and create a clearer history.
-          </p>
-        </motion.div>
-        <motion.div variants={scaleIn} className="border border-[#ef4444]/30 bg-[#ef4444]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-[#ef4444]" />
-            <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">Warning</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Never commit directly to main. Always work on a feature branch. In professional teams, main is protected — direct pushes are blocked at the GitHub level.
-          </p>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Commit early, commit often. A commit every 30–60 minutes of work is healthy. Small commits are easier to review, easier to revert, and create a clearer history.
+        </CurriculumCallout>
+        <CurriculumCallout type="warning">
+          Never commit directly to main. Always work on a feature branch. In professional teams, main is protected — direct pushes are blocked at the GitHub level.
+        </CurriculumCallout>
       </div>
     </motion.section>
   );

@@ -2,7 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, Component, Folder, FileText } from "lucide-react";
+import { Component, Folder, FileText } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import FunctionFactory from "./FunctionFactory";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
@@ -75,41 +77,9 @@ export default function W1Section5Functions() {
         A function is a stamping machine on a factory floor. You design it once, quality-test it once, and then run every unit through it. You don&apos;t redesign the stamp for every product — you call the same function for every row. This is the core of scalable pipeline design.
       </motion.div>
 
-      {/* Before / After cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={slideFromLeft} className="border border-[#ef4444]/30 bg-[#141B23] rounded-xl p-5 flex flex-col gap-3">
-          <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">❌ Without Functions</h4>
-          <pre className="text-[12px] font-mono text-[#9CA3AF] leading-relaxed whitespace-pre-wrap">
-{`# Row 1
-margin = (899-450)/899*100
-
-# Row 2
-margin = (249-85)/249*100
-
-# Row 3
-margin = (119-32)/119*100
-
-Repeated logic. If formula
-changes, fix in 3 places ❌`}
-          </pre>
-        </motion.div>
-        <motion.div variants={slideFromRight} className="border border-[#22c55e]/30 bg-[#141B23] rounded-xl p-5 flex flex-col gap-3">
-          <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">✅ With Functions</h4>
-          <pre className="text-[12px] font-mono text-[#9CA3AF] leading-relaxed whitespace-pre-wrap">
-{`def calculate_margin(cost, price):
-    return (price-cost)/price
-           * 100
-
-# Works for any product
-calculate_margin(450, 899)
-calculate_margin(85, 249)
-calculate_margin(32, 119)
-
-Change once, fixed everywhere.
-Testable in isolation ✅`}
-          </pre>
-        </motion.div>
-      </div>
+      <motion.div variants={fadeUp}>
+        <FunctionFactory />
+      </motion.div>
 
       {/* Code Block */}
       <motion.div variants={fadeUp} className="bg-[#0B111A] border border-[#253141] rounded-2xl overflow-hidden shadow-2xl">
@@ -149,24 +119,12 @@ Testable in isolation ✅`}
 
       {/* Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={scaleIn} className="border border-[#22c55e]/30 bg-[#22c55e]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-[#22c55e]" />
-            <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">Pro Tip</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Write functions that do ONE thing. calculate_margin() calculates margin. It does not print, it does not write to a file, it does not send an email. Single-responsibility functions are testable, reusable, and debuggable.
-          </p>
-        </motion.div>
-        <motion.div variants={scaleIn} className="border border-[#ef4444]/30 bg-[#ef4444]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-[#ef4444]" />
-            <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">Warning</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Always add type hints to your function signatures. def calculate_margin(unit_cost: float, unit_price: float) -&gt; float is infinitely better than def calculate_margin(a, b). Type hints are documentation.
-          </p>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Write functions that do ONE thing. calculate_margin() calculates margin. It does not print, it does not write to a file, it does not send an email. Single-responsibility functions are testable, reusable, and debuggable.
+        </CurriculumCallout>
+        <CurriculumCallout type="warning">
+          Always add type hints to your function signatures. def calculate_margin(unit_cost: float, unit_price: float) -&gt; float is infinitely better than def calculate_margin(a, b). Type hints are documentation.
+        </CurriculumCallout>
       </div>
     </motion.section>
   );

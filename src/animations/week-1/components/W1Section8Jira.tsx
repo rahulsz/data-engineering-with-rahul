@@ -2,7 +2,8 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, ClipboardList, Square } from "lucide-react";
+import { ClipboardList, Square } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
@@ -117,24 +118,12 @@ export default function W1Section8Jira() {
 
       {/* Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={scaleIn} className="border border-[#22c55e]/30 bg-[#22c55e]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-[#22c55e]" />
-            <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">Pro Tip</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Write Acceptance Criteria before you start coding, not after. ACs are your definition of done. If you don&apos;t know what done looks like before you start, you&apos;ll either over-build or under-build.
-          </p>
-        </motion.div>
-        <motion.div variants={scaleIn} className="border border-[#ef4444]/30 bg-[#ef4444]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-[#ef4444]" />
-            <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">Warning</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            User Stories are not technical tasks. &ldquo;Write a for loop to process CSV rows&rdquo; is a task. &ldquo;As a supply chain analyst, I want daily stockout flags so I can trigger reorders&rdquo; is a User Story. Tasks live inside stories as sub-tasks.
-          </p>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Write Acceptance Criteria before you start coding, not after. ACs are your definition of done. If you don&apos;t know what done looks like before you start, you&apos;ll either over-build or under-build.
+        </CurriculumCallout>
+        <CurriculumCallout type="warning">
+          User Stories are not technical tasks. &ldquo;Write a for loop to process CSV rows&rdquo; is a task. &ldquo;As a supply chain analyst, I want daily stockout flags so I can trigger reorders&rdquo; is a User Story. Tasks live inside stories as sub-tasks.
+        </CurriculumCallout>
       </div>
     </motion.section>
   );

@@ -2,7 +2,8 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Wrench, BookHeart, Server, Database, Clock, CloudCog, Check, Lightbulb, AlertTriangle, MonitorPlay } from "lucide-react";
+import { Wrench, BookHeart, Server, Database, Clock, CloudCog, Check, MonitorPlay } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import CodeBlock from "@/components/mdx/CodeBlock";
@@ -196,25 +197,13 @@ print("   bronze | silver | gold — ready to build.")`;
 
       {/* Callouts */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={slideUp} className="flex gap-4 p-5 rounded-xl bg-[#ef4444]/5 border border-[#ef4444]/20">
-          <AlertTriangle className="w-6 h-6 text-[#ef4444] shrink-0 mt-0.5" />
-          <div className="flex flex-col gap-1">
-            <h5 className="text-[#ef4444] font-bold text-sm tracking-wide">COMMON MISTAKE</h5>
-            <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-              Clusters auto-terminate after 2 hours. Your notebook code is always safe — but all in-memory variables are gone. Always re-run cells from the top after a restart.
-            </p>
-          </div>
-        </motion.div>
+        <CurriculumCallout type="warning" title="COMMON MISTAKE">
+          Clusters auto-terminate after 2 hours. Your notebook code is always safe — but all in-memory variables are gone. Always re-run cells from the top after a restart.
+        </CurriculumCallout>
         
-        <motion.div variants={slideUp} className="flex gap-4 p-5 rounded-xl bg-[#38bdf8]/5 border border-[#38bdf8]/20">
-          <Lightbulb className="w-6 h-6 text-[#38bdf8] shrink-0 mt-0.5" />
-          <div className="flex flex-col gap-1">
-            <h5 className="text-[#38bdf8] font-bold text-sm tracking-wide">PRO TIP</h5>
-            <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-              Name your cluster intentionally: <code>globalmart-dev-[yourname]</code>. In real teams, clusters are named after the project they serve. This signals infrastructure awareness in interviews.
-            </p>
-          </div>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Name your cluster intentionally: <code>globalmart-dev-[yourname]</code>. In real teams, clusters are named after the project they serve. This signals infrastructure awareness in interviews.
+        </CurriculumCallout>
       </motion.div>
 
       {/* Setup Validation Code Block */}

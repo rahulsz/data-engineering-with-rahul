@@ -2,7 +2,8 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Hammer, Repeat, PackageOpen, AlertTriangle, Lightbulb, BookOpen } from "lucide-react";
+import { Hammer, Repeat, PackageOpen, BookOpen } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
 import CodeBlock from "@/components/mdx/CodeBlock";
 
 export default function Section2CoreConcepts() {
@@ -182,25 +183,13 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
 
       {/* Callouts */}
       <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={cardScale} className="flex gap-4 p-5 rounded-xl bg-[#22c55e]/5 border border-[#22c55e]/20">
-          <Lightbulb className="w-6 h-6 text-[#22c55e] shrink-0 mt-0.5" />
-          <div className="flex flex-col gap-1">
-            <h5 className="text-[#22c55e] font-bold text-sm tracking-wide">PRO TIP</h5>
-            <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-              If you internalize the 3-layer model in Week 0, every architecture diagram you see for the rest of your career will immediately make sense.
-            </p>
-          </div>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          If you internalize the 3-layer model in Week 0, every architecture diagram you see for the rest of your career will immediately make sense.
+        </CurriculumCallout>
 
-        <motion.div variants={cardScale} className="flex gap-4 p-5 rounded-xl bg-[#ef4444]/5 border border-[#ef4444]/20">
-          <AlertTriangle className="w-6 h-6 text-[#ef4444] shrink-0 mt-0.5" />
-          <div className="flex flex-col gap-1">
-            <h5 className="text-[#ef4444] font-bold text-sm tracking-wide">WARNING</h5>
-            <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-              Don't confuse Data Engineering with Data Science. You build the highway. They drive the car.
-            </p>
-          </div>
-        </motion.div>
+        <CurriculumCallout type="warning">
+          Don't confuse Data Engineering with Data Science. You build the highway. They drive the car.
+        </CurriculumCallout>
       </motion.div>
 
       {/* Code Block Mental Model */}

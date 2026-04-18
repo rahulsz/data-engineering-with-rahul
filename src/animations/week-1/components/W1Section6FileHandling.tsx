@@ -2,7 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, FileText, FileJson, FolderInput, Search, Plus, ClipboardCheck } from "lucide-react";
+import { FileText, FileJson, FolderInput, Search, Plus, ClipboardCheck } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import IOFlowVisualizer from "./IOFlowVisualizer";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
@@ -133,41 +135,18 @@ PO-002,SKU-32201,200`}
         </motion.div>
       </motion.div>
 
-      {/* 5-Step Pipeline */}
-      <motion.div variants={stagger} className="flex flex-wrap items-center justify-center gap-2">
-        {pipelineSteps.map((step, i) => (
-          <React.Fragment key={i}>
-            <motion.div variants={nodeReveal} className={`flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border ${step.color} text-xs font-mono font-bold`}>
-              {step.icon}
-              {step.label}
-            </motion.div>
-            {i < pipelineSteps.length - 1 && (
-              <motion.span variants={fadeUp} className="text-[#6B7280] text-sm">──→</motion.span>
-            )}
-          </React.Fragment>
-        ))}
+      <motion.div variants={fadeUp}>
+        <IOFlowVisualizer />
       </motion.div>
 
       {/* Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={scaleIn} className="border border-[#22c55e]/30 bg-[#22c55e]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-[#22c55e]" />
-            <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">Pro Tip</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Always use &apos;with open()&apos; — never open() without it. The &apos;with&apos; statement guarantees the file is closed even if your code crashes mid-processing.
-          </p>
-        </motion.div>
-        <motion.div variants={scaleIn} className="border border-[#ef4444]/30 bg-[#ef4444]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-[#ef4444]" />
-            <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">Warning</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Never hardcode file paths as strings in your pipeline logic. Use a config dictionary or environment variable at the top of the file.
-          </p>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Always use &apos;with open()&apos; — never open() without it. The &apos;with&apos; statement guarantees the file is closed even if your code crashes mid-processing.
+        </CurriculumCallout>
+        <CurriculumCallout type="warning">
+          Never hardcode file paths as strings in your pipeline logic. Use a config dictionary or environment variable at the top of the file.
+        </CurriculumCallout>
       </div>
     </motion.section>
   );

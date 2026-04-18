@@ -2,7 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, Repeat } from "lucide-react";
+import { Repeat } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import ConveyorSimulator from "./ConveyorSimulator";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -105,36 +107,8 @@ export default function W1Section4Loops() {
         Imagine a warehouse worker checking every box on a conveyor belt. For each box: if the label is damaged, put it in the reject pile. If the quantity is zero, flag it for reorder. Otherwise, shelve it. That manual process is exactly what a Python loop with conditions automates for your data files.
       </motion.div>
 
-      {/* Decision Tree */}
-      <motion.div variants={stagger} className="bg-[#0B111A] border border-[#253141] rounded-2xl p-6 md:p-8 shadow-2xl">
-        <h4 className="text-[#9CA3AF] text-xs tracking-widest uppercase font-sans mb-6">Control Flow Decision Tree</h4>
-        <div className="flex flex-col items-center gap-3">
-          {treeNodes.map((n, i) => (
-            <React.Fragment key={i}>
-              <motion.div variants={nodeReveal} className={`px-5 py-2.5 rounded-lg border ${n.color} ${n.bg} text-[#D1D5DB] text-sm font-mono`}>
-                {n.label}
-              </motion.div>
-              {i < treeNodes.length - 1 && (
-                <motion.div variants={fadeUp} className="w-px h-6 bg-gradient-to-b from-[#38bdf8] to-[#f59e0b]" />
-              )}
-            </React.Fragment>
-          ))}
-          <motion.div variants={fadeUp} className="w-px h-4 bg-[#f59e0b]/40" />
-          <div className="grid grid-cols-2 gap-8 w-full max-w-md">
-            {branches.map((b, i) => (
-              <motion.div key={i} variants={nodeReveal} className={`text-center text-xs font-mono ${b.color}`}>
-                {b.label}
-              </motion.div>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 gap-8 w-full max-w-md">
-            {leafNodes.map((n, i) => (
-              <motion.div key={i} variants={nodeReveal} className={`text-center px-4 py-2 rounded-lg border ${n.border} bg-[#141B23] text-sm font-mono ${n.color}`}>
-                {n.label}
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      <motion.div variants={fadeUp}>
+        <ConveyorSimulator />
       </motion.div>
 
       {/* Code Block */}
@@ -171,24 +145,12 @@ export default function W1Section4Loops() {
 
       {/* Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={scaleIn} className="border border-[#22c55e]/30 bg-[#22c55e]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-[#22c55e]" />
-            <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">Pro Tip</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Always validate BEFORE you transform. In production pipelines, the order is: Read → Validate → Flag bad rows → Transform clean rows. Never transform first and validate after. Bad data that gets transformed becomes bad data that looks clean — the worst kind.
-          </p>
-        </motion.div>
-        <motion.div variants={scaleIn} className="border border-[#ef4444]/30 bg-[#ef4444]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-[#ef4444]" />
-            <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">Warning</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Watch for off-by-one errors in loops. If you use range(len(rows)) instead of iterating directly over the list, you&apos;re writing harder-to-read code with more bugs. In Python: always iterate over the collection directly — for row in rows — not by index.
-          </p>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Always validate BEFORE you transform. In production pipelines, the order is: Read → Validate → Flag bad rows → Transform clean rows. Never transform first and validate after. Bad data that gets transformed becomes bad data that looks clean — the worst kind.
+        </CurriculumCallout>
+        <CurriculumCallout type="warning">
+          Watch for off-by-one errors in loops. If you use range(len(rows)) instead of iterating directly over the list, you&apos;re writing harder-to-read code with more bugs. In Python: always iterate over the collection directly — for row in rows — not by index.
+        </CurriculumCallout>
       </div>
     </motion.section>
   );

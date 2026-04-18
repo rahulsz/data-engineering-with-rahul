@@ -2,7 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, Package } from "lucide-react";
+import { Package } from "lucide-react";
+import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import MemoryInspector from "./MemoryInspector";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -102,69 +104,18 @@ export default function W1Section3Variables() {
         Think of a Python dictionary like a row in a database table. The keys are the column names, the values are the cell data. When you later read a CSV file row-by-row, each row becomes a dictionary automatically — the mental model transfers perfectly.
       </motion.div>
 
-      {/* Datatype Table */}
-      <motion.div variants={stagger} className="overflow-x-auto rounded-xl border border-[#253141]">
-        <table className="w-full text-sm">
-          <thead className="bg-[#19222E] text-left">
-            <tr>
-              <th className="px-5 py-3 text-[11px] font-mono font-bold tracking-widest uppercase text-[#9CA3AF] border-b border-[#253141]">Type</th>
-              <th className="px-5 py-3 text-[11px] font-mono font-bold tracking-widest uppercase text-[#9CA3AF] border-b border-[#253141]">Example</th>
-              <th className="px-5 py-3 text-[11px] font-mono font-bold tracking-widest uppercase text-[#9CA3AF] border-b border-[#253141]">DE Use Case</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dtRows.map((r, i) => (
-              <motion.tr key={i} variants={rowReveal} className="border-b border-[#1e293b]/50 hover:bg-white/[0.02] transition-colors">
-                <td className="px-5 py-3 text-[#c084fc] font-mono font-bold">{r.type}</td>
-                <td className="px-5 py-3 text-[#22c55e] font-mono text-xs">{r.example}</td>
-                <td className="px-5 py-3 text-[#9CA3AF]">{r.useCase}</td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-      </motion.div>
-
-      {/* Code Block */}
-      <motion.div variants={fadeUp} className="bg-[#0B111A] border border-[#253141] rounded-2xl overflow-hidden shadow-2xl">
-        <div className="flex items-center gap-2 px-5 py-3 bg-[#141B23] border-b border-[#253141]">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-[#ef4444]/70" />
-            <div className="w-3 h-3 rounded-full bg-[#eab308]/70" />
-            <div className="w-3 h-3 rounded-full bg-[#22c55e]/70" />
-          </div>
-          <span className="text-[11px] font-mono text-[#6B7280] ml-2">globalmart_datatypes.py</span>
-        </div>
-        <motion.div variants={stagger} className="p-5 overflow-x-auto">
-          <pre className="text-[13px] leading-relaxed font-mono">
-            {codeLines.map((line, i) => (
-              <motion.div key={i} variants={rowReveal} className={line.comment ? "text-[#4b5563]" : "text-[#D1D5DB]"}>
-                {line.text || "\u00A0"}
-              </motion.div>
-            ))}
-          </pre>
-        </motion.div>
+      <motion.div variants={fadeUp}>
+        <MemoryInspector />
       </motion.div>
 
       {/* Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div variants={scaleIn} className="border border-[#22c55e]/30 bg-[#22c55e]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-[#22c55e]" />
-            <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide">Pro Tip</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Always store monetary values as float, not string. &apos;12.75&apos; looks like a number but Python can&apos;t do math on it. This is one of the top 3 bugs in beginner data pipelines — a price field that accidentally got stored as a string and silently broke every calculation downstream.
-          </p>
-        </motion.div>
-        <motion.div variants={scaleIn} className="border border-[#ef4444]/30 bg-[#ef4444]/5 rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-[#ef4444]" />
-            <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide">Warning</h4>
-          </div>
-          <p className="text-[#D1D5DB] text-[13px] leading-relaxed">
-            Lists are mutable — you can change them after creation. Tuples are immutable — you cannot. Never store pipeline layer names or config constants in lists. Use tuples. Accidental mutation of config data causes silent, catastrophic bugs in production pipelines.
-          </p>
-        </motion.div>
+        <CurriculumCallout type="tip">
+          Always store monetary values as float, not string. &apos;12.75&apos; looks like a number but Python can&apos;t do math on it. This is one of the top 3 bugs in beginner data pipelines — a price field that accidentally got stored as a string and silently broke every calculation downstream.
+        </CurriculumCallout>
+        <CurriculumCallout type="warning">
+          Lists are mutable — you can change them after creation. Tuples are immutable — you cannot. Never store pipeline layer names or config constants in lists. Use tuples. Accidental mutation of config data causes silent, catastrophic bugs in production pipelines.
+        </CurriculumCallout>
       </div>
     </motion.section>
   );
