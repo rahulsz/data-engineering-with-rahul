@@ -59,10 +59,10 @@ export default function Section8ConceptMap() {
               variants={slideRow}
               onMouseEnter={() => setHoverIdx(idx)}
               onMouseLeave={() => setHoverIdx(null)}
-              className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 rounded-xl border border-transparent hover:border-[#253141] hover:bg-[#141B23] transition-colors duration-300 group cursor-default"
+              className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl border border-transparent hover:border-[#253141] hover:bg-[#141B23] transition-colors duration-300 group cursor-default"
             >
               {/* Connection Vector */}
-              <div className="flex items-center gap-3 lg:w-[50%] shrink-0">
+              <div className="flex items-center gap-3 md:w-[50%] shrink-0">
                 <div className={`px-4 py-2 rounded-lg font-bold text-sm tracking-wide transition-all duration-300 ${isHovered ? 'bg-[#38bdf8]/20 text-[#38bdf8] shadow-[0_0_15px_rgba(56,189,248,0.2)]' : 'bg-[#1A232E] text-[#D1D5DB]'}`}>
                   {item.from}
                 </div>
@@ -91,7 +91,7 @@ export default function Section8ConceptMap() {
               </div>
 
               {/* Relationship Label */}
-              <div className="lg:w-[50%] pl-2 lg:pl-6 border-l-2 border-transparent lg:group-hover:border-[#a855f7]/30 transition-colors duration-300">
+              <div className="md:w-[50%] pl-2 md:pl-6 border-l-2 border-transparent md:group-hover:border-[#a855f7]/30 transition-colors duration-300">
                 <p className={`text-sm leading-relaxed transition-colors duration-300 ${isHovered ? 'text-white' : 'text-[#9CA3AF]'}`}>
                   {item.desc}
                 </p>

@@ -26,7 +26,7 @@ export default function Section2CoreConcepts() {
 
   const drawLine = {
     hidden: { strokeDashoffset: 100 },
-    visible: { strokeDashoffset: 0, transition: { duration: 0.6, ease: "linear" } }
+    visible: { strokeDashoffset: 0, transition: { duration: 0.6, ease: "linear" as const } }
   };
 
   const rawPythonCode = `raw_purchase_order = {
@@ -100,7 +100,7 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
       </motion.div>
 
       {/* Mental Model & DE vs DS Table Container */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* 3-Layer Mental Model */}
         <motion.div variants={cardScale} className="flex flex-col justify-between p-8 bg-[#141B23] border border-[#253141] rounded-xl">

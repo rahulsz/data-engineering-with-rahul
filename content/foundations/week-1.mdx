@@ -1,48 +1,35 @@
 ---
-title: "Week 1 — Python + Git + Jira"
-description: "Master Python fundamentals, version control with Git, and project tracking using Jira."
+title: "Python Basics + Git + Jira"
+description: "Every data pipeline ever written started with someone opening a Python file. This is where yours begins."
 weekNumber: 1
 phase: "foundations"
-tags: ["Python", "Git", "Jira", "Control Flow"]
-estimatedMinutes: 60
+tags: ["Python", "Git", "Jira", "Variables", "Functions", "File Handling"]
+estimatedMinutes: 480
 lastUpdated: "2026-04-18"
 ---
 
-## Overview
-Master Python fundamentals, version control with Git, and project tracking using Jira to establish robust engineering workflows.
+<W1Section1Hero />
 
-## Key Concepts
-- **Variables & Types** — Lists, dicts, tuples, sets — Python's core building blocks.
-- **Control Flow** — Directing execution with `if/elif/else` and loops.
-- **Functions** — Reusable blocks of code that perform specific tasks.
-- **Git Basics** — `init`, `add`, `commit`, `push`, `pull`, branching.
-- **Scrum/Agile (Jira)** — Tracking user stories and managing sprints.
+<W1Section2Overview />
 
-## Code Examples
+<W1Section3Variables />
 
-```bash
-# Git Workflow
-git checkout -b feature/data-ingestion
-git add script.py
-git commit -m "feat: initial python ingestion script"
-git push origin feature/data-ingestion
-```
+<W1Section4Loops />
 
-```python
-# Python Data Structures
-def process_shipments(shipments: list[dict]) -> dict:
-    summary = {"total_weight": 0, "status_count": {}}
-    for shipment in shipments:
-        summary["total_weight"] += shipment.get("weight", 0)
-        status = shipment.get("status", "unknown")
-        summary["status_count"][status] = summary["status_count"].get(status, 0) + 1
-    return summary
-```
+<W1Section5Functions />
 
-## Real-World Application
-In an e-commerce platform, the data team uses Git to version control Python pipelines pulling daily sales data. They track adding a new 'Returns' data source using a Jira Kanban board.
+<W1Section6FileHandling />
 
-## Practice Exercises
-- **Beginner**: Write a function that returns only even numbers from a list.
-- **Intermediate**: Create a Git repo, commit a file, branch, and merge.
-- **Advanced**: Parse a local JSON file of mock Jira tickets and print the 'In Progress' ones.
+<W1Section7Git />
+
+<W1Section8Jira />
+
+<W1Section9ConceptMap />
+
+<W1Section10Lab />
+
+<W1Section11Quiz />
+
+<W1Section12Resources />
+
+<W1Section13Navigation />

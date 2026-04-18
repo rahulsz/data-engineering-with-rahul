@@ -172,7 +172,7 @@ print("✅ 3 sample products inserted into Bronze layer")`;
       </motion.div>
 
       {/* Task Cards Grid */}
-      <motion.div variants={staggerCards} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <motion.div variants={staggerCards} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {taskData.map((task, idx) => (
           <motion.div 
             variants={slideUp} 

@@ -80,7 +80,7 @@ warehouse.fact_shipments`;
         </h2>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Company Profile Card */}
         <motion.div variants={slideLeft} className="bg-[#141B23] border border-[#253141] rounded-2xl overflow-hidden shadow-2xl relative">
           <div className="absolute top-0 right-0 p-32 bg-[#38bdf8] blur-[150px] opacity-10 rounded-full" />

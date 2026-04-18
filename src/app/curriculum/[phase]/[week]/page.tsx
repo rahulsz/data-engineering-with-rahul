@@ -28,6 +28,20 @@ import Section8ConceptMap from "@/animations/week-0/components/Section8ConceptMa
 import Section9Resources from "@/animations/week-0/components/Section9Resources";
 import Section10Navigation from "@/animations/week-0/components/Section10Navigation";
 
+import W1Section1Hero from "@/animations/week-1/components/W1Section1Hero";
+import W1Section2Overview from "@/animations/week-1/components/W1Section2Overview";
+import W1Section3Variables from "@/animations/week-1/components/W1Section3Variables";
+import W1Section4Loops from "@/animations/week-1/components/W1Section4Loops";
+import W1Section5Functions from "@/animations/week-1/components/W1Section5Functions";
+import W1Section6FileHandling from "@/animations/week-1/components/W1Section6FileHandling";
+import W1Section7Git from "@/animations/week-1/components/W1Section7Git";
+import W1Section8Jira from "@/animations/week-1/components/W1Section8Jira";
+import W1Section9ConceptMap from "@/animations/week-1/components/W1Section9ConceptMap";
+import W1Section10Lab from "@/animations/week-1/components/W1Section10Lab";
+import W1Section11Quiz from "@/animations/week-1/components/W1Section11Quiz";
+import W1Section12Resources from "@/animations/week-1/components/W1Section12Resources";
+import W1Section13Navigation from "@/animations/week-1/components/W1Section13Navigation";
+
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
   return slugs;
@@ -61,10 +75,10 @@ export default async function NotePage({
   const nextWeek = ctxIdx < allFlattenedWeeks.length - 1 ? allFlattenedWeeks[ctxIdx + 1] : null;
 
   return (
-    <div className={`mx-auto py-10 pb-32 ${note.weekNumber === 0 ? 'max-w-7xl px-6 lg:px-10' : 'max-w-3xl px-8 lg:px-12'}`}>
+    <div className={`mx-auto py-10 pb-32 ${note.weekNumber <= 1 ? 'max-w-7xl px-6 lg:px-10' : 'max-w-3xl px-8 lg:px-12'}`}>
       <SidebarHydrator headings={headings} />
       
-      {note.weekNumber !== 0 && (
+      {note.weekNumber > 1 && (
         <>
           {/* Header Section */}
           <div className="flex flex-col gap-6 mb-10">
@@ -90,7 +104,7 @@ export default async function NotePage({
       )}
 
       {/* Article */}
-      <article className={note.weekNumber === 0 ? 'w-full' : 'prose prose-zinc dark:prose-invert max-w-none prose-p:text-[#D1D5DB] prose-p:leading-relaxed prose-a:text-[#F97316] prose-strong:text-white pb-6'}>
+      <article className={note.weekNumber <= 1 ? 'w-full' : 'prose prose-zinc dark:prose-invert max-w-none prose-p:text-[#D1D5DB] prose-p:leading-relaxed prose-a:text-[#F97316] prose-strong:text-white pb-6'}>
         <MDXRemote
           source={note.content}
           options={{
@@ -119,6 +133,11 @@ export default async function NotePage({
             Section1Hero, Section2CoreConcepts, Section3CaseStudy,
             Section4Setup, Section5Capstone, Section6Lab, Section7Quiz,
             Section8ConceptMap, Section9Resources, Section10Navigation,
+            W1Section1Hero, W1Section2Overview, W1Section3Variables,
+            W1Section4Loops, W1Section5Functions, W1Section6FileHandling,
+            W1Section7Git, W1Section8Jira, W1Section9ConceptMap,
+            W1Section10Lab, W1Section11Quiz, W1Section12Resources,
+            W1Section13Navigation,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             RevealContent: RevealContent as any,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

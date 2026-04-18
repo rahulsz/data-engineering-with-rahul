@@ -72,7 +72,7 @@ export default function Section9Resources() {
         </h2>
       </motion.div>
 
-      <motion.div variants={staggerCategories} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div variants={staggerCategories} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {categories.map((cat, idx) => (
           <motion.div 
             key={idx}

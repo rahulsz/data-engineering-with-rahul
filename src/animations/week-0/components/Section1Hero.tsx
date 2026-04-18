@@ -51,7 +51,7 @@ export default function Section1Hero() {
       />
 
       {/* Main Grid — two columns at md+, single column below */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] gap-0 min-h-[400px]">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-0 min-h-[400px]">
 
         {/* ── Left: Content ── */}
         <motion.div
@@ -127,7 +127,7 @@ export default function Section1Hero() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" as const }}
-          className="flex flex-col items-center justify-center gap-4 p-8 bg-[#141B23]/80 backdrop-blur-xl border-l border-[#253141] rounded-r-2xl"
+          className="flex flex-col items-center justify-center gap-4 p-8 bg-[#141B23]/80 backdrop-blur-xl border-t lg:border-t-0 lg:border-l border-[#253141] rounded-b-2xl lg:rounded-b-none lg:rounded-r-2xl"
         >
           {/* SVG Progress Ring */}
           <div className="relative w-24 h-24">
