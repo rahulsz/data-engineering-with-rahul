@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Download, CheckCircle2, Calendar, Zap, Clock, Terminal, GitBranch, ClipboardList } from "lucide-react";
+import { Calendar, Zap, Clock, Terminal, GitBranch, ClipboardList } from "lucide-react";
 
 const stagger: Variants = {
   hidden: { opacity: 0 },
@@ -30,10 +29,6 @@ const scaleIn: Variants = {
 };
 
 export default function W1Section1Hero() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  const circ = 2 * Math.PI * 38;
 
   return (
     <div className="relative w-full rounded-2xl border border-[#253141] bg-[#0F151B] mb-16 isolate">
@@ -48,7 +43,7 @@ export default function W1Section1Hero() {
         className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#F97316] rounded-full blur-[100px] -z-10 mix-blend-screen -translate-x-1/3 translate-y-1/3 pointer-events-none"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] gap-0 min-h-[420px]">
+      <div className="w-full">
         <motion.div variants={stagger} initial="hidden" animate="visible" className="p-8 md:p-10 lg:p-12">
           <motion.div variants={slideDown} className="inline-flex items-center gap-2 mb-8 bg-[#0d1a2e] text-[#38bdf8] border border-[#38bdf8]/30 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase">
             <Zap className="w-3 h-3 fill-current" /> PHASE 1 — DATA ENGINEERING FOUNDATIONS
@@ -93,53 +88,6 @@ export default function W1Section1Hero() {
                 </motion.span>
               ))}
             </motion.div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" as const }}
-          className="flex flex-col items-center justify-center gap-4 p-8 bg-[#141B23]/80 backdrop-blur-xl border-l border-[#253141] rounded-r-2xl"
-        >
-          <div className="relative w-24 h-24">
-            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="38" fill="transparent" stroke="#1A232E" strokeWidth="8" />
-              <motion.circle
-                cx="50" cy="50" r="38" fill="transparent" stroke="url(#w1Grad)" strokeWidth="8" strokeLinecap="round"
-                initial={{ strokeDasharray: circ, strokeDashoffset: circ }}
-                animate={mounted ? { strokeDashoffset: circ } : {}}
-                transition={{ duration: 1.2, ease: "easeOut" as const, delay: 0.5 }}
-              />
-              <defs>
-                <linearGradient id="w1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#F97316" />
-                  <stop offset="100%" stopColor="#fb923c" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-bold text-white">0%</span>
-              <span className="text-[10px] text-[#6B7280] font-mono tracking-wider uppercase">Complete</span>
-            </div>
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <button className="w-full py-2.5 px-4 rounded-lg bg-[#253141] text-[#D1D5DB] hover:bg-[#2A3645] hover:text-white transition-all flex items-center justify-center gap-2 text-sm font-semibold group cursor-not-allowed opacity-70" onClick={(e) => e.preventDefault()}>
-              <CheckCircle2 className="w-4 h-4 text-[#6B7280] group-hover:text-green-400 transition-colors" />
-              Mark Complete
-            </button>
-            <button className="w-full py-2.5 px-4 rounded-lg bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 hover:bg-[#F97316]/20 transition-all flex items-center justify-center gap-2 text-sm font-semibold active:scale-[0.98]">
-              <Download className="w-4 h-4" />
-              Download Notes
-            </button>
-          </div>
-          <div className="w-full grid grid-cols-2 gap-2 pt-2 border-t border-[#253141] mt-2">
-            {[{ label: "Duration", value: "8–10 hrs" }, { label: "Sections", value: "13" }].map(({ label, value }) => (
-              <div key={label} className="flex flex-col items-center">
-                <span className="text-white font-bold text-sm">{value}</span>
-                <span className="text-[#6B7280] text-[10px] font-mono tracking-widest uppercase">{label}</span>
-              </div>
-            ))}
           </div>
         </motion.div>
       </div>
