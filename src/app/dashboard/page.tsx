@@ -6,6 +6,7 @@ import {
 import GamificationMatrix from "./_components/GamificationMatrix";
 import SystemLoadWidget from "./_components/SystemLoadWidget";
 import ActiveModuleWidget from "./_components/ActiveModuleWidget";
+import ActivityHeatmap from "./_components/ActivityHeatmap";
 
 export default function DashboardPage() {
   return (
@@ -38,8 +39,9 @@ export default function DashboardPage() {
         {/* Bottom Grid (Operations & Meta) */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           
-          {/* Gamification Matrix - Replaces Upcoming Operations */}
-          <div className="xl:col-span-2">
+          {/* Center Column: Heatmap & Gamification */}
+          <div className="xl:col-span-2 flex flex-col gap-8">
+            <ActivityHeatmap />
             <GamificationMatrix />
           </div>
 

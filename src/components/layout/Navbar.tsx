@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserButton } from "@clerk/nextjs";
 import { Search, PanelLeft, FolderClosed, Bell } from "lucide-react";
 import { motion } from "framer-motion";
@@ -17,6 +17,18 @@ interface NavbarProps {
 export default function Navbar({ onMobileSidebarToggle }: NavbarProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
+
+  // Global hotkey for Command Palette
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Find the current phase for breadcrumbs
   const currentPhase = CURRICULUM.find(p =>
@@ -71,8 +83,15 @@ export default function Navbar({ onMobileSidebarToggle }: NavbarProps) {
               <Bell className="w-[18px] h-[18px]" />
               <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-[#F97316] rounded-full border border-[#0B111A]"></span>
             </button>
-            <button onClick={() => setIsSearchOpen(true)} className="hover:text-white transition-colors cursor-pointer">
-              <Search className="w-[18px] h-[18px]" />
+            <button 
+              onClick={() => setIsSearchOpen(true)} 
+              className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer bg-[#141B23] border border-[#253141] hover:border-[#374151] rounded-lg px-3 py-1.5"
+            >
+              <Search className="w-[16px] h-[16px]" />
+              <span className="flex items-center gap-1 text-[11px] font-mono tracking-widest uppercase">
+                Search
+                <span className="bg-[#1e293b] px-1.5 py-0.5 rounded text-[#9CA3AF]">⌘K</span>
+              </span>
             </button>
           </div>
 

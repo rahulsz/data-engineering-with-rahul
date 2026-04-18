@@ -12,7 +12,21 @@ import { CURRICULUM } from "@/config/site-config";
 import { Clock, CalendarDays, Tag, ChevronLeft, ChevronRight, BookOpen, Layers, Map, Brain, Code2, Factory, Target, Rocket, Wrench, CheckSquare, Lightbulb, type LucideIcon } from "lucide-react";
 
 import LivePythonBlock from "@/components/mdx/LivePythonBlock";
+import LiveSqlBlock from "@/components/mdx/LiveSqlBlock";
 import SidebarHydrator from "@/components/layout/SidebarHydrator";
+import RevealContent from "@/components/motion/RevealContent";
+import Week0Layout from "@/animations/week-0/Week0Layout";
+
+import Section1Hero from "@/animations/week-0/components/Section1Hero";
+import Section2CoreConcepts from "@/animations/week-0/components/Section2CoreConcepts";
+import Section3CaseStudy from "@/animations/week-0/components/Section3CaseStudy";
+import Section4Setup from "@/animations/week-0/components/Section4Setup";
+import Section5Capstone from "@/animations/week-0/components/Section5Capstone";
+import Section6Lab from "@/animations/week-0/components/Section6Lab";
+import Section7Quiz from "@/animations/week-0/components/Section7Quiz";
+import Section8ConceptMap from "@/animations/week-0/components/Section8ConceptMap";
+import Section9Resources from "@/animations/week-0/components/Section9Resources";
+import Section10Navigation from "@/animations/week-0/components/Section10Navigation";
 
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
@@ -47,33 +61,36 @@ export default async function NotePage({
   const nextWeek = ctxIdx < allFlattenedWeeks.length - 1 ? allFlattenedWeeks[ctxIdx + 1] : null;
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-8 lg:px-12 pb-32">
+    <div className={`mx-auto py-10 pb-32 ${note.weekNumber === 0 ? 'max-w-7xl px-6 lg:px-10' : 'max-w-3xl px-8 lg:px-12'}`}>
       <SidebarHydrator headings={headings} />
-      {/* Header Section */}
-      <div className="flex flex-col gap-6 mb-10">
-        
-        {/* Module Pill */}
-        <div className="flex items-center self-start gap-2 bg-[#211713] text-[#F97316] border border-[#F97316]/30 px-3 py-1.5 rounded-full text-xs font-bold tracking-wider">
-          🎓 Module {note.weekNumber}.0
-        </div>
+      
+      {note.weekNumber !== 0 && (
+        <>
+          {/* Header Section */}
+          <div className="flex flex-col gap-6 mb-10">
+            {/* Module Pill */}
+            <div className="flex items-center self-start gap-2 bg-[#211713] text-[#F97316] border border-[#F97316]/30 px-3 py-1.5 rounded-full text-xs font-bold tracking-wider">
+              🎓 Module {note.weekNumber}.0
+            </div>
 
-        {/* Title */}
-        <h1 className="text-4xl sm:text-[42px] font-bold tracking-tight text-white leading-tight">
-          {note.title}
-        </h1>
-        
-        {/* Description */}
-        <p className="text-[#9CA3AF] text-lg leading-relaxed">
-          {note.description}
-        </p>
+            {/* Title */}
+            <h1 className="text-4xl sm:text-[42px] font-bold tracking-tight text-white leading-tight">
+              {note.title}
+            </h1>
+            
+            {/* Description */}
+            <p className="text-[#9CA3AF] text-lg leading-relaxed">
+              {note.description}
+            </p>
+          </div>
 
-      </div>
-
-      {/* Divider */}
-      <div className="h-px bg-[#1C2532] mb-12" />
+          {/* Divider */}
+          <div className="h-px bg-[#1C2532] mb-12" />
+        </>
+      )}
 
       {/* Article */}
-      <article className="prose prose-zinc dark:prose-invert max-w-none prose-p:text-[#D1D5DB] prose-p:leading-relaxed prose-a:text-[#F97316] prose-strong:text-white pb-6">
+      <article className={note.weekNumber === 0 ? 'w-full' : 'prose prose-zinc dark:prose-invert max-w-none prose-p:text-[#D1D5DB] prose-p:leading-relaxed prose-a:text-[#F97316] prose-strong:text-white pb-6'}>
         <MDXRemote
           source={note.content}
           options={{
@@ -99,6 +116,13 @@ export default async function NotePage({
             },
           }}
           components={{
+            Section1Hero, Section2CoreConcepts, Section3CaseStudy,
+            Section4Setup, Section5Capstone, Section6Lab, Section7Quiz,
+            Section8ConceptMap, Section9Resources, Section10Navigation,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            RevealContent: RevealContent as any,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            Week0Layout: Week0Layout as any,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             CodeBlock: CodeBlock as any,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -107,12 +131,21 @@ export default async function NotePage({
             pre: ({ children, className, rawCode, ...props }: any) => {
               const childClassName = children?.props?.className || "";
               const isPython = childClassName.includes("language-python");
+              const isSql = childClassName.includes("language-sql");
               
               if (isPython && rawCode) {
                 return (
                   <LivePythonBlock code={rawCode}>
                     {children.props.children}
                   </LivePythonBlock>
+                );
+              }
+
+              if (isSql && rawCode) {
+                return (
+                  <LiveSqlBlock code={rawCode}>
+                    {children.props.children}
+                  </LiveSqlBlock>
                 );
               }
 
@@ -192,14 +225,17 @@ export default async function NotePage({
         />
       </article>
 
-      {/* Divider */}
-      <div className="h-px bg-[#1C2532] my-12" />
-
-      {/* Navigation Footer Pipeline */}
-      <BottomNavPipeline 
-        weekId={note.weekNumber} 
-        nextLesson={nextWeek}
-      />
+      {note.weekNumber !== 0 && (
+        <>
+          {/* Divider */}
+          <div className="h-px bg-[#1C2532] my-12" />
+          <BottomNavPipeline 
+            weekId={note.weekNumber} 
+            nextLesson={nextWeek}
+            prevLesson={prevWeek}
+          />
+        </>
+      )}
     </div>
   );
 }

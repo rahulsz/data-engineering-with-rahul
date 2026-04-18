@@ -118,10 +118,12 @@ export default async function SettingsPage() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <CheckCircle2 className="w-5 h-5 text-[#22c55e] shrink-0 mt-0.5" />
+                  <CheckCircle2 className={initialData.githubHandle ? "w-5 h-5 text-[#22c55e] shrink-0 mt-0.5" : "w-5 h-5 text-[#4B5563] shrink-0 mt-0.5"} />
                   <div>
                     <div className="text-[14px] font-semibold text-white mb-0.5">Elite Discord Sandbox</div>
-                    <div className="text-[12px] font-mono text-[#6B7280]">Connected as @alexc</div>
+                    <div className="text-[12px] font-mono text-[#6B7280]">
+                      {initialData.githubHandle ? `Connected as @${initialData.githubHandle}` : "GitHub Not Connected"}
+                    </div>
                   </div>
                 </div>
               </div>

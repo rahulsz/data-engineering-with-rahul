@@ -86,24 +86,24 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="relative w-full max-w-lg bg-white dark:bg-zinc-950 rounded-2xl shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 mx-4"
+            className="relative w-full max-w-lg bg-[#0F151B] rounded-2xl shadow-2xl overflow-hidden border border-[#253141] mx-4 shadow-[0_0_40px_rgba(249,115,22,0.1)]"
           >
-            <div className="flex items-center px-4 py-3 border-b border-zinc-200 dark:border-zinc-800">
-              <Search className="w-5 h-5 text-zinc-400 shrink-0" />
+            <div className="flex items-center px-4 py-4 border-b border-[#1A232E]">
+              <Search className="w-5 h-5 text-[#F97316]/70 shrink-0" />
               <input
                 ref={inputRef}
                 type="text"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                placeholder="Search curriculum..."
-                className="flex-1 bg-transparent border-none outline-none px-3 text-lg text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                placeholder="Search the curriculum..."
+                className="flex-1 bg-transparent border-none outline-none px-4 text-[15px] font-mono text-white placeholder:text-[#4B5563]"
               />
-              <button onClick={onClose} className="p-1 rounded-md text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer">
+              <button onClick={onClose} className="p-1 rounded-md text-[#6B7280] hover:text-[#E5E7EB] cursor-pointer transition-colors border border-transparent hover:border-[#374151] hover:bg-[#1A232E]">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="max-h-80 overflow-y-auto p-2">
+            <div className="max-h-80 overflow-y-auto p-3 custom-scrollbar">
               {results.length > 0 ? (
                 results.map((note, idx) => (
                   <div
@@ -113,28 +113,39 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                       onClose();
                     }}
                     className={cn(
-                      "flex flex-col p-3 rounded-xl cursor-pointer transition-colors group",
-                      idx === selectedIndex ? "bg-brand-50 dark:bg-brand-900/40" : "hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                      "flex flex-col p-3 rounded-xl cursor-pointer transition-colors group mb-1",
+                      idx === selectedIndex ? "bg-[#141B23] border border-[#F97316]/30" : "hover:bg-[#141B23] border border-transparent"
                     )}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                      <div className="flex items-center gap-3">
+                        <span className={cn(
+                          "text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-widest",
+                          idx === selectedIndex ? "bg-[#F97316]/10 text-[#F97316]" : "bg-[#1e293b] text-[#9CA3AF]"
+                        )}>
                           Week {note.weekNumber}
                         </span>
-                        <span className="font-medium text-zinc-900 dark:text-zinc-100">{note.title}</span>
+                        <span className={cn(
+                          "font-semibold text-[14px]",
+                          idx === selectedIndex ? "text-white" : "text-[#E5E7EB]"
+                        )}>{note.title}</span>
                       </div>
-                      <ArrowRight className={cn("w-4 h-4 text-brand-500 transition-opacity", idx === selectedIndex ? "opacity-100" : "opacity-0 group-hover:opacity-100")} />
+                      <ArrowRight className={cn(
+                        "w-4 h-4 transition-all", 
+                        idx === selectedIndex ? "opacity-100 text-[#F97316] translate-x-1" : "opacity-0 group-hover:opacity-100 group-hover:translate-x-1 text-[#6B7280]"
+                      )} />
                     </div>
                     {note.description && (
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-1">{note.description}</p>
+                      <p className="text-[13px] text-[#6B7280] line-clamp-1 mt-1 font-mono tracking-tight">{note.description}</p>
                     )}
                   </div>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-                  <Search className="w-10 h-10 text-zinc-300 dark:text-zinc-700 mb-3" />
-                  <p className="text-zinc-500 dark:text-zinc-400">No results found for &quot;{query}&quot;</p>
+                <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                  <div className="w-[48px] h-[48px] rounded-xl bg-[#141B23] border border-[#253141] flex items-center justify-center mb-4">
+                    <Search className="w-6 h-6 text-[#4B5563]" />
+                  </div>
+                  <p className="text-[13px] font-mono text-[#6B7280]">No matching records found for <span className="text-white">"{query}"</span></p>
                 </div>
               )}
             </div>

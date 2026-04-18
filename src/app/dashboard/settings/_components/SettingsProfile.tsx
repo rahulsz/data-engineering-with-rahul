@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import { User, Pencil, Settings, Sun, Moon, Monitor, Shield } from "lucide-react";
 import { updateUserSettings } from "@/app/actions/userSettings";
+import { toast } from "sonner";
 
 interface SettingsProfileProps {
   initialData: {
@@ -43,16 +44,26 @@ export default function SettingsProfile({ initialData, clerkAvatarUrl, clerkId }
       portfolioUrl: initialData.portfolioUrl,
     });
     setHasUnsavedChanges(false);
+    toast.info("Changes discarded.");
   };
 
   const handleCommit = () => {
-    startTransition(async () => {
-      const res = await updateUserSettings(formData);
-      if (res.success) {
-        setHasUnsavedChanges(false);
-      } else {
-        alert("Failed to save settings: " + res.error);
-      }
+    const promise = new Promise((resolve, reject) => {
+      startTransition(async () => {
+        const res = await updateUserSettings(formData);
+        if (res.success) {
+          setHasUnsavedChanges(false);
+          resolve(true);
+        } else {
+          reject(res.error);
+        }
+      });
+    });
+
+    toast.promise(promise, {
+      loading: "Syncing to Database...",
+      success: "Settings successfully committed!",
+      error: (err) => `Sync failed: ${err}`
     });
   };
 

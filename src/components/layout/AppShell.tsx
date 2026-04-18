@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import ProgressHydrator from "./ProgressHydrator";
+import AITutorPanel from "./AITutorPanel";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -34,6 +35,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <main className={`flex-1 w-full flex flex-col ${isFullscreenRoute ? '' : 'md:pl-[260px] pt-14'}`}>
         {children}
       </main>
+      {!isFullscreenRoute && <AITutorPanel />}
     </div>
   );
 }
