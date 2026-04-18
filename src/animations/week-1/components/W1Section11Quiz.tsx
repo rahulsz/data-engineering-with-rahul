@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence, Variants } from "framer-motion";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
+import { FileText, Trophy, Brain, BookOpen, CheckCircle2, XCircle } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
@@ -75,9 +76,9 @@ const questions: Question[] = [
 ];
 
 const resultTiers = [
-  { min: 5, max: 5, msg: "🏆 Pythonista unlocked. Week 2 awaits.", color: "text-[#22c55e]" },
-  { min: 3, max: 4, msg: "💪 Strong base. Review functions and Git sections.", color: "text-[#f59e0b]" },
-  { min: 0, max: 2, msg: "📖 Re-read Loops and File Handling — then retry.", color: "text-[#ef4444]" },
+  { min: 5, max: 5, icon: <Trophy className="w-5 h-5 inline mr-2" />, msg: "Pythonista unlocked. Week 2 awaits.", color: "text-[#22c55e]" },
+  { min: 3, max: 4, icon: <Brain className="w-5 h-5 inline mr-2" />, msg: "Strong base. Review functions and Git sections.", color: "text-[#f59e0b]" },
+  { min: 0, max: 2, icon: <BookOpen className="w-5 h-5 inline mr-2" />, msg: "Re-read Loops and File Handling — then retry.", color: "text-[#ef4444]" },
 ];
 
 export default function W1Section11Quiz() {
@@ -119,7 +120,7 @@ export default function W1Section11Quiz() {
 
       <motion.div variants={fadeUp} className="flex flex-col gap-3">
         <h3 className="text-[#F97316] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">📝</span> Knowledge Check
+          <FileText className="w-5 h-5" /> Knowledge Check
         </h3>
         <div className="flex items-center gap-4">
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
@@ -183,8 +184,9 @@ export default function W1Section11Quiz() {
                     transition={{ duration: 0.3, ease: "easeOut" as const }}
                     className={`mt-3 p-3 rounded-lg border text-[13px] ${isCorrect ? "border-[#22c55e]/30 bg-[#22c55e]/5 text-[#D1D5DB]" : "border-[#ef4444]/30 bg-[#ef4444]/5 text-[#D1D5DB]"}`}
                   >
-                    <span className="font-bold text-xs uppercase tracking-wider mr-2" style={{ color: isCorrect ? "#22c55e" : "#ef4444" }}>
-                      {isCorrect ? "✅ Correct" : "❌ Incorrect"}
+                    <span className="font-bold text-xs uppercase tracking-wider mr-2 flex items-center gap-1.5" style={{ color: isCorrect ? "#22c55e" : "#ef4444" }}>
+                      {isCorrect ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                      {isCorrect ? "Correct" : "Incorrect"}
                     </span>
                     {q.explanation}
                   </motion.div>
@@ -203,7 +205,7 @@ export default function W1Section11Quiz() {
             animate={{ opacity: 1, scale: 1 }}
             className={`text-center py-6 px-4 bg-[#141B23] border border-[#253141] rounded-2xl ${tier.color} text-lg font-bold`}
           >
-            {tier.msg}
+            {tier.icon}{tier.msg}
           </motion.div>
         )}
       </AnimatePresence>

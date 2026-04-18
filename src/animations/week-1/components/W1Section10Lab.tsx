@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence, Variants } from "framer-motion";
-import { CheckCircle2, ChevronRight, Check } from "lucide-react";
+import { CheckCircle2, ChevronRight, Check, Beaker, AlertTriangle, XCircle } from "lucide-react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 
@@ -70,12 +70,12 @@ const taskData = [
 ];
 
 const expectedOutput = [
-  { icon: "✅", color: "text-[#22c55e]", text: "CLEAN       : SKU-88821 — qty=120, cost=$450.00" },
-  { icon: "⚠️", color: "text-[#f59e0b]", text: " REORDER    : SKU-32201 — quantity is zero" },
-  { icon: "❌", color: "text-[#ef4444]", text: "SKIPPED     : SKU-11043 — negative unit_cost" },
-  { icon: "✅", color: "text-[#22c55e]", text: "CLEAN       : SKU-55509 — qty=310, cost=$78.00" },
-  { icon: "⚠️", color: "text-[#f59e0b]", text: " REORDER    : SKU-77732 — quantity is zero" },
-  { icon: "✅", color: "text-[#22c55e]", text: "CLEAN       : SKU-99001 — qty=88, cost=$22.00" },
+  { icon: <CheckCircle2 className="w-3.5 h-3.5 inline" />, color: "text-[#22c55e]", text: "CLEAN       : SKU-88821 — qty=120, cost=$450.00" },
+  { icon: <AlertTriangle className="w-3.5 h-3.5 inline" />, color: "text-[#f59e0b]", text: " REORDER    : SKU-32201 — quantity is zero" },
+  { icon: <XCircle className="w-3.5 h-3.5 inline" />, color: "text-[#ef4444]", text: "SKIPPED     : SKU-11043 — negative unit_cost" },
+  { icon: <CheckCircle2 className="w-3.5 h-3.5 inline" />, color: "text-[#22c55e]", text: "CLEAN       : SKU-55509 — qty=310, cost=$78.00" },
+  { icon: <AlertTriangle className="w-3.5 h-3.5 inline" />, color: "text-[#f59e0b]", text: " REORDER    : SKU-77732 — quantity is zero" },
+  { icon: <CheckCircle2 className="w-3.5 h-3.5 inline" />, color: "text-[#22c55e]", text: "CLEAN       : SKU-99001 — qty=88, cost=$22.00" },
 ];
 
 export default function W1Section10Lab() {
@@ -114,7 +114,7 @@ export default function W1Section10Lab() {
       {/* Header */}
       <motion.div variants={fadeUp} className="flex flex-col gap-3 bg-[#1A232E] border border-[#253141] p-6 lg:p-8 rounded-2xl shadow-xl">
         <h3 className="text-[#22c55e] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-xl">🧪</span> Hands-On Lab
+          <Beaker className="w-5 h-5" /> Hands-On Lab
         </h3>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
           Lab 1: Inventory CSV Reader + Git-Tracked Order Processor

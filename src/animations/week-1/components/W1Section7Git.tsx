@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, GitBranch } from "lucide-react";
+import { Lightbulb, AlertTriangle, GitBranch, XCircle, CheckCircle2 } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } };
@@ -96,7 +96,9 @@ export default function W1Section7Git() {
       {/* Good vs Bad Commits */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <motion.div variants={slideFromLeft} className="border border-[#ef4444]/30 bg-[#141B23] rounded-xl p-5">
-          <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide mb-4">❌ Bad Commits</h4>
+          <h4 className="text-[#ef4444] font-bold text-sm uppercase tracking-wide mb-4 flex items-center gap-2">
+            <XCircle className="w-4 h-4" /> Bad Commits
+          </h4>
           <div className="flex flex-col gap-2">
             {badCommits.map((c, i) => (
               <div key={i} className="text-[#9CA3AF] text-[13px] font-mono line-through decoration-[#ef4444]/50">{c}</div>
@@ -104,7 +106,9 @@ export default function W1Section7Git() {
           </div>
         </motion.div>
         <motion.div variants={slideFromRight} className="border border-[#22c55e]/30 bg-[#141B23] rounded-xl p-5">
-          <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide mb-4">✅ Good Commits</h4>
+          <h4 className="text-[#22c55e] font-bold text-sm uppercase tracking-wide mb-4 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4" /> Good Commits
+          </h4>
           <div className="flex flex-col gap-2">
             {goodCommits.map((c, i) => (
               <div key={i} className="text-[#22c55e] text-[13px] font-mono">{c}</div>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Download, CheckCircle2 } from "lucide-react";
+import { Download, CheckCircle2, Calendar, Zap, Clock, Terminal, GitBranch, ClipboardList } from "lucide-react";
 
 const stagger: Variants = {
   hidden: { opacity: 0 },
@@ -51,7 +51,7 @@ export default function W1Section1Hero() {
       <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] gap-0 min-h-[420px]">
         <motion.div variants={stagger} initial="hidden" animate="visible" className="p-8 md:p-10 lg:p-12">
           <motion.div variants={slideDown} className="inline-flex items-center gap-2 mb-8 bg-[#0d1a2e] text-[#38bdf8] border border-[#38bdf8]/30 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase">
-            ⚡ PHASE 1 — DATA ENGINEERING FOUNDATIONS
+            <Zap className="w-3 h-3 fill-current" /> PHASE 1 — DATA ENGINEERING FOUNDATIONS
           </motion.div>
 
           <div className="flex items-start gap-4 mb-5">
@@ -69,9 +69,17 @@ export default function W1Section1Hero() {
           </div>
 
           <motion.div variants={stagger} className="flex flex-wrap gap-2 mt-6">
-            {["📅 Week 1", "🟢 Beginner", "⏱ 8–10 Hours", "🐍 Python", "🔀 Git", "📋 Jira"].map((pill, i) => (
-              <motion.div key={i} variants={scaleIn} className="px-3 py-1.5 rounded-md bg-[#1A232E] border border-[#2A3645] text-[#D1D5DB] text-[13px] font-medium flex items-center shadow-sm">
-                {pill}
+            {[
+              { icon: <Calendar className="w-3.5 h-3.5" />, text: "Week 1" },
+              { icon: <Zap className="w-3.5 h-3.5 text-green-400" />, text: "Beginner" },
+              { icon: <Clock className="w-3.5 h-3.5" />, text: "8–10 Hours" },
+              { icon: <Terminal className="w-3.5 h-3.5 text-blue-400" />, text: "Python" },
+              { icon: <GitBranch className="w-3.5 h-3.5 text-orange-400" />, text: "Git" },
+              { icon: <ClipboardList className="w-3.5 h-3.5 text-white" />, text: "Jira" },
+            ].map((pill, i) => (
+              <motion.div key={i} variants={scaleIn} className="px-3 py-1.5 rounded-md bg-[#1A232E] border border-[#2A3645] text-[#D1D5DB] text-[13px] font-medium flex items-center gap-2 shadow-sm">
+                {pill.icon}
+                {pill.text}
               </motion.div>
             ))}
           </motion.div>

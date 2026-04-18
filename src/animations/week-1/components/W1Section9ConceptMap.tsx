@@ -2,6 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
+import { Link } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.06 } } };
@@ -27,7 +28,7 @@ export default function W1Section9ConceptMap() {
     <motion.section ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} className="w-full flex flex-col gap-10 mb-24">
       <motion.div variants={fadeUp} className="flex flex-col gap-2">
         <h3 className="text-[#38bdf8] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">🔗</span> Concept Connections
+          <Link className="w-5 h-5" /> Concept Connections
         </h3>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
           How Week 1 Connects Forward &amp; Backward

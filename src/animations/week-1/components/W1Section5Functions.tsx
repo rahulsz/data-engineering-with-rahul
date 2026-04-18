@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle } from "lucide-react";
+import { Lightbulb, AlertTriangle, Component, Folder, FileText } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
@@ -60,7 +60,7 @@ export default function W1Section5Functions() {
     <motion.section ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} className="w-full flex flex-col gap-10 mb-24">
       <motion.div variants={fadeUp} className="flex flex-col gap-2">
         <h3 className="text-[#c084fc] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">📚</span> Core Concepts
+          <Component className="w-5 h-5" /> Core Concepts
         </h3>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
           Writing Functions &amp; Organizing Modules
@@ -138,8 +138,8 @@ Testable in isolation ✅`}
         <motion.div variants={stagger} className="font-mono text-[13px]">
           {moduleTree.map((item, i) => (
             <motion.div key={i} variants={rowReveal} className="py-0.5" style={{ paddingLeft: `${item.indent * 20}px` }}>
-              <span className={item.isDir ? "text-[#38bdf8]" : "text-[#22c55e]"}>
-                {item.isDir ? "📁 " : "📄 "}{item.name}
+              <span className={item.isDir ? "text-[#38bdf8] flex items-center gap-1.5" : "text-[#22c55e] flex items-center gap-1.5"}>
+                {item.isDir ? <Folder className="w-3.5 h-3.5" /> : <FileText className="w-3.5 h-3.5" />}{item.name}
               </span>
               {item.note && <span className="text-[#6B7280] ml-3 text-xs">{item.note}</span>}
             </motion.div>

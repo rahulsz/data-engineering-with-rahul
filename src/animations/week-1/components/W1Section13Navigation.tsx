@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, FastForward, Check, Home, Search, Eraser, Link as LinkIcon, Package } from "lucide-react";
 import Link from "next/link";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.5 } } };
@@ -10,11 +10,11 @@ const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, trans
 const popIn: Variants = { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 20 } } };
 
 const previewItems = [
-  "🐼 Pandas DataFrames from scratch",
-  "🔍 EDA on GlobalMart inventory & orders data",
-  "🧹 Data cleansing: nulls, duplicates, type casting",
-  "🔗 Merging DataFrames like SQL JOINs",
-  "📦 Projects: Procurement Pipeline + Inventory Summary",
+  { icon: <Search className="w-4 h-4 text-[#38bdf8]" />, text: "Pandas DataFrames from scratch" },
+  { icon: <Search className="w-4 h-4 text-[#f59e0b]" />, text: "EDA on GlobalMart inventory & orders data" },
+  { icon: <Eraser className="w-4 h-4 text-[#ef4444]" />, text: "Data cleansing: nulls, duplicates, type casting" },
+  { icon: <LinkIcon className="w-4 h-4 text-[#c084fc]" />, text: "Merging DataFrames like SQL JOINs" },
+  { icon: <Package className="w-4 h-4 text-[#22c55e]" />, text: "Projects: Procurement Pipeline + Inventory Summary" },
 ];
 
 export default function W1Section13Navigation() {
@@ -26,7 +26,7 @@ export default function W1Section13Navigation() {
       {/* What's Next */}
       <motion.div variants={fadeUp} className="flex flex-col gap-3">
         <h3 className="text-[#F97316] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">⏭️</span> What&apos;s Next
+          <FastForward className="w-5 h-5" /> What&apos;s Next
         </h3>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
           Week 2: Intermediate Python + Pandas
@@ -44,8 +44,9 @@ export default function W1Section13Navigation() {
         <h4 className="text-[#F97316] font-bold text-xs tracking-widest uppercase mb-4">Week 2 Preview</h4>
         <motion.div variants={stagger} className="flex flex-col gap-2">
           {previewItems.map((item, i) => (
-            <motion.div key={i} variants={popIn} className="flex items-center gap-2 text-[#D1D5DB] text-sm">
-              <span className="text-[#22c55e]">✓</span> {item}
+            <motion.div key={i} variants={popIn} className="flex items-center gap-3 text-[#D1D5DB] text-sm group">
+              <span className="shrink-0">{item.icon}</span>
+              <span className="group-hover:text-white transition-colors">{item.text}</span>
             </motion.div>
           ))}
         </motion.div>
@@ -79,8 +80,8 @@ export default function W1Section13Navigation() {
       </motion.div>
 
       {/* Breadcrumb center */}
-      <motion.div variants={fadeUp} className="text-center text-[#6B7280] text-xs font-mono tracking-widest uppercase mt-2">
-        PHASE 1 › Week 1 | <Link href="/dashboard" className="text-[#F97316] hover:underline">🏠 Dashboard</Link>
+      <motion.div variants={fadeUp} className="text-center text-[#6B7280] text-xs font-mono tracking-widest uppercase mt-2 flex items-center justify-center gap-2">
+        PHASE 1 › Week 1 | <Link href="/dashboard" className="text-[#F97316] hover:underline flex items-center gap-1"><Home className="w-3 h-3" /> Dashboard</Link>
       </motion.div>
     </motion.section>
   );

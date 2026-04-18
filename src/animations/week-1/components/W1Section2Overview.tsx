@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView, Variants } from "framer-motion";
+import { Target } from "lucide-react";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -61,7 +62,7 @@ export default function W1Section2Overview() {
     <motion.section ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} className="w-full flex flex-col gap-12 mb-24">
       <motion.div variants={fadeUp} className="flex flex-col gap-2">
         <h3 className="text-[#38bdf8] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">🎯</span> Week Overview
+          <Target className="w-5 h-5" /> Week Overview
         </h3>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
           Why Python + Git + Jira Before Anything Else?

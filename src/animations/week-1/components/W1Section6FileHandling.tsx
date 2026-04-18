@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, FileText, FileJson } from "lucide-react";
+import { Lightbulb, AlertTriangle, FileText, FileJson, FolderInput, Search, Plus, ClipboardCheck } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
@@ -52,11 +52,11 @@ const codeLines = [
 ];
 
 const pipelineSteps = [
-  { label: "READ CSV", icon: "📄", color: "border-[#38bdf8] bg-[#38bdf8]/10 text-[#38bdf8]" },
-  { label: "VALIDATE", icon: "🔍", color: "border-[#f59e0b] bg-[#f59e0b]/10 text-[#f59e0b]" },
-  { label: "ENRICH", icon: "➕", color: "border-[#c084fc] bg-[#c084fc]/10 text-[#c084fc]" },
-  { label: "WRITE CSV", icon: "📄", color: "border-[#22c55e] bg-[#22c55e]/10 text-[#22c55e]" },
-  { label: "WRITE JSON", icon: "📋", color: "border-[#F97316] bg-[#F97316]/10 text-[#F97316]" },
+  { label: "READ CSV", icon: <FileText className="w-5 h-5" />, color: "border-[#38bdf8] bg-[#38bdf8]/10 text-[#38bdf8]" },
+  { label: "VALIDATE", icon: <Search className="w-5 h-5" />, color: "border-[#f59e0b] bg-[#f59e0b]/10 text-[#f59e0b]" },
+  { label: "ENRICH", icon: <Plus className="w-5 h-5" />, color: "border-[#c084fc] bg-[#c084fc]/10 text-[#c084fc]" },
+  { label: "WRITE CSV", icon: <FileText className="w-5 h-5" />, color: "border-[#22c55e] bg-[#22c55e]/10 text-[#22c55e]" },
+  { label: "WRITE JSON", icon: <ClipboardCheck className="w-5 h-5" />, color: "border-[#F97316] bg-[#F97316]/10 text-[#F97316]" },
 ];
 
 export default function W1Section6FileHandling() {
@@ -67,7 +67,7 @@ export default function W1Section6FileHandling() {
     <motion.section ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} className="w-full flex flex-col gap-10 mb-24">
       <motion.div variants={fadeUp} className="flex flex-col gap-2">
         <h3 className="text-[#c084fc] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">📚</span> Core Concepts
+          <FolderInput className="w-5 h-5" /> Core Concepts
         </h3>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
           File Handling — Reading &amp; Writing Data Files
@@ -138,7 +138,7 @@ PO-002,SKU-32201,200`}
         {pipelineSteps.map((step, i) => (
           <React.Fragment key={i}>
             <motion.div variants={nodeReveal} className={`flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border ${step.color} text-xs font-mono font-bold`}>
-              <span className="text-lg">{step.icon}</span>
+              {step.icon}
               {step.label}
             </motion.div>
             {i < pipelineSteps.length - 1 && (

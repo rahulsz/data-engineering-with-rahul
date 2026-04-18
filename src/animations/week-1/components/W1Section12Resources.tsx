@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Library, FileText, Target, Package, BookOpen } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.06 } } };
@@ -10,9 +10,9 @@ const slideUp: Variants = { hidden: { opacity: 0, y: 15 }, visible: { opacity: 1
 
 type ResourceLink = { title: string; desc: string; url?: string; mono?: boolean };
 
-const sections: { label: string; icon: string; color: string; items: ResourceLink[] }[] = [
+const sections: { label: string; icon: React.ReactNode; color: string; items: ResourceLink[] }[] = [
   {
-    label: "Official Docs", icon: "📄", color: "text-[#38bdf8]",
+    label: "Official Docs", icon: <FileText className="w-5 h-5" />, color: "text-[#38bdf8]",
     items: [
       { title: "Python Official Tutorial", desc: "Read chapters 3–5: Numbers, Strings, Lists, Control Flow, Functions", url: "https://docs.python.org/3/tutorial" },
       { title: "Python csv module", desc: "Read DictReader and DictWriter sections specifically", url: "https://docs.python.org/3/library/csv.html" },
@@ -21,21 +21,21 @@ const sections: { label: string; icon: string; color: string; items: ResourceLin
     ],
   },
   {
-    label: "Practice Platforms", icon: "🎯", color: "text-[#22c55e]",
+    label: "Practice Platforms", icon: <Target className="w-5 h-5" />, color: "text-[#22c55e]",
     items: [
       { title: "HackerRank Python", desc: "Complete: Basic Data Types, Lists, Dictionaries (10 problems total)", url: "https://hackerrank.com/domains/python" },
       { title: "Learn Git Branching", desc: "Visual interactive Git — do Levels 1–4 of Main before Week 2", url: "https://learngitbranching.js.org" },
     ],
   },
   {
-    label: "This Week's Datasets", icon: "📦", color: "text-[#F97316]",
+    label: "This Week's Datasets", icon: <Package className="w-5 h-5" />, color: "text-[#F97316]",
     items: [
       { title: "GlobalMart inventory_snapshot CSV", desc: "data/raw/inventory_snapshot_2024_11_01.csv", mono: true },
       { title: "GlobalMart purchase_orders JSON", desc: "data/raw/purchase_orders_2024_11.json", mono: true },
     ],
   },
   {
-    label: "Recommended Reading", icon: "📖", color: "text-[#c084fc]",
+    label: "Recommended Reading", icon: <BookOpen className="w-5 h-5" />, color: "text-[#c084fc]",
     items: [
       { title: '"Clean Code" Chapter 3 — Functions', desc: "The single-responsibility principle explained for practitioners" },
       { title: '"Pro Git" Book', desc: "Read Chapter 2: Git Basics — the only chapter you need this week", url: "https://git-scm.com/book" },
@@ -51,7 +51,7 @@ export default function W1Section12Resources() {
     <motion.section ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} className="w-full flex flex-col gap-10 mb-24">
       <motion.div variants={fadeUp} className="flex flex-col gap-2">
         <h3 className="text-[#38bdf8] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">📚</span> Resources
+          <Library className="w-5 h-5" /> Resources
         </h3>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
           Week 1 Study Materials
@@ -62,7 +62,7 @@ export default function W1Section12Resources() {
         {sections.map((section) => (
           <motion.div key={section.label} variants={slideUp} className="bg-[#141B23] border border-[#253141] rounded-xl p-5">
             <h4 className={`${section.color} font-bold text-sm uppercase tracking-wide mb-4 flex items-center gap-2`}>
-              <span>{section.icon}</span> {section.label}
+              {section.icon} {section.label}
             </h4>
             <motion.div variants={stagger} className="flex flex-col gap-3">
               {section.items.map((item) => (

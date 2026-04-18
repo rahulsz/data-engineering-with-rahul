@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle } from "lucide-react";
+import { Lightbulb, AlertTriangle, Package } from "lucide-react";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -86,7 +86,7 @@ export default function W1Section3Variables() {
     <motion.section ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} className="w-full flex flex-col gap-10 mb-24">
       <motion.div variants={fadeUp} className="flex flex-col gap-2">
         <h3 className="text-[#c084fc] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-lg">📚</span> Core Concepts
+          <Package className="w-5 h-5" /> Core Concepts
         </h3>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
           Variables, Datatypes &amp; Collections

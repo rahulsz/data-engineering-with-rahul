@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
-import { Lightbulb, AlertTriangle, ClipboardList } from "lucide-react";
+import { Lightbulb, AlertTriangle, ClipboardList, Square } from "lucide-react";
 
 const fadeUp: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } };
 const stagger: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
@@ -90,7 +90,7 @@ export default function W1Section8Jira() {
                 <p className="text-[10px] font-mono text-[#6B7280] tracking-widest uppercase mb-2">Acceptance Criteria</p>
                 {story.criteria.map((c, i) => (
                   <div key={i} className="flex items-start gap-2 py-1 text-[#9CA3AF] text-xs">
-                    <span className="text-[#6B7280] shrink-0">☐</span> {c}
+                    <Square className="w-3 h-3 text-[#6B7280] shrink-0 mt-0.5" /> {c}
                   </div>
                 ))}
               </div>

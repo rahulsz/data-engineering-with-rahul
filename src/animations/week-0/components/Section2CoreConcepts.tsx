@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Hammer, Repeat, PackageOpen, AlertTriangle, Lightbulb } from "lucide-react";
+import { Hammer, Repeat, PackageOpen, AlertTriangle, Lightbulb, BookOpen } from "lucide-react";
 import CodeBlock from "@/components/mdx/CodeBlock";
 
 export default function Section2CoreConcepts() {
@@ -65,7 +65,7 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
       {/* Header */}
       <motion.div variants={slideUp} className="flex flex-col gap-2">
         <h3 className="text-[#F97316] text-sm font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="text-xl">📚</span> Core Concepts
+          <BookOpen className="w-5 h-5" /> Core Concepts
         </h3>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
           What Does a Data Engineer Actually Do?
