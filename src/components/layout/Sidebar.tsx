@@ -71,13 +71,24 @@ function NavItem({
 
 export default function Sidebar({ isMobileOpen, onMobileClose }: { isMobileOpen?: boolean; onMobileClose?: () => void }) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  
+  // eslint-disable-next-line
+  React.useEffect(() => setMounted(true), []);
+
   const { completedWeeks, getCompletionPercentage } = useProgressStore();
-  const completionPercentage = getCompletionPercentage();
   const headings = useSidebarStore(state => state.headings);
 
-  const nextWeek = CURRICULUM.flatMap(p =>
+  // Guarantee matching values for the first hydration pass
+  const completionPercentage = mounted ? getCompletionPercentage() : 0;
+
+  const allWeeks = CURRICULUM.flatMap(p =>
     p.weeks.map(w => ({ ...w, phaseSlug: p.slug }))
-  ).find(w => w.status === "available" && !completedWeeks.includes(w.week));
+  );
+
+  const nextWeek = mounted 
+    ? allWeeks.find(w => w.status === "available" && !completedWeeks.includes(w.week))
+    : allWeeks.find(w => w.status === "available");
 
   const currentPhaseSlug = CURRICULUM.find(p =>
     p.weeks.some(w => pathname === `/curriculum/${p.slug}/${w.slug}`)

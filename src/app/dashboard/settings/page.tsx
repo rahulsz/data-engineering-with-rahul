@@ -1,21 +1,30 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { currentUser } from "@clerk/nextjs/server";
+import { getUserSettings } from "@/app/actions/userSettings";
+import SettingsProfile from "./_components/SettingsProfile";
 import {
-  Settings,
-  User,
   Search,
-  Pencil,
-  Moon,
-  Sun,
-  Monitor,
-  Shield,
   CheckCircle2,
   ArrowRight,
   Crown,
 } from "lucide-react";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const user = await currentUser();
+  const dbSettingsRes = await getUserSettings();
+  
+  // Base initial data, mixing Clerk info if DB is empty
+  const initialData = dbSettingsRes.success && dbSettingsRes.data
+    ? dbSettingsRes.data
+    : {
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
+        bio: "",
+        githubHandle: "",
+        portfolioUrl: ""
+      };
+
   return (
     <div className="min-h-screen bg-[#0F151B] text-[#E5E7EB] font-sans selection:bg-[#F97316]/30">
 
@@ -34,7 +43,6 @@ export default function SettingsPage() {
         {/* Tab Navigation */}
         <div className="border-b border-[#1A232E] mb-10">
           <nav className="flex gap-1 -mb-px overflow-x-auto">
-            {/* Active tab */}
             <button className="px-5 py-4 text-[13px] font-semibold text-[#F97316] border-b-2 border-[#F97316] whitespace-nowrap">
               Identity & Profile
             </button>
@@ -53,157 +61,11 @@ export default function SettingsPage() {
           </nav>
         </div>
 
-        {/* ── TOP SECTION : Avatar + Identity Form ── */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10">
-
-          {/* LEFT : Avatar Card + Theme Card */}
-          <div className="xl:col-span-1 flex flex-col gap-8">
-
-            {/* Operator Avatar */}
-            <section className="bg-[#141B23] rounded-xl border-l-2 border-l-[#F97316]/40 border border-[#1e293b]/60 p-8 flex flex-col items-center">
-              <div className="flex items-center gap-2 self-start mb-8">
-                <User className="w-4 h-4 text-[#9CA3AF]" />
-                <h3 className="text-[11px] font-mono font-bold tracking-[0.15em] text-[#9CA3AF] uppercase">Operator Avatar</h3>
-              </div>
-
-              <div className="relative mb-6 group">
-                <div className="w-[140px] h-[140px] rounded-xl overflow-hidden border-2 border-[#253141] group-hover:border-[#F97316]/50 transition-colors shadow-xl">
-                  <Image
-                    src="/avatar.png"
-                    alt="Operator Avatar"
-                    width={140}
-                    height={140}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                {/* Edit badge */}
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-[#F97316] flex items-center justify-center cursor-pointer hover:bg-[#fb923c] transition-colors shadow-lg">
-                  <Pencil className="w-3.5 h-3.5 text-white" />
-                </div>
-              </div>
-
-              <h2 className="text-xl font-bold text-white mb-1 text-center">Alex Chen</h2>
-              <p className="text-[12px] font-mono text-[#6B7280]">ID: OP-7729-A</p>
-            </section>
-
-            {/* Environment Theme */}
-            <section className="bg-[#141B23] rounded-xl border-l-2 border-l-[#38bdf8]/30 border border-[#1e293b]/60 p-8">
-              <div className="flex items-center gap-2 mb-8">
-                <Settings className="w-4 h-4 text-[#9CA3AF]" />
-                <h3 className="text-[11px] font-mono font-bold tracking-[0.15em] text-[#9CA3AF] uppercase">Environment Theme</h3>
-              </div>
-
-              <div className="flex gap-4 justify-center">
-                {/* Light */}
-                <button className="flex flex-col items-center gap-3 group">
-                  <div className="w-[60px] h-[60px] rounded-xl bg-[#1A232E] border border-[#253141] flex items-center justify-center group-hover:border-[#374151] transition-colors">
-                    <Sun className="w-6 h-6 text-[#6B7280]" />
-                  </div>
-                  <span className="text-[11px] font-mono text-[#6B7280]">Light</span>
-                </button>
-
-                {/* Dark (Active) */}
-                <button className="flex flex-col items-center gap-3">
-                  <div className="w-[60px] h-[60px] rounded-xl bg-[#0B111A] border-2 border-[#38bdf8] flex items-center justify-center shadow-[0_0_16px_rgba(56,189,248,0.15)]">
-                    <Moon className="w-6 h-6 text-[#38bdf8]" />
-                  </div>
-                  <span className="text-[11px] font-mono text-[#38bdf8] font-semibold">Dark</span>
-                </button>
-
-                {/* System */}
-                <button className="flex flex-col items-center gap-3 group">
-                  <div className="w-[60px] h-[60px] rounded-xl bg-[#1A232E] border border-[#253141] flex items-center justify-center group-hover:border-[#374151] transition-colors">
-                    <Monitor className="w-6 h-6 text-[#6B7280]" />
-                  </div>
-                  <span className="text-[11px] font-mono text-[#6B7280]">System</span>
-                </button>
-              </div>
-            </section>
-          </div>
-
-          {/* RIGHT : Identity Parameters Form */}
-          <section className="xl:col-span-2 bg-[#141B23] rounded-xl border-l-2 border-l-[#F97316]/40 border border-[#1e293b]/60 p-8">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-[#9CA3AF]" />
-                <h3 className="text-[11px] font-mono font-bold tracking-[0.15em] text-[#9CA3AF] uppercase">Identity Parameters</h3>
-              </div>
-              <div className="bg-[#F97316]/10 text-[#ea580c] text-[10px] font-mono font-bold tracking-widest px-3 py-1 rounded border border-[#F97316]/20">
-                UNSAVED CHANGES
-              </div>
-            </div>
-
-            {/* Form Fields */}
-            <div className="space-y-6">
-
-              {/* First + Last Name Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">First Name</label>
-                  <input
-                    type="text"
-                    defaultValue="Alex"
-                    className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">Last Name</label>
-                  <input
-                    type="text"
-                    defaultValue="Chen"
-                    className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
-                  />
-                </div>
-              </div>
-
-              {/* Professional Bio */}
-              <div>
-                <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">Professional Bio</label>
-                <textarea
-                  rows={4}
-                  defaultValue="Senior Systems Architect focused on distributed networks and high-performance computing. Building the next generation of scalable infrastructure."
-                  className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white leading-relaxed resize-none focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
-                />
-                <div className="text-right mt-1.5">
-                  <span className="text-[11px] font-mono text-[#6B7280]">142 / 300</span>
-                </div>
-              </div>
-
-              {/* GitHub + Portfolio Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">GitHub Handle</label>
-                  <div className="flex items-center bg-[#0F151B] border border-[#253141] rounded-lg overflow-hidden focus-within:border-[#F97316]/50 transition-colors">
-                    <span className="text-[13px] text-[#6B7280] pl-4 font-mono shrink-0">github.com/</span>
-                    <input
-                      type="text"
-                      defaultValue="alexc-arch"
-                      className="flex-1 bg-transparent px-1 py-3 text-[15px] text-white focus:outline-none"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">Portfolio URL</label>
-                  <input
-                    type="text"
-                    defaultValue="https://alexchen.dev"
-                    className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-4 pt-4">
-                <button className="px-6 py-2.5 text-[13px] font-semibold text-[#F97316] hover:text-[#fb923c] transition-colors">
-                  Discard
-                </button>
-                <button className="px-6 py-2.5 text-[13px] font-bold text-white bg-[#F97316] rounded-lg hover:bg-[#fb923c] transition-colors shadow-lg shadow-[#F97316]/10">
-                  Commit Changes
-                </button>
-              </div>
-            </div>
-          </section>
-        </div>
+        <SettingsProfile 
+          initialData={initialData} 
+          clerkAvatarUrl={user?.imageUrl || ""} 
+          clerkId={user?.id || "unknown"} 
+        />
 
         {/* ── ACCESS TIER ── */}
         <section className="bg-[#141B23] rounded-xl border-l-2 border-l-[#22c55e]/40 border border-[#1e293b]/60 overflow-hidden">
