@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { week0Item } from "./variants";
+import { fadeUp } from "@/lib/animations/variants";
 import { cn } from "@/lib/cn";
 
 interface Props {
@@ -12,11 +12,11 @@ interface Props {
 
 export default function Week0Layout({ children, className, delay = 0 }: Props) {
   const dynamicVariant = {
-    ...week0Item,
+    ...fadeUp,
     visible: {
-      ...week0Item.visible,
+      ...fadeUp.visible,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      transition: { ...(week0Item.visible as any).transition, delay }
+      transition: { ...(fadeUp.visible as any).transition, delay }
     }
   };
 

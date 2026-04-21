@@ -4,10 +4,7 @@ import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
 import { Cloud, Server, Database, TrendingUp, Link } from "lucide-react";
 
-const slideUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } }
-};
+import { slideUp } from "@/lib/animations/variants";
 
 const staggerTimeline: Variants = {
   hidden: { opacity: 0 },
@@ -38,7 +35,7 @@ const steps = [
   { num: 5, icon: <TrendingUp className="w-5 h-5 text-[#22c55e]"/>, title: "Power BI Dashboard",       desc: "Executive KPI dashboard: Inventory scorecard, Supplier performance.",               tool: "Power BI",   week: "10 & 11" },
 ];
 
-export default function Section5Capstone() {
+export default function Week0Capstone() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
 

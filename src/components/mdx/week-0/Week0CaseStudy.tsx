@@ -5,14 +5,11 @@ import { motion, useInView } from "framer-motion";
 import { Building2, XCircle, Search, HelpCircle, ShieldCheck } from "lucide-react";
 import CodeBlock from "@/components/mdx/CodeBlock";
 
-export default function Section3CaseStudy() {
+import { slideLeft, popIn } from "@/lib/animations/variants";
+
+export default function Week0CaseStudy() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
-
-  const slideLeft = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { type: "spring" as const, stiffness: 260, damping: 28 } }
-  };
 
   const slideRight = {
     hidden: { opacity: 0, x: 30 },
@@ -22,11 +19,6 @@ export default function Section3CaseStudy() {
   const staggerCards = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
-  };
-
-  const popIn = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
   };
 
   const drawLineDown = {

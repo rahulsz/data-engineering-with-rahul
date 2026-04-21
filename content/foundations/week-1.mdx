@@ -8,28 +8,328 @@ estimatedMinutes: 480
 lastUpdated: "2026-04-18"
 ---
 
-<W1Section1Hero />
+<CurriculumHero
+  phase="PHASE 1 — DATA ENGINEERING FOUNDATIONS"
+  phaseIcon={<span className="text-xl">🐍</span>}
+  week="W1"
+  title="Python Basics + Git + Jira"
+  description="Every data pipeline ever written started with someone opening a Python file. This is where yours begins."
+  pills={[
+    { text: "Python + Git + Jira" },
+    { text: "Beginner" },
+    { text: "4-6 Hours" }
+  ]}
+  topics={["Data Types", "Loops", "Functions", "Local File IO", "Git Branching", "Jira Tickets"]}
+  glowTopColor="bg-[#38bdf8]"
+  glowBottomColor="bg-[#a855f7]"
+/>
 
-<W1Section2Overview />
+## Why Python + Git + Jira Before Anything Else?
 
-<W1Section3Variables />
+Python is the lingua franca of modern data engineering. Every tool you will use in this course — PySpark, Pandas, Delta Lake, MLflow — is either written in Python or exposes a Python API. Before you can orchestrate a pipeline that processes 10 million inventory records, you need to understand how Python thinks: how it stores data, how it makes decisions, how it reads files. Week 1 builds that foundation from scratch, with zero assumptions about prior programming experience.
 
-<W1Section4Loops />
+Git is not optional. In every data engineering team on the planet, code that isn't in version control doesn't exist. Git is how you save your work safely, collaborate without destroying each other's code, and create an auditable history of every change to a pipeline. By the end of this week, every Python script you write will be committed to a repository — exactly the habit that separates professionals from hobbyists.
 
-<W1Section5Functions />
+Jira closes the loop between code and business intent. A pipeline you built for no documented reason is a pipeline nobody can maintain. In this week you learn to write User Stories — the professional format for describing what needs to be built, why, and for whom. Every lab task from Week 1 onward maps to a Jira ticket. This is not busywork. It is the daily workflow of every data engineering team at every company you will interview at.
 
-<W1Section6FileHandling />
+## Variables, Datatypes & Collections
 
-<W1Section7Git />
+A variable is a named container for a value. In data engineering, variables hold everything from a single SKU code to an entire list of 50,000 product records. Python gives you four core collection types — lists, tuples, dicts, and sets — each with specific strengths for different data shapes.
 
-<W1Section8Jira />
+> Think of a Python dictionary like a row in a database table. The keys are the column names, the values are the cell data. When you later read a CSV file row-by-row, each row becomes a dictionary automatically — the mental model transfers perfectly.
 
-<W1Section9ConceptMap />
+<MemoryInspector />
 
-<W1Section10Lab />
+<Callout type="tip">
+  Always store monetary values as float, not string. '12.75' looks like a number but Python can't do math on it. This is one of the top 3 bugs in beginner data pipelines — a price field that accidentally got stored as a string and silently broke every calculation downstream.
+</Callout>
 
-<W1Section11Quiz />
+<Callout type="warning">
+  Lists are mutable — you can change them after creation. Tuples are immutable — you cannot. Never store pipeline layer names or config constants in lists. Use tuples. Accidental mutation of config data causes silent, catastrophic bugs in production pipelines.
+</Callout>
 
-<W1Section12Resources />
+## Loops, Conditions & Control Flow
 
-<W1Section13Navigation />
+Loops and conditions are the decision engine of every pipeline. A loop says "do this for every row." A condition says "but only if this is true." Together they let you process thousands of inventory records with logic that would take a human hours to apply manually.
+
+> Imagine a warehouse worker checking every box on a conveyor belt. For each box: if the label is damaged, put it in the reject pile. If the quantity is zero, flag it for reorder. Otherwise, shelve it. That manual process is exactly what a Python loop with conditions automates for your data files.
+
+<ConveyorSimulator />
+
+```python
+# ── GlobalMart: Inventory Row Processor ─────────────────
+
+inventory_rows = [
+    {"sku": "SKU-88821", "quantity": 120,  "unit_cost": 450.00},
+    {"sku": "SKU-32201", "quantity": 0,    "unit_cost": 85.00},
+    {"sku": "SKU-11043", "quantity": 45,   "unit_cost": -32.00},
+    {"sku": "SKU-55509", "quantity": 310,  "unit_cost": 78.00},
+    {"sku": "SKU-77732", "quantity": 0,    "unit_cost": 8.50},
+]
+
+clean_rows    = []
+reorder_flags = []
+corrupt_rows  = []
+
+for row in inventory_rows:
+    sku      = row["sku"]
+    quantity = row["quantity"]
+    cost     = row["unit_cost"]
+
+    if quantity == 0:
+        reorder_flags.append(sku)
+        print(f"⚠️  REORDER FLAG : {sku} — quantity is zero")
+
+    elif cost < 0:
+        corrupt_rows.append(sku)
+        print(f"❌ CORRUPT ROW  : {sku} — negative unit cost")
+
+    else:
+        clean_rows.append(row)
+        print(f"✅ CLEAN        : {sku} — qty={quantity}, cost=${cost}")
+```
+
+<Callout type="tip">
+  Always validate BEFORE you transform. In production pipelines, the order is: Read → Validate → Flag bad rows → Transform clean rows. Never transform first and validate after. Bad data that gets transformed becomes bad data that looks clean — the worst kind.
+</Callout>
+
+<Callout type="warning">
+  Watch for off-by-one errors in loops. If you use range(len(rows)) instead of iterating directly over the list, you're writing harder-to-read code with more bugs. In Python: always iterate over the collection directly — for row in rows — not by index.
+</Callout>
+
+## Writing Functions & Organizing Modules
+
+A function is a reusable block of logic with a name. Once written, you call it as many times as you need without rewriting the logic. In data engineering, functions are how you package transformations — clean_supplier_name(), calculate_lead_time(), validate_order_row() — so they can be tested independently and reused across pipelines.
+
+> A function is a stamping machine on a factory floor. You design it once, quality-test it once, and then run every unit through it. You don't redesign the stamp for every product — you call the same function for every row. This is the core of scalable pipeline design.
+
+<FunctionFactory />
+
+<Callout type="tip">
+  Write functions that do ONE thing. calculate_margin() calculates margin. It does not print, it does not write to a file, it does not send an email. Single-responsibility functions are testable, reusable, and debuggable.
+</Callout>
+
+<Callout type="warning">
+  Always add type hints to your function signatures. def calculate_margin(unit_cost: float, unit_price: float) -&gt; float is infinitely better than def calculate_margin(a, b). Type hints are documentation.
+</Callout>
+
+## File Handling — Reading & Writing Data Files
+
+Before cloud storage and Delta Lake, data engineering started with files. CSVs, JSONs, and text logs are still the most common raw data formats you will receive from source systems. Python's built-in file handling lets you read any file, process every row, and write clean output.
+
+> Reading a CSV in Python is like opening a filing cabinet drawer, pulling out one sheet at a time, reading it, and placing it in either the "keep" pile or the "shred" pile. Every pipeline on the planet does this at its core.
+
+<IOFlowVisualizer />
+
+<Callout type="tip">
+  Always use 'with open()' — never open() without it. The 'with' statement guarantees the file is closed even if your code crashes mid-processing.
+</Callout>
+
+<Callout type="warning">
+  Never hardcode file paths as strings in your pipeline logic. Use a config dictionary or environment variable at the top of the file.
+</Callout>
+
+## Git Fundamentals: Your Daily Work Routine
+
+Git is a version control system that tracks every change you make to every file in your project. It lets you rewind to any previous state, work on experimental features without breaking the main codebase, and collaborate with teammates without overwriting each other's work.
+
+> Think of Git like a time machine for your code. Every commit is a checkpoint you can teleport back to. Every branch is a parallel timeline where you can experiment. Every merge is timelines reuniting.
+
+<InteractiveGitGraph />
+
+<Callout type="tip">
+  Commit early, commit often. A commit every 30–60 minutes of work is healthy. Small commits are easier to review, easier to revert, and create a clearer history.
+</Callout>
+
+<Callout type="warning">
+  Never commit directly to main. Always work on a feature branch. In professional teams, main is protected — direct pushes are blocked at the GitHub level.
+</Callout>
+
+## Jira — User Stories & Sprint Boards
+
+A User Story is a one-sentence description of a feature from the perspective of the person who needs it. It forces you to answer three questions before writing a single line of code: Who needs this? What do they need? Why do they need it?
+
+<Week1Quiz />
+
+<CurriculumConceptMap
+  badgeText="Concept Connections"
+  badgeIcon={<span className="text-xl">🔗</span>}
+  title="How Week 1 Connects Forward & Backward"
+  groups={[
+    {
+      label: "↓ From Week 0",
+      labelColor: "text-[#c084fc]",
+      items: [
+        { source: "Databricks Setup (W0)", target: "Python Notebooks (W1)", desc: "Every Databricks notebook runs Python — setup enables execution", srcColor: "text-[#c084fc]", tgtColor: "text-[#38bdf8]" },
+        { source: "Capstone Overview (W0)", target: "File Handling (W1)", desc: "Raw CSV files are the first data source in the capstone ingestion layer", srcColor: "text-[#c084fc]", tgtColor: "text-[#38bdf8]" },
+      ]
+    },
+    {
+      label: "↑ To Future Weeks",
+      labelColor: "text-[#22c55e]",
+      items: [
+        { source: "Variables & Datatypes", target: "Pandas DataFrames (W2)", desc: "DataFrames are dictionaries at scale — same mental model, bigger data", srcColor: "text-[#38bdf8]", tgtColor: "text-[#22c55e]" },
+        { source: "Functions & Modules", target: "PySpark ETL (W5)", desc: "PySpark transformation logic is organized as Python functions and modules", srcColor: "text-[#38bdf8]", tgtColor: "text-[#22c55e]" },
+        { source: "File Handling (CSV/JSON)", target: "Delta Lake Ingestion (W4)", desc: "Reading CSVs manually becomes automated Delta table writes in Week 4", srcColor: "text-[#38bdf8]", tgtColor: "text-[#22c55e]" },
+        { source: "Loops & Conditions", target: "Data Validation Layer (W8)", desc: "The if/elif/else validation logic here scales to PySpark DataFrame filters", srcColor: "text-[#38bdf8]", tgtColor: "text-[#22c55e]" },
+      ]
+    }
+  ]}
+/>
+
+<CurriculumLab
+  badgeText="Hands-On Lab"
+  badgeIcon={<span className="text-xl">🧪</span>}
+  title="Lab 1: Inventory CSV Reader + Git-Tracked Order Processor"
+  objective={<><span className="font-bold text-[#38bdf8]">Objective:</span> Build two Python scripts, commit both to GitHub following professional conventions, and link every commit to a Jira ticket.</>}
+  duration="3–4 hours"
+  tasks={[
+    {
+      title: "Create Jira Story GDP-12",
+      steps: [
+        "Write full User Story + 5 Acceptance Criteria",
+        "Add to current sprint",
+        "Set status to IN PROGRESS",
+      ],
+    },
+    {
+      title: "Create branch: feature/GDP-12-inventory-csv-reader",
+      steps: [
+        "git checkout -b feature/GDP-12-inventory-csv-reader",
+      ],
+    },
+    {
+      title: "Create sample dataset: data/raw/inventory.csv",
+      steps: [
+        "Add header: sku,product_name,category,quantity,unit_cost",
+        "Add 6 rows including zero-quantity and negative cost rows",
+      ],
+    },
+    {
+      title: "Write: notebooks/week-01/inventory_csv_reader.py",
+      steps: [
+        "Read inventory.csv with csv.DictReader",
+        "Skip rows with negative unit_cost",
+        "Flag rows with quantity == 0 to reorder_flags.json",
+        "Write valid rows to inventory_clean.csv",
+        "Print summary: clean / flagged / skipped counts",
+      ],
+    },
+    {
+      title: "Commit & push with proper message",
+      steps: [
+        'git add notebooks/week-01/inventory_csv_reader.py',
+        'git commit -m "feat(week-1): add inventory CSV reader with reorder flagging  Refs: GDP-12"',
+        "git push origin feature/GDP-12-inventory-csv-reader",
+      ],
+    },
+    {
+      title: "Challenge: Git-Tracked Orders Processor (GDP-13)",
+      challenge: true,
+      steps: [
+        "Create: data/raw/purchase_orders.json",
+        "Write: notebooks/week-01/orders_processor.py",
+        "Read JSON file with json.load()",
+        "Calculate total_cost = quantity × unit_cost",
+        "Classify: HIGH_VALUE (>10k), STANDARD (>1k), SMALL",
+        "Write classified orders to orders_classified.json",
+        "Commit with proper message referencing GDP-13",
+      ],
+    },
+  ]}
+>
+  <div className="bg-[#0B111A] border border-[#253141] rounded-2xl p-5 shadow-lg mt-8 mb-4">
+    <h4 className="text-[#9CA3AF] text-xs tracking-widest uppercase font-mono mb-4">Expected Output (Project 1)</h4>
+    <div className="font-mono text-[13px] space-y-1">
+      <div className="text-[#22c55e]">✅ CLEAN       : SKU-88821 — qty=120, cost=$450.00</div>
+      <div className="text-[#f59e0b]">⚠️ REORDER    : SKU-32201 — quantity is zero</div>
+      <div className="text-[#ef4444]">❌ SKIPPED     : SKU-11043 — negative unit_cost</div>
+      <div className="text-[#22c55e]">✅ CLEAN       : SKU-55509 — qty=310, cost=$78.00</div>
+      <div className="text-[#f59e0b]">⚠️ REORDER    : SKU-77732 — quantity is zero</div>
+      <div className="text-[#22c55e]">✅ CLEAN       : SKU-99001 — qty=88, cost=$22.00</div>
+    </div>
+    <div className="mt-4 pt-3 border-t border-[#253141] text-[#D1D5DB] text-xs font-mono space-y-1">
+      <div>Clean rows    : 3  → written to inventory_clean.csv</div>
+      <div>Reorder flags : 2  → written to reorder_flags.json</div>
+      <div>Skipped rows  : 1  → logged, not written</div>
+    </div>
+  </div>
+</CurriculumLab>
+
+<CurriculumResources
+  badgeText="Resources"
+  badgeIcon={<span className="text-xl">📚</span>}
+  title="Week 1 Study Materials"
+  categories={[
+    {
+      id: "docs",
+      label: "Official Docs",
+      colorClass: "text-[#38bdf8]",
+      borderHoverClass: "hover:border-[#38bdf8]/50 focus-within:border-[#38bdf8]/50",
+      bgHoverGradient: "from-[#38bdf8]/20 to-transparent",
+      items: [
+        { title: "Python Official Tutorial", desc: "Read chapters 3–5: Numbers, Strings, Lists, Control Flow, Functions", url: "https://docs.python.org/3/tutorial" },
+        { title: "Python csv module", desc: "Read DictReader and DictWriter sections specifically", url: "https://docs.python.org/3/library/csv.html" },
+        { title: "Python json module", desc: "Read json.load() and json.dump() with the indent parameter", url: "https://docs.python.org/3/library/json.html" },
+        { title: "Git Cheat Sheet", desc: "Print this. Pin it. Use it daily for the first 3 weeks.", url: "https://education.github.com/git-cheat-sheet-education.pdf" },
+      ],
+    },
+    {
+      id: "practice",
+      label: "Practice Platforms",
+      colorClass: "text-[#22c55e]",
+      borderHoverClass: "hover:border-[#22c55e]/50 focus-within:border-[#22c55e]/50",
+      bgHoverGradient: "from-[#22c55e]/20 to-transparent",
+      items: [
+        { title: "HackerRank Python", desc: "Complete: Basic Data Types, Lists, Dictionaries (10 problems total)", url: "https://hackerrank.com/domains/python" },
+        { title: "Learn Git Branching", desc: "Visual interactive Git — do Levels 1–4 of Main before Week 2", url: "https://learngitbranching.js.org" },
+      ],
+    },
+    {
+      id: "datasets",
+      label: "This Week's Datasets",
+      colorClass: "text-[#F97316]",
+      borderHoverClass: "hover:border-[#F97316]/50 focus-within:border-[#F97316]/50",
+      bgHoverGradient: "from-[#F97316]/20 to-transparent",
+      items: [
+        { title: "GlobalMart inventory_snapshot CSV", desc: "data/raw/inventory_snapshot_2024_11_01.csv", mono: true },
+        { title: "GlobalMart purchase_orders JSON", desc: "data/raw/purchase_orders_2024_11.json", mono: true },
+      ],
+    },
+    {
+      id: "reading",
+      label: "Recommended Reading",
+      colorClass: "text-[#c084fc]",
+      borderHoverClass: "hover:border-[#c084fc]/50 focus-within:border-[#c084fc]/50",
+      bgHoverGradient: "from-[#c084fc]/20 to-transparent",
+      items: [
+        { title: '"Clean Code" Chapter 3 — Functions', desc: "The single-responsibility principle explained for practitioners" },
+        { title: '"Pro Git" Book', desc: "Read Chapter 2: Git Basics — the only chapter you need this week", url: "https://git-scm.com/book" },
+      ],
+    },
+  ]}
+/>
+
+<CurriculumNavigation
+  whatsNext={{
+    title: "Week 2: Intermediate Python + Pandas",
+    description: "Week 2 takes everything you built this week and scales it. Instead of manually looping through 5 inventory rows with plain Python, you will load 50,000 rows into a Pandas DataFrame in a single line. The functions you wrote in product_utils.py this week will become the logic inside DataFrame .apply() calls next week. Come with your Week 1 code open — you'll refactor it into production-grade Pandas pipelines.",
+    previewTitle: "Week 2 Preview",
+    previewItems: [
+      { text: "Pandas DataFrames from scratch" },
+      { text: "EDA on GlobalMart inventory & orders data" },
+      { text: "Data cleansing: nulls, duplicates, type casting" }
+    ]
+  }}
+  previous={{
+    href: "/curriculum/orientation/week-0",
+    phase: "PHASE 0 — ORIENTATION",
+    label: "W0 — Setting the Stage"
+  }}
+  next={{
+    href: "/curriculum/foundations/week-2",
+    phase: "PHASE 1 — DATA ENGINEERING FOUNDATIONS",
+    label: "W2 — Intermediate Python + Pandas"
+  }}
+  breadcrumb={<>Phase 1 <span className="text-[#6B7280]">›</span> Week 1</>}
+/>

@@ -3,30 +3,7 @@
 import React, { useRef, useState } from "react";
 import { motion, Variants, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-const stagger: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-};
-
-const slideDown: Variants = {
-  hidden: { opacity: 0, y: -20 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 28 } },
-};
-
-const slideLeft: Variants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 260, damping: 28 } },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut", duration: 0.5 } },
-};
-
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.85 },
-  visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 260, damping: 28 } },
-};
+import { stagger, slideDown, slideLeft, fadeUp, scaleIn } from "@/lib/animations/variants";
 
 interface Pill {
   icon?: React.ReactNode;
@@ -57,8 +34,8 @@ export default function CurriculumHero({
   week,
   title,
   description,
-  pills,
-  topics,
+  pills = [],
+  topics = [],
   glowTopColor = "bg-[#F97316]",
   glowBottomColor = "bg-[#06b6d4]"
 }: CurriculumHeroProps) {

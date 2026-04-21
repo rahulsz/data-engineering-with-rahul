@@ -8,18 +8,6 @@ export default function FunctionFactory() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [outputReady, setOutputReady] = useState(false);
 
-  const rawRow = {
-    sku: "SKU-888",
-    unit_cost: 450,
-    unit_price: 899
-  };
-
-  const enrichedRow = {
-    ...rawRow,
-    margin_pct: 49.94,
-    margin_tier: "MEDIUM",
-    is_profitable: true
-  };
 
   const handleRun = () => {
     if (isProcessing) return;

@@ -6,7 +6,7 @@ import { Search, PanelLeft, FolderClosed, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { fadeIn } from "@/animations/variants";
+import { fadeIn } from "@/lib/animations/variants";
 import CommandPalette from "@/components/search/CommandPalette";
 import { CURRICULUM } from "@/config/site-config";
 

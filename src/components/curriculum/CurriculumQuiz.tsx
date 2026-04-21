@@ -6,22 +6,10 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { CheckCircle2, XCircle } from "lucide-react";
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } },
-};
-const staggerCards: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-};
-const popIn: Variants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { type: "spring" as const, stiffness: 200, damping: 20 },
-  },
-};
+import { stagger, slideDown, slideLeft, fadeUp, scaleIn, popIn } from "@/lib/animations/variants";
+
+
+
 
 export interface QuizQuestion {
   q: string;
@@ -46,16 +34,47 @@ interface CurriculumQuizProps {
   badgeIcon?: React.ReactNode;
   title: string;
   questions: QuizQuestion[];
-  resultTiers: QuizTier[];
+  resultTiers?: QuizTier[];
 }
 
 export default function CurriculumQuiz({
   badgeText,
   badgeIcon,
   title,
-  questions,
+  questions = [],
   resultTiers,
 }: CurriculumQuizProps) {
+  const defaultTiers: QuizTier[] = [
+    {
+      minPercentage: 100,
+      maxPercentage: 100,
+      icon: <span className="text-4xl">🏆</span>,
+      msg: "Perfect Score!",
+      colorClass: "text-[#22c55e]",
+      borderColorClass: "border-[#22c55e]/50",
+      bgGradientClass: "from-[#22c55e]/20 to-[#141B23]"
+    },
+    {
+      minPercentage: 60,
+      maxPercentage: 99,
+      icon: <span className="text-4xl">💪</span>,
+      msg: "Solid work.",
+      colorClass: "text-[#38bdf8]",
+      borderColorClass: "border-[#38bdf8]/50",
+      bgGradientClass: "from-[#38bdf8]/20 to-[#141B23]"
+    },
+    {
+      minPercentage: 0,
+      maxPercentage: 59,
+      icon: <span className="text-4xl">📖</span>,
+      msg: "Keep practicing.",
+      colorClass: "text-[#ef4444]",
+      borderColorClass: "border-[#ef4444]/50",
+      bgGradientClass: "from-[#ef4444]/20 to-[#141B23]"
+    }
+  ];
+
+  const activeTiers = resultTiers || defaultTiers;
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
   const { width, height } = useWindowSize();
@@ -88,7 +107,7 @@ export default function CurriculumQuiz({
     setAnswers(next);
   };
 
-  const tier = resultTiers.find(
+  const tier = activeTiers.find(
     (t) => scorePercentage >= t.minPercentage && scorePercentage <= t.maxPercentage
   );
 
@@ -171,7 +190,7 @@ export default function CurriculumQuiz({
       </motion.div>
 
       {/* Questions Stack */}
-      <motion.div variants={staggerCards} className="flex flex-col gap-6 mt-4">
+      <motion.div variants={stagger} className="flex flex-col gap-6 mt-4">
         {questions.map((q, qIndex) => {
           const selected = answers[qIndex];
           const isAnswered = selected !== null;

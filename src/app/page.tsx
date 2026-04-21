@@ -12,6 +12,8 @@ import { cn } from "@/lib/cn";
 import { useProgressStore } from "@/store/progressStore";
 import CommandPalette from "@/components/search/CommandPalette";
 
+import { stagger, slideDown, slideLeft, fadeUp, scaleIn } from "@/lib/animations/variants";
+
 // ─── EFFECTS ───
 function BackgroundEffects() {
   return (
@@ -189,16 +191,6 @@ const fadeInUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
   initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] } },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] } },
-};
-
-const stagger: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
 };
 
 const scaleUp: Variants = {

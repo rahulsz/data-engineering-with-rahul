@@ -28,31 +28,13 @@ interface CurriculumResourcesProps {
   categories: ResourceCategory[];
 }
 
-const slideUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } }
-};
-
-const staggerCategories: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
-};
-
-const staggerItems: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.06 } }
-};
-
-const slideItemUp: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.35 } }
-};
+import { slideUp, stagger, fadeUp as slideItemUp } from "@/lib/animations/variants";
 
 export default function CurriculumResources({
   badgeText,
   badgeIcon,
   title,
-  categories
+  categories = []
 }: CurriculumResourcesProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
@@ -74,7 +56,7 @@ export default function CurriculumResources({
         </h2>
       </motion.div>
 
-      <motion.div variants={staggerCategories} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((cat, idx) => (
           <motion.div 
             key={idx}
@@ -88,7 +70,7 @@ export default function CurriculumResources({
             </div>
 
             {/* Links */}
-            <motion.div variants={staggerItems} className="flex flex-col p-2 gap-2 h-full">
+            <motion.div variants={stagger} className="flex flex-col p-2 gap-2 h-full">
               {cat.items.map((item, iIdx) => {
                 if (item.url) {
                   return (

@@ -3,27 +3,14 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Hammer, Repeat, PackageOpen, BookOpen } from "lucide-react";
-import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import Callout from "@/components/mdx/Callout";
 import CodeBlock from "@/components/mdx/CodeBlock";
 
-export default function Section2CoreConcepts() {
+import { stagger, scaleIn, slideUp } from "@/lib/animations/variants";
+
+export default function Week0CoreConcepts() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const slideUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } }
-  };
-
-  const cardScale = {
-    hidden: { opacity: 0, scale: 0.92, y: 20 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring" as const, stiffness: 260, damping: 28 } }
-  };
 
   const drawLine = {
     hidden: { strokeDashoffset: 100 },
@@ -59,7 +46,7 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
       ref={ref}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
-      variants={staggerContainer}
+      variants={stagger}
       className="w-full flex flex-col gap-12 mt-16 mb-24"
     >
       
@@ -74,7 +61,7 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
       </motion.div>
 
       {/* 3 Icon Cards */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { icon: <Hammer className="w-6 h-6 text-[#F97316]" />, title: "BUILD", desc: "Pipelines, platforms & infrastructure" },
           { icon: <Repeat className="w-6 h-6 text-[#38bdf8]" />, title: "MOVE", desc: "Data from A to B reliably, at any scale" },
@@ -82,7 +69,7 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
         ].map((card, idx) => (
           <motion.div 
             key={idx} 
-            variants={cardScale}
+            variants={scaleIn}
             whileHover={{ y: -4, borderColor: "#F97316", boxShadow: "0 10px 30px -10px rgba(249,115,22,0.2)" }}
             className="flex flex-col gap-4 p-6 bg-[#141B23] border border-[#253141] rounded-xl transition-colors duration-300 group"
           >
@@ -104,7 +91,7 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* 3-Layer Mental Model */}
-        <motion.div variants={cardScale} className="flex flex-col justify-between p-8 bg-[#141B23] border border-[#253141] rounded-xl">
+        <motion.div variants={scaleIn} className="flex flex-col justify-between p-8 bg-[#141B23] border border-[#253141] rounded-xl">
           <h4 className="text-[#9CA3AF] text-sm font-mono tracking-widest uppercase mb-6">The 3-Layer Mental Model</h4>
           
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 h-full">
@@ -182,18 +169,18 @@ serve(cleaned, "delta://globalmart/gold/fact_purchase_orders")`;
       </div>
 
       {/* Callouts */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CurriculumCallout type="tip">
+      <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Callout type="tip">
           If you internalize the 3-layer model in Week 0, every architecture diagram you see for the rest of your career will immediately make sense.
-        </CurriculumCallout>
+        </Callout>
 
-        <CurriculumCallout type="warning">
+        <Callout type="warning">
           Don't confuse Data Engineering with Data Science. You build the highway. They drive the car.
-        </CurriculumCallout>
+        </Callout>
       </motion.div>
 
       {/* Code Block Mental Model */}
-      <motion.div variants={cardScale}>
+      <motion.div variants={scaleIn}>
         <h4 className="text-[#9CA3AF] text-sm font-mono tracking-widest uppercase mb-3">Python — Pipeline Mental Model</h4>
         <div className="rounded-xl overflow-hidden border border-[#253141] shadow-2xl">
           <CodeBlock language="python">{rawPythonCode}</CodeBlock>

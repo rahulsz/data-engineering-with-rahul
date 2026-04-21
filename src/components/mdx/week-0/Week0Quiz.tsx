@@ -4,7 +4,7 @@ import React from "react";
 import CurriculumQuiz, { QuizQuestion, QuizTier } from "@/components/curriculum/CurriculumQuiz";
 import { Trophy, BrainCircuit, BookOpen } from "lucide-react";
 
-export default function Section7Quiz() {
+export default function Week0Quiz() {
   const quizData: QuizQuestion[] = [
     {
       q: "What is the primary role of a Data Engineer?",
@@ -63,38 +63,6 @@ export default function Section7Quiz() {
     }
   ];
 
-  const resultTiers: QuizTier[] = [
-    {
-      minPercentage: 100,
-      maxPercentage: 100,
-      icon: <Trophy className="w-12 h-12 text-[#22c55e]" />,
-      msg: "🏆 Perfect Score! You're ready for Week 1.",
-      desc: "All core concepts secured. Move on to the interactive Python and SQL setups.",
-      colorClass: "text-[#22c55e]",
-      borderColorClass: "border-[#22c55e]/50",
-      bgGradientClass: "from-[#22c55e]/20 to-[#141B23]"
-    },
-    {
-      minPercentage: 60,
-      maxPercentage: 99,
-      icon: <BrainCircuit className="w-12 h-12 text-[#38bdf8]" />,
-      msg: "💪 Solid work.",
-      desc: "Take another pass through the content sections you missed to solidify your mental model.",
-      colorClass: "text-[#38bdf8]",
-      borderColorClass: "border-[#38bdf8]/50",
-      bgGradientClass: "from-[#38bdf8]/20 to-[#141B23]"
-    },
-    {
-      minPercentage: 0,
-      maxPercentage: 59,
-      icon: <BookOpen className="w-12 h-12 text-[#ef4444]" />,
-      msg: "📖 Keep practicing.",
-      desc: "Take another pass through the content sections you missed to solidify your mental model.",
-      colorClass: "text-[#ef4444]",
-      borderColorClass: "border-[#ef4444]/50",
-      bgGradientClass: "from-[#ef4444]/20 to-[#141B23]"
-    }
-  ];
 
   return (
     <CurriculumQuiz
@@ -102,7 +70,6 @@ export default function Section7Quiz() {
       badgeIcon={<span className="text-xl">📝</span>}
       title="5 Questions — Test Your Understanding"
       questions={quizData}
-      resultTiers={resultTiers}
     />
   );
 }

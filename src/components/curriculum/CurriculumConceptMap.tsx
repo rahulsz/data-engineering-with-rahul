@@ -4,22 +4,7 @@ import React, { useRef } from "react";
 import { motion, useInView, Variants } from "framer-motion";
 import { Link } from "lucide-react";
 
-const fadeUp: Variants = { 
-  hidden: { opacity: 0, y: 20 }, 
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } 
-};
-const stagger: Variants = { 
-  hidden: { opacity: 0 }, 
-  visible: { opacity: 1, transition: { staggerChildren: 0.06 } } 
-};
-const rowSlide: Variants = { 
-  hidden: { opacity: 0, x: -20 }, 
-  visible: { opacity: 1, x: 0, transition: { ease: "easeOut" as const, duration: 0.4 } } 
-};
-const pop: Variants = { 
-  hidden: { opacity: 0, scale: 0.8 }, 
-  visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 260, damping: 20 } } 
-};
+import { stagger, fadeUp, slideLeft as rowSlide, popIn as pop } from "@/lib/animations/variants";
 
 export interface ConceptConnection {
   source: string;
@@ -47,7 +32,7 @@ export default function CurriculumConceptMap({
   badgeText,
   badgeIcon = <Link className="w-5 h-5" />,
   title,
-  groups
+  groups = []
 }: CurriculumConceptMapProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });

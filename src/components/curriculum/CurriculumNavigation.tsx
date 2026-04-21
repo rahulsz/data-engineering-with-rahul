@@ -5,18 +5,7 @@ import { motion, useInView, Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight, FastForward, Home } from "lucide-react";
 import Link from "next/link";
 
-const fadeUp: Variants = { 
-  hidden: { opacity: 0, y: 20 }, 
-  visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.5 } } 
-};
-const stagger: Variants = { 
-  hidden: { opacity: 0 }, 
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } } 
-};
-const popIn: Variants = { 
-  hidden: { opacity: 0, scale: 0.95 }, 
-  visible: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 20 } } 
-};
+import { stagger, fadeUp, popIn } from "@/lib/animations/variants";
 
 export interface PreviewItem {
   icon: React.ReactNode;
@@ -87,7 +76,7 @@ export default function CurriculumNavigation({
                 {whatsNext.previewTitle || "Preview"}
               </h4>
               <motion.div variants={stagger} className="flex flex-col gap-3">
-                {whatsNext.previewItems.map((item, i) => (
+                {whatsNext.previewItems?.map((item, i) => (
                   <motion.div key={i} variants={popIn} className="flex items-center gap-3 text-[#D1D5DB] text-sm group">
                     <span className="shrink-0">{item.icon}</span>
                     <span className="group-hover:text-white transition-colors">{item.text}</span>

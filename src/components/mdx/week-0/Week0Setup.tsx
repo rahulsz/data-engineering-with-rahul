@@ -3,10 +3,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Wrench, BookHeart, Server, Database, Clock, CloudCog, Check, MonitorPlay } from "lucide-react";
-import CurriculumCallout from "@/components/curriculum/CurriculumCallout";
+import Callout from "@/components/mdx/Callout";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import CodeBlock from "@/components/mdx/CodeBlock";
+
+import { stagger, slideUp } from "@/lib/animations/variants";
 
 // --- Zustand Store for Checklists ---
 interface SetupStore {
@@ -26,7 +28,7 @@ const useSetupStore = create<SetupStore>()(
   )
 );
 
-export default function Section4Setup() {
+export default function Week0Setup() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
   const [activeTab, setActiveTab] = useState(0);
@@ -35,16 +37,6 @@ export default function Section4Setup() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const { checks, toggle } = useSetupStore();
-
-  const slideUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { ease: "easeOut" as const, duration: 0.4 } }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
 
   const tabs = [
     { id: "Workspace", icon: <BookHeart size={16} />, content: "Where notebooks & files live. This is your primary coding interface." },
@@ -156,7 +148,7 @@ print("   bronze | silver | gold — ready to build.")`;
         </div>
 
         {/* Right Column: Interactive Checklist */}
-        <motion.div variants={staggerContainer} className="bg-gradient-to-br from-[#141B23] to-[#0F151B] border border-[#253141] rounded-xl overflow-hidden shadow-2xl relative">
+        <motion.div variants={stagger} className="bg-gradient-to-br from-[#141B23] to-[#0F151B] border border-[#253141] rounded-xl overflow-hidden shadow-2xl relative">
           <div className="p-5 border-b border-[#253141] bg-[#1A232E] flex items-center justify-between">
              <div className="flex items-center gap-2">
                 <Wrench className="w-5 h-5 text-[#a855f7]" />
@@ -196,14 +188,14 @@ print("   bronze | silver | gold — ready to build.")`;
       </div>
 
       {/* Callouts */}
-      <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CurriculumCallout type="warning" title="COMMON MISTAKE">
+      <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Callout type="warning" title="COMMON MISTAKE">
           Clusters auto-terminate after 2 hours. Your notebook code is always safe — but all in-memory variables are gone. Always re-run cells from the top after a restart.
-        </CurriculumCallout>
+        </Callout>
         
-        <CurriculumCallout type="tip">
+        <Callout type="tip">
           Name your cluster intentionally: <code>globalmart-dev-[yourname]</code>. In real teams, clusters are named after the project they serve. This signals infrastructure awareness in interviews.
-        </CurriculumCallout>
+        </Callout>
       </motion.div>
 
       {/* Setup Validation Code Block */}

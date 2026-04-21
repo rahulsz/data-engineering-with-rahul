@@ -6,19 +6,7 @@ import { CheckCircle2, ChevronRight, Check } from "lucide-react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 
-const slideUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { ease: "easeOut" as const, duration: 0.5 },
-  },
-};
-
-const staggerCards: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-};
+import { slideUp, stagger } from "@/lib/animations/variants";
 
 export interface LabTask {
   title: string;
@@ -42,7 +30,7 @@ export default function CurriculumLab({
   title,
   objective,
   duration,
-  tasks,
+  tasks = [],
   children,
 }: CurriculumLabProps) {
   const ref = useRef(null);
@@ -150,9 +138,8 @@ export default function CurriculumLab({
         </div>
       </motion.div>
 
-      {/* Task Cards Grid */}
       <motion.div
-        variants={staggerCards}
+        variants={stagger}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
         {tasks.map((task, idx) => (

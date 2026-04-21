@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { slideUp } from "@/animations/variants";
+import { slideUp } from "@/lib/animations/variants";
 import { cn } from "@/lib/cn";
 
 interface Props {

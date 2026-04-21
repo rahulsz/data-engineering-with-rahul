@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Search, X, ArrowRight } from "lucide-react";
 import { SearchableNote } from "@/data/mdx-utils";
-import { scaleIn } from "@/animations/variants";
+import { scaleIn } from "@/lib/animations/variants";
 import { cn } from "@/lib/cn";
 
 interface CommandPaletteProps {

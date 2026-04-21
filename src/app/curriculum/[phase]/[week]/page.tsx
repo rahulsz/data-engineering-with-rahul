@@ -15,32 +15,27 @@ import LivePythonBlock from "@/components/mdx/LivePythonBlock";
 import LiveSqlBlock from "@/components/mdx/LiveSqlBlock";
 import SidebarHydrator from "@/components/layout/SidebarHydrator";
 import RevealContent from "@/components/motion/RevealContent";
-import Week0Layout from "@/animations/week-0/Week0Layout";
+import Week0Layout from "@/components/mdx/week-0/Week0Layout";
 
-import Section1Hero from "@/animations/week-0/components/Section1Hero";
-import Section2CoreConcepts from "@/animations/week-0/components/Section2CoreConcepts";
-import Section3CaseStudy from "@/animations/week-0/components/Section3CaseStudy";
-import Section4Setup from "@/animations/week-0/components/Section4Setup";
-import Section5Capstone from "@/animations/week-0/components/Section5Capstone";
-import Section6Lab from "@/animations/week-0/components/Section6Lab";
-import Section7Quiz from "@/animations/week-0/components/Section7Quiz";
-import Section8ConceptMap from "@/animations/week-0/components/Section8ConceptMap";
-import Section9Resources from "@/animations/week-0/components/Section9Resources";
-import Section10Navigation from "@/animations/week-0/components/Section10Navigation";
+import Week0CoreConcepts from "@/components/mdx/week-0/Week0CoreConcepts";
+import Week0CaseStudy from "@/components/mdx/week-0/Week0CaseStudy";
+import Week0Setup from "@/components/mdx/week-0/Week0Setup";
+import Week0Capstone from "@/components/mdx/week-0/Week0Capstone";
+import Week0Quiz from "@/components/mdx/week-0/Week0Quiz";
 
-import W1Section1Hero from "@/animations/week-1/components/W1Section1Hero";
-import W1Section2Overview from "@/animations/week-1/components/W1Section2Overview";
-import W1Section3Variables from "@/animations/week-1/components/W1Section3Variables";
-import W1Section4Loops from "@/animations/week-1/components/W1Section4Loops";
-import W1Section5Functions from "@/animations/week-1/components/W1Section5Functions";
-import W1Section6FileHandling from "@/animations/week-1/components/W1Section6FileHandling";
-import W1Section7Git from "@/animations/week-1/components/W1Section7Git";
-import W1Section8Jira from "@/animations/week-1/components/W1Section8Jira";
-import W1Section9ConceptMap from "@/animations/week-1/components/W1Section9ConceptMap";
-import W1Section10Lab from "@/animations/week-1/components/W1Section10Lab";
-import W1Section11Quiz from "@/animations/week-1/components/W1Section11Quiz";
-import W1Section12Resources from "@/animations/week-1/components/W1Section12Resources";
-import W1Section13Navigation from "@/animations/week-1/components/W1Section13Navigation";
+import MemoryInspector from "@/components/interactive/week-1/MemoryInspector";
+import ConveyorSimulator from "@/components/interactive/week-1/ConveyorSimulator";
+import FunctionFactory from "@/components/interactive/week-1/FunctionFactory";
+import IOFlowVisualizer from "@/components/interactive/week-1/IOFlowVisualizer";
+import InteractiveGitGraph from "@/components/interactive/week-1/InteractiveGitGraph";
+import Week1Quiz from "@/components/mdx/week-1/Week1Quiz";
+
+import CurriculumHero from "@/components/curriculum/CurriculumHero";
+import CurriculumNavigation from "@/components/curriculum/CurriculumNavigation";
+import CurriculumQuiz from "@/components/curriculum/CurriculumQuiz";
+import CurriculumLab from "@/components/curriculum/CurriculumLab";
+import CurriculumConceptMap from "@/components/curriculum/CurriculumConceptMap";
+import CurriculumResources from "@/components/curriculum/CurriculumResources";
 
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
@@ -130,14 +125,11 @@ export default async function NotePage({
             },
           }}
           components={{
-            Section1Hero, Section2CoreConcepts, Section3CaseStudy,
-            Section4Setup, Section5Capstone, Section6Lab, Section7Quiz,
-            Section8ConceptMap, Section9Resources, Section10Navigation,
-            W1Section1Hero, W1Section2Overview, W1Section3Variables,
-            W1Section4Loops, W1Section5Functions, W1Section6FileHandling,
-            W1Section7Git, W1Section8Jira, W1Section9ConceptMap,
-            W1Section10Lab, W1Section11Quiz, W1Section12Resources,
-            W1Section13Navigation,
+            Week0CoreConcepts, Week0CaseStudy, Week0Setup, Week0Capstone, Week0Quiz,
+            MemoryInspector, ConveyorSimulator, FunctionFactory,
+            IOFlowVisualizer, InteractiveGitGraph, Week1Quiz,
+            CurriculumHero, CurriculumNavigation, CurriculumQuiz,
+            CurriculumLab, CurriculumConceptMap, CurriculumResources,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             RevealContent: RevealContent as any,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

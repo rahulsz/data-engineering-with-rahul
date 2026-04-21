@@ -4,7 +4,7 @@ import React from "react";
 import CurriculumQuiz, { QuizQuestion, QuizTier } from "@/components/curriculum/CurriculumQuiz";
 import { FileText, Trophy, Brain, BookOpen } from "lucide-react";
 
-export default function W1Section11Quiz() {
+export default function Week1Quiz() {
   const questions: QuizQuestion[] = [
     {
       q: "You have a list of 50,000 inventory rows in a Python list. Which structure would you use to store a single row?",
@@ -63,35 +63,6 @@ export default function W1Section11Quiz() {
     },
   ];
 
-  const resultTiers: QuizTier[] = [
-    {
-      minPercentage: 100,
-      maxPercentage: 100,
-      icon: <Trophy className="w-12 h-12 text-[#22c55e]" />,
-      msg: "🏆 Pythonista unlocked. Week 2 awaits.",
-      colorClass: "text-[#22c55e]",
-      borderColorClass: "border-[#22c55e]/50",
-      bgGradientClass: "from-[#22c55e]/20 to-[#141B23]"
-    },
-    {
-      minPercentage: 60,
-      maxPercentage: 99,
-      icon: <Brain className="w-12 h-12 text-[#f59e0b]" />,
-      msg: "💪 Strong base. Review functions and Git sections.",
-      colorClass: "text-[#f59e0b]",
-      borderColorClass: "border-[#f59e0b]/50",
-      bgGradientClass: "from-[#f59e0b]/20 to-[#141B23]"
-    },
-    {
-      minPercentage: 0,
-      maxPercentage: 59,
-      icon: <BookOpen className="w-12 h-12 text-[#ef4444]" />,
-      msg: "📖 Re-read Loops and File Handling — then retry.",
-      colorClass: "text-[#ef4444]",
-      borderColorClass: "border-[#ef4444]/50",
-      bgGradientClass: "from-[#ef4444]/20 to-[#141B23]"
-    }
-  ];
 
   return (
     <CurriculumQuiz
@@ -99,7 +70,6 @@ export default function W1Section11Quiz() {
       badgeIcon={<FileText className="w-5 h-5" />}
       title="Week 1 Quiz"
       questions={questions}
-      resultTiers={resultTiers}
     />
   );
 }
