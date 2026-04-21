@@ -7,6 +7,7 @@ import GamificationMatrix from "./_components/GamificationMatrix";
 import SystemLoadWidget from "./_components/SystemLoadWidget";
 import ActiveModuleWidget from "./_components/ActiveModuleWidget";
 import ActivityHeatmap from "./_components/ActivityHeatmap";
+import EventLogWidget from "./_components/EventLogWidget";
 
 export default function DashboardPage() {
   return (
@@ -63,32 +64,7 @@ export default function DashboardPage() {
             </section>
 
             {/* Event Log */}
-            <section className="bg-[#19222E] rounded-xl p-8 flex-1 border-t-2 border-t-transparent">
-              <h3 className="text-[11px] font-bold tracking-[0.15em] text-[#9CA3AF] uppercase mb-6">Event Log</h3>
-              
-              <div className="relative border-l border-[#374151] ml-2 pb-4 space-y-8 mt-2">
-                {/* Event 1 */}
-                <div className="relative pl-6">
-                  <div className="absolute w-[11px] h-[11px] bg-[#22c55e] rounded-full -left-[6px] top-1 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                  <div className="text-[13px] font-semibold text-white">Lesson Complete: Relational Databases</div>
-                  <div className="text-[11px] font-mono text-[#9CA3AF] mt-1.5 opacity-80">2 hours ago</div>
-                </div>
-
-                {/* Event 2 */}
-                <div className="relative pl-6">
-                  <div className="absolute w-[11px] h-[11px] bg-[#4b5563] rounded-full -left-[6px] top-1"></div>
-                  <div className="text-[13px] font-semibold text-[#D1D5DB]">Quiz Passed: Data Types 101</div>
-                  <div className="text-[11px] font-mono text-[#9CA3AF] mt-1.5 opacity-80">Yesterday</div>
-                </div>
-
-                {/* Event 3 */}
-                <div className="relative pl-6">
-                  <div className="absolute w-[11px] h-[11px] bg-[#4b5563] rounded-full -left-[6px] top-1"></div>
-                  <div className="text-[13px] font-semibold text-[#D1D5DB]">Module Unlocked: Phase 1 Week 2</div>
-                  <div className="text-[11px] font-mono text-[#9CA3AF] mt-1.5 opacity-80">Oct 12</div>
-                </div>
-              </div>
-            </section>
+            <EventLogWidget />
 
           </div>
         </div>

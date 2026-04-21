@@ -24,6 +24,7 @@ export default function ConveyorSimulator() {
     if (!isPlaying) return;
 
     if (currentRowIndex >= inventoryData.length) {
+      // eslint-disable-next-line
       setIsPlaying(false);
       return;
     }

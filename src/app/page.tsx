@@ -635,7 +635,7 @@ export default function Home() {
         <div className="hidden md:flex items-center gap-8 text-sm font-ui text-[#8B949E]">
           <Link href="/curriculum" className="hover:text-white transition-colors">Curriculum</Link>
           <Link href="#curriculum" className="hover:text-white transition-colors">Phases</Link>
-          <Link href="/progress" className="hover:text-white transition-colors">Progress</Link>
+          <Link href="/dashboard/progress" className="hover:text-white transition-colors">Progress</Link>
           <button onClick={() => setIsSearchOpen(true)} className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
             Search
             <kbd className="px-1.5 py-0.5 rounded bg-[#21262D] text-[10px] font-mono text-[#8B949E] border border-zinc-700">⌘K</kbd>

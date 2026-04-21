@@ -25,7 +25,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
     if (isOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery("");
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
     setSelectedIndex(0);
       fetch("/api/search")
         .then(res => res.json())

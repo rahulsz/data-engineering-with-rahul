@@ -20,10 +20,12 @@ export async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      dbName: "data_engineering",
     };
 
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      console.log("🔥 Successfully connected to MongoDB Atlas");
+      const dbName = mongoose.connection.db?.databaseName ?? "unknown";
+      console.log(`🔥 Successfully connected to MongoDB Atlas — database: "${dbName}"`);
       return mongoose;
     }).catch((e) => {
       console.error("❌ MongoDB connection error:", e.message);
@@ -40,3 +42,4 @@ export async function connectToDatabase() {
 
   return cached.conn;
 }
+

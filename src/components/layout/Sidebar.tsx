@@ -73,7 +73,7 @@ export default function Sidebar({ isMobileOpen, onMobileClose }: { isMobileOpen?
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   
-  // eslint-disable-next-line
+   
   React.useEffect(() => setMounted(true), []);
 
   const { completedWeeks, getCompletionPercentage } = useProgressStore();

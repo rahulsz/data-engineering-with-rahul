@@ -35,6 +35,7 @@ export default function Week0Setup() {
   
   // Hydration fix for zustand persist
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line
   useEffect(() => setMounted(true), []);
   const { checks, toggle } = useSetupStore();
 

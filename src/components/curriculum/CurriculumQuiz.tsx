@@ -94,6 +94,7 @@ export default function CurriculumQuiz({
 
   useEffect(() => {
     if (allAnswered && scorePercentage === 100) {
+      // eslint-disable-next-line
       setShowConfetti(true);
       const t = setTimeout(() => setShowConfetti(false), 5000);
       return () => clearTimeout(t);

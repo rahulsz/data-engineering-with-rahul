@@ -13,6 +13,8 @@ interface SettingsProfileProps {
     bio: string;
     githubHandle: string;
     portfolioUrl: string;
+    linkedinUrl?: string;
+    discordHandle?: string;
   };
   clerkAvatarUrl: string;
   clerkId: string;
@@ -26,6 +28,8 @@ export default function SettingsProfile({ initialData, clerkAvatarUrl, clerkId }
     bio: initialData.bio,
     githubHandle: initialData.githubHandle,
     portfolioUrl: initialData.portfolioUrl,
+    linkedinUrl: initialData.linkedinUrl || "",
+    discordHandle: initialData.discordHandle || "",
   });
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -42,6 +46,8 @@ export default function SettingsProfile({ initialData, clerkAvatarUrl, clerkId }
       bio: initialData.bio,
       githubHandle: initialData.githubHandle,
       portfolioUrl: initialData.portfolioUrl,
+      linkedinUrl: initialData.linkedinUrl || "",
+      discordHandle: initialData.discordHandle || "",
     });
     setHasUnsavedChanges(false);
     toast.info("Changes discarded.");
@@ -197,36 +203,66 @@ export default function SettingsProfile({ initialData, clerkAvatarUrl, clerkId }
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">GitHub Handle</label>
-              <div className="flex items-center bg-[#0F151B] border border-[#253141] rounded-lg overflow-hidden focus-within:border-[#F97316]/50 transition-colors">
-                <span className="text-[13px] text-[#6B7280] pl-4 font-mono shrink-0">github.com/</span>
+          <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">GitHub Handle</label>
+                <div className="flex items-center bg-[#0F151B] border border-[#253141] rounded-lg overflow-hidden focus-within:border-[#F97316]/50 transition-colors">
+                  <span className="text-[13px] text-[#6B7280] pl-4 font-mono shrink-0">github.com/</span>
+                  <input
+                    type="text"
+                    name="githubHandle"
+                    value={formData.githubHandle}
+                    onChange={handleChange}
+                    placeholder="username"
+                    className="flex-1 bg-transparent px-1 py-3 text-[15px] text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">Portfolio URL</label>
                 <input
                   type="text"
-                  name="githubHandle"
-                  value={formData.githubHandle}
+                  name="portfolioUrl"
+                  value={formData.portfolioUrl}
                   onChange={handleChange}
-                  placeholder="username"
-                  className="flex-1 bg-transparent px-1 py-3 text-[15px] text-white focus:outline-none"
+                  placeholder="https://example.com"
+                  className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">Portfolio URL</label>
-              <input
-                type="text"
-                name="portfolioUrl"
-                value={formData.portfolioUrl}
-                onChange={handleChange}
-                placeholder="https://example.com"
-                className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
-              />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">LinkedIn Profile</label>
+                <div className="flex items-center bg-[#0F151B] border border-[#253141] rounded-lg overflow-hidden focus-within:border-[#F97316]/50 transition-colors">
+                  <span className="text-[13px] text-[#6B7280] pl-4 font-mono shrink-0">linkedin.com/in/</span>
+                  <input
+                    type="text"
+                    name="linkedinUrl"
+                    value={formData.linkedinUrl}
+                    onChange={handleChange}
+                    placeholder="username"
+                    className="flex-1 bg-transparent px-1 py-3 text-[15px] text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[12px] font-mono text-[#9CA3AF] mb-2.5">Discord Handle</label>
+                <input
+                  type="text"
+                  name="discordHandle"
+                  value={formData.discordHandle}
+                  onChange={handleChange}
+                  placeholder="username#1234"
+                  className="w-full bg-[#0F151B] border border-[#253141] rounded-lg px-4 py-3 text-[15px] text-white focus:outline-none focus:border-[#F97316]/50 transition-colors placeholder:text-[#4B5563]"
+                />
+              </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-4 pt-4">
+          <div className="flex items-center justify-end gap-4 pt-4 mt-6 border-t border-[#1C2532]">
             {hasUnsavedChanges && (
               <button 
                 onClick={handleDiscard}

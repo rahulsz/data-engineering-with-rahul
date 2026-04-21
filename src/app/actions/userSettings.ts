@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/mongoose";
-import { UserSettings } from "@/models/UserSettings";
+import { UserProfile } from "@/models/UserProfile";
 import { revalidatePath } from "next/cache";
 
 export async function getUserSettings() {
@@ -14,26 +14,33 @@ export async function getUserSettings() {
 
     await connectToDatabase();
 
-    // Find the settings doc
-    let settings = await UserSettings.findOne({ userId }).lean();
+    // Find the profile doc
+    let settings = await UserProfile.findOne({ userId }).lean();
     
     if (!settings) {
-      // If none exists, we just return empty string defaults
+      // If none exists, return empty string defaults
       // The frontend will merge this with Clerk's standard info
       settings = {
         firstName: "",
         lastName: "",
         bio: "",
         githubHandle: "",
-        portfolioUrl: ""
+        portfolioUrl: "",
+        linkedinUrl: "",
+        discordHandle: "",
+        accessTier: "free",
+        preferredTheme: "dark",
+        emailNotifications: true,
+        weeklyDigest: true,
       };
     }
 
-    // We stringify/parse to ensure the lean document is a plain object safe for client components
+    // Stringify/parse to ensure the lean document is a plain object safe for client components
     return { success: true, data: JSON.parse(JSON.stringify(settings)) };
-  } catch (error: any) {
-    console.error("getUserSettings error:", error);
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("getUserSettings error:", msg);
+    return { success: false, error: msg };
   }
 }
 
@@ -43,6 +50,8 @@ export async function updateUserSettings(formData: {
   bio: string;
   githubHandle: string;
   portfolioUrl: string;
+  linkedinUrl?: string;
+  discordHandle?: string;
 }) {
   try {
     const { userId } = await auth();
@@ -52,7 +61,7 @@ export async function updateUserSettings(formData: {
 
     await connectToDatabase();
 
-    await UserSettings.findOneAndUpdate(
+    await UserProfile.findOneAndUpdate(
       { userId },
       { 
         $set: {
@@ -61,6 +70,8 @@ export async function updateUserSettings(formData: {
           bio: formData.bio,
           githubHandle: formData.githubHandle,
           portfolioUrl: formData.portfolioUrl,
+          linkedinUrl: formData.linkedinUrl ?? "",
+          discordHandle: formData.discordHandle ?? "",
         }
       },
       { upsert: true, returnDocument: "after" }
@@ -68,8 +79,9 @@ export async function updateUserSettings(formData: {
 
     revalidatePath("/dashboard/settings");
     return { success: true };
-  } catch (error: any) {
-    console.error("updateUserSettings error:", error);
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("updateUserSettings error:", msg);
+    return { success: false, error: msg };
   }
 }

@@ -22,7 +22,9 @@ export default async function SettingsPage() {
         lastName: user?.lastName || "",
         bio: "",
         githubHandle: "",
-        portfolioUrl: ""
+        portfolioUrl: "",
+        linkedinUrl: "",
+        discordHandle: ""
       };
 
   return (

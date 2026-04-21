@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useProgressStore } from "@/store/progressStore";
-import { fetchUserProgress, syncUserProgress } from "@/app/actions/progressSync";
+import { fetchUserProgress, syncUserProgress, logDailyLogin } from "@/app/actions/progressSync";
 
 export default function ProgressHydrator() {
   const { isLoaded, isSignedIn, userId } = useAuth();
@@ -23,6 +23,8 @@ export default function ProgressHydrator() {
           if (res.success && res.completedWeeks) {
             // Apply cloud state to local browser
             hydrateFromServer(res.completedWeeks);
+            // Log daily login to update streak and heatmap
+            await logDailyLogin();
           }
         } catch (e) {
           console.error("Hydration fault", e);

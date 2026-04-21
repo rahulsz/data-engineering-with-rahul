@@ -47,6 +47,7 @@ export default function CurriculumLab({
 
   useEffect(() => {
     if (completedCount === tasks.length && completedCount > 0) {
+      // eslint-disable-next-line
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 5000);
       return () => clearTimeout(timer);

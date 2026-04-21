@@ -5,43 +5,50 @@ import { ActivityCalendar, ThemeInput } from "react-activity-calendar";
 import { Activity } from "lucide-react";
 import { subDays, format } from "date-fns";
 
+import { fetchActivityHeatmap, fetchUserProgress } from "@/app/actions/progressSync";
+
 export default function ActivityHeatmap() {
   const [data, setData] = useState<{ date: string; count: number; level: number }[]>([]);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
 
   useEffect(() => {
-    // Generate realistic looking mock data for the last 6 months
-    const mockData = [];
-    const today = new Date();
-    
-    // Fill the last 180 days
-    for (let i = 180; i >= 0; i--) {
-      const date = subDays(today, i);
-      const dateStr = format(date, "yyyy-MM-dd");
-      
-      // Randomly assign activity
-      // Weight recent days higher to simulate active learning
-      let count = 0;
-      let level = 0;
-      
-      const rand = Math.random();
-      if (i < 30) {
-        // Highly active in last month
-        if (rand > 0.3) {
-          count = Math.floor(Math.random() * 5) + 1;
-          level = Math.min(Math.ceil(count / 2), 4);
+    async function loadActivity() {
+      try {
+        const [heatmapRes, progressRes] = await Promise.all([
+          fetchActivityHeatmap(180),
+          fetchUserProgress()
+        ]);
+
+        if (progressRes.success) {
+          setCurrentStreak(progressRes.currentStreak || 0);
+          setLongestStreak(progressRes.longestStreak || 0);
         }
-      } else {
-        // Less active in past
-        if (rand > 0.7) {
-          count = Math.floor(Math.random() * 3) + 1;
-          level = Math.min(Math.ceil(count / 2), 4);
+
+        const hm = heatmapRes.success && heatmapRes.heatmap ? heatmapRes.heatmap : {};
+        const realData = [];
+        const today = new Date();
+        
+        for (let i = 180; i >= 0; i--) {
+          const date = subDays(today, i);
+          const dateStr = format(date, "yyyy-MM-dd");
+          
+          const count = hm[dateStr] || 0;
+          let level = 0;
+          if (count > 0) {
+            level = Math.max(1, Math.min(Math.ceil(count / 2), 4));
+          }
+          
+          realData.push({ date: dateStr, count, level });
         }
+        
+        setData(realData);
+      } catch (err) {
+        console.error("Failed to load activity data", err);
       }
-      
-      mockData.push({ date: dateStr, count, level });
     }
     
-    setData(mockData);
+    loadActivity();
   }, []);
 
   const heatMapTheme: ThemeInput = {
@@ -75,11 +82,11 @@ export default function ActivityHeatmap() {
         <div className="flex items-center gap-4 text-[11px] font-mono whitespace-nowrap">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            <span className="text-[#9CA3AF]">Current Streak: <span className="text-white font-bold">12 Days</span></span>
+            <span className="text-[#9CA3AF]">Current Streak: <span className="text-white font-bold">{currentStreak} Days</span></span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#38bdf8]" />
-            <span className="text-[#9CA3AF]">Longest: <span className="text-white font-bold">41 Days</span></span>
+            <span className="text-[#9CA3AF]">Longest: <span className="text-white font-bold">{longestStreak} Days</span></span>
           </div>
         </div>
       </div>

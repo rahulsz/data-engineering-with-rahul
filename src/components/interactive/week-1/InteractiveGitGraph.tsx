@@ -112,13 +112,13 @@ export default function InteractiveGitGraph() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 0.5, height: "60%" }}
                   className="absolute top-[20%] left-8 w-1 bg-[#c084fc] origin-top rounded-full z-0" 
-                  style={{ left: `${mainNodes.find(n => n.id === "init" || mainNodes.indexOf(n) === mainNodes.length-(merged?2:1))?.x! + 26}px` }}
+                  style={{ left: `${(mainNodes.find(n => n.id === "init" || mainNodes.indexOf(n) === mainNodes.length-(merged?2:1))?.x ?? 0) + 26}px` }}
                 />
                 <motion.div 
                   initial={{ opacity: 0, width: 0 }}
                   animate={{ opacity: 0.5, width: "100%" }}
                   className="absolute top-[80%] left-8 h-1 bg-gradient-to-r from-[#c084fc] to-transparent z-0" 
-                  style={{ left: `${mainNodes.find(n => n.id === "init" || mainNodes.indexOf(n) === mainNodes.length-(merged?2:1))?.x! + 26}px` }}
+                  style={{ left: `${(mainNodes.find(n => n.id === "init" || mainNodes.indexOf(n) === mainNodes.length-(merged?2:1))?.x ?? 0) + 26}px` }}
                 />
 
                 {/* Feature Nodes */}
