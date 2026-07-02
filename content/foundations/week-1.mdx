@@ -24,130 +24,566 @@ lastUpdated: "2026-04-18"
   glowBottomColor="bg-[#a855f7]"
 />
 
-## Why Python + Git + Jira Before Anything Else?
+---
 
-Python is the lingua franca of modern data engineering. Every tool you will use in this course — PySpark, Pandas, Delta Lake, MLflow — is either written in Python or exposes a Python API. Before you can orchestrate a pipeline that processes 10 million inventory records, you need to understand how Python thinks: how it stores data, how it makes decisions, how it reads files. Week 1 builds that foundation from scratch, with zero assumptions about prior programming experience.
+### 🐍 Part 1 — Python Fundamentals
 
-Git is not optional. In every data engineering team on the planet, code that isn't in version control doesn't exist. Git is how you save your work safely, collaborate without destroying each other's code, and create an auditable history of every change to a pipeline. By the end of this week, every Python script you write will be committed to a repository — exactly the habit that separates professionals from hobbyists.
+## What is Programming and Why Python for Data?
 
-Jira closes the loop between code and business intent. A pipeline you built for no documented reason is a pipeline nobody can maintain. In this week you learn to write User Stories — the professional format for describing what needs to be built, why, and for whom. Every lab task from Week 1 onward maps to a Jira ticket. This is not busywork. It is the daily workflow of every data engineering team at every company you will interview at.
+Programming is telling a computer to make decisions at a scale no human can match. As a data engineer, you move, transform, and validate massive datasets — and Python is the tool the entire industry uses to do it. It connects storage layers, orchestration tools, and compute frameworks together like glue.
 
-## Variables, Datatypes & Collections
+Think of a massive distribution center where pallets arrive 24/7. Programming is the conveyor system that scans barcodes, checks manifests, and routes items to the right aisle. Python is the control panel where you write those routing rules — and it's the same panel used by Netflix, Spotify, and Airbnb.
 
-A variable is a named container for a value. In data engineering, variables hold everything from a single SKU code to an entire list of 50,000 product records. Python gives you four core collection types — lists, tuples, dicts, and sets — each with specific strengths for different data shapes.
+<Callout type="tip">
+Always prioritize readability over cleverness. A clear `if supplier_id is None: skip_row()` beats a dense one-liner. Remember: you'll be reading this code at 2 AM during a production outage.
+</Callout>
 
-> Think of a Python dictionary like a row in a database table. The keys are the column names, the values are the cell data. When you later read a CSV file row-by-row, each row becomes a dictionary automatically — the mental model transfers perfectly.
+<Callout type="warning">
+Don't treat Python like an in-memory spreadsheet. Loading a 50GB CSV into a plain Python list will crash your server with an Out Of Memory error. Use generators or chunked reads instead.
+</Callout>
+
+## How Python Code Gets Executed
+
+Python is an **interpreted language** — the Python interpreter reads your script line-by-line, top to bottom, converting each instruction into bytecode that your machine can run. There's no separate compile step like in Java or C++.
+
+Picture a warehouse manager reading an SOP checklist: *"Go to aisle 4"* → done. *"Scan barcode SKU-102"* → done. If step 50 has a typo, the manager stops right there. That's exactly how Python works — it runs until it hits an error, then crashes at that exact line.
+
+<Callout type="tip">
+Set up a virtual environment (`python -m venv venv`) from day one. It isolates your project's dependencies and ensures you're running the same Python version everywhere — no more "works on my machine" surprises.
+</Callout>
+
+<Callout type="warning">
+Never name your file `csv.py` or `json.py`. When you write `import csv`, Python finds your local file first instead of the built-in library, causing mysterious `AttributeError` crashes that are painful to debug.
+</Callout>
+
+## Variables and Data Types
+
+A variable is a named label pointing to a value stored in memory. In data engineering, you'll use variables to hold everything — order IDs as strings, quantities as integers, unit costs as floats, and flags as booleans. These four primitive types are your building blocks.
 
 <MemoryInspector />
 
+Think of a variable like a labeled bin in a warehouse. You write `current_stock_qty` on the bin and put `450` inside. Now any worker (or any line in your code) can reference that label to get the value — without recounting the inventory.
+
 <Callout type="tip">
-  Always store monetary values as float, not string. '12.75' looks like a number but Python can't do math on it. This is one of the top 3 bugs in beginner data pipelines — a price field that accidentally got stored as a string and silently broke every calculation downstream.
+Use descriptive `snake_case` names. `supplier_unit_cost` tells you exactly what the value represents. `cost` is vague, and `c` is actively hostile to anyone reading your code (including future you).
 </Callout>
 
 <Callout type="warning">
-  Lists are mutable — you can change them after creation. Tuples are immutable — you cannot. Never store pipeline layer names or config constants in lists. Use tuples. Accidental mutation of config data causes silent, catastrophic bugs in production pipelines.
+Never store money as strings. `'99.99'` looks like a number but Python can't do math on it — `'99.99' + '10.00'` gives you `'99.9910.00'`, not `109.99`. This causes silent pipeline failures.
 </Callout>
 
-## Loops, Conditions & Control Flow
+## Type Casting and Type Checking
 
-Loops and conditions are the decision engine of every pipeline. A loop says "do this for every row." A condition says "but only if this is true." Together they let you process thousands of inventory records with logic that would take a human hours to apply manually.
+<TypeCastingVisualizer />
 
-> Imagine a warehouse worker checking every box on a conveyor belt. For each box: if the label is damaged, put it in the reject pile. If the quantity is zero, flag it for reorder. Otherwise, shelve it. That manual process is exactly what a Python loop with conditions automates for your data files.
+Real-world data almost never arrives in the right type. CSV files store everything as strings, APIs return numbers wrapped in quotes, and databases sometimes mix formats. **Type casting** converts a value from one type to another — like turning the string `"450"` into the integer `450` so you can actually do math with it.
+
+Imagine a supplier manifest where pallet counts are written as `"12"` (text). You can't stack text on a shelf — you need to cast it into a real number before your inventory system can process it. That's `int("12")` → `12`.
+
+<Callout type="tip">
+Cast data types at the **ingestion boundary** — the moment you read from a CSV or API. Use `int(row['quantity'])` and `float(row['unit_price'])` immediately so the rest of your pipeline works with clean types.
+</Callout>
+
+<Callout type="warning">
+Casting dirty data crashes your script. `int('NULL')` and `float('Unknown')` throw a `ValueError`. Always validate or wrap casts in `try/except` with a sensible fallback like `0` or `None`.
+</Callout>
+
+## String Operations and Formatting
+
+Strings are sequences of text characters, and they're **immutable** — once created, they can't be changed in place. As a data engineer, you'll constantly clean vendor names, format log messages, and extract metadata from messy file paths. Your daily toolkit: `.strip()`, `.lower()`, `.replace()`, and f-strings.
+
+Imagine receiving a shipping label that reads `  GLOBALMART_US_EAST  `. String operations are the scissors that trim the whitespace and the stamp that standardizes the text to match your internal region codes.
+
+<Callout type="tip">
+Use f-strings everywhere. `f"Loaded {count} rows for {sku}"` is cleaner, faster, and more readable than string concatenation with `+` or the older `.format()` method.
+</Callout>
+
+<Callout type="warning">
+Don't build strings with `+=` in loops. Since strings are immutable, every `+=` creates an entirely new string in memory. On millions of rows, this turns a 2-second operation into a 2-minute memory hog. Use `''.join(parts)` instead.
+</Callout>
+
+## Lists — Creation, Indexing, Slicing, Methods
+
+Lists are **ordered, mutable** collections — the go-to structure when you need to keep items in sequence. Use them to hold a batch of order IDs waiting to be processed, a list of file paths to ingest, or rows read from a CSV.
+
+A list is like a sequential staging rack in the warehouse. Pallet 0 goes in the first slot, pallet 1 in the second. You can pop items off, slice the first ten for a priority shipment, or append new arrivals to the end.
+
+<Callout type="tip">
+Use negative indexing to grab items from the end. `orders[-1]` gets the last item instantly — no need to calculate `len(orders) - 1`.
+</Callout>
+
+<Callout type="warning">
+Never remove items from a list while iterating over it — it scrambles the indexes and skips elements. Instead, build a new list with only the items you want to keep.
+</Callout>
+
+## Tuples — Immutability and Use Cases
+
+Tuples look like lists but with one critical difference: they're **immutable**. Once created, you can't add, remove, or change their contents. This makes them perfect for data that should never be accidentally modified during execution.
+
+Think of a tuple as a welded steel crate containing reference data — like the exact coordinates of your three fulfillment centers. Unlike a staging rack (list), nothing can be casually swapped out once the crate is sealed.
+
+<Callout type="tip">
+Use tuples for constants: `ALLOWED_REGIONS = ('US-EAST', 'US-WEST', 'EU-CEN')`. This signals to every reader that these values are intentionally fixed and should never be modified.
+</Callout>
+
+<Callout type="warning">
+A tuple protects its structure, not its contents. If you put a dictionary inside a tuple, the dictionary's values can still be changed. Immutability only goes one level deep.
+</Callout>
+
+## Dictionaries — Key-Value Pairs, Nested Dicts
+
+Dictionaries map **unique keys to values**, giving you instant O(1) lookups. They mirror the structure of JSON payloads perfectly — which is why they're the most important data structure for data engineers working with APIs and database records.
+
+A dictionary is like a barcode scanner in the warehouse. Instead of walking every aisle to find `SKU-882`, you scan the barcode and the system instantly returns the unit cost, location, and supplier — no linear search required.
+
+<Callout type="tip">
+Always use `.get(key, default)` when reading from unpredictable data. `row.get('quantity', 0)` returns `0` if the key is missing, instead of crashing your entire pipeline with a `KeyError`.
+</Callout>
+
+<Callout type="warning">
+Dictionary keys must be immutable (strings, integers, tuples). Using a list as a key throws a `TypeError`. Stick to column names or primary key IDs.
+</Callout>
+
+## Sets — Uniqueness and Set Operations
+
+Sets are **unordered** collections of purely unique elements. They're blazing fast for membership checks (`in`) and set math like intersections, unions, and differences.
+
+If two suppliers dump 100,000 product IDs onto your loading dock, converting both lists to sets and running `set_a & set_b` instantly tells you which products overlap — no nested loops required.
+
+<Callout type="tip">
+When checking if a value is one of many allowed options, use a set: `if status in {'active', 'pending', 'shipped'}`. Set lookups are O(1) — dramatically faster than scanning a list.
+</Callout>
+
+<Callout type="warning">
+Sets destroy duplicates **and** order. Converting a chronological list of transaction IDs to a set permanently loses the sequence. If order matters, use a list and deduplicate manually.
+</Callout>
+
+## Conditional Logic — if, elif, else
+
+Conditionals are how your code makes decisions. An `if` statement evaluates a condition and runs different code paths based on whether it's `True` or `False`. This is how you separate clean data from bad data based on business rules.
+
+Picture automated diverter arms on a sorting conveyor: `if order_qty < 0` → push left to quarantine. `elif order_qty > 1000` → flag for manager review. `else` → proceed to shipping. Each condition routes items to a different destination.
+
+<Callout type="tip">
+Keep conditions shallow by "returning early". Instead of deeply nesting code inside `if valid:`, flip it: `if not valid: continue`. This keeps your logic flat and easy to follow.
+</Callout>
+
+<Callout type="warning">
+Watch out for Python's truthiness rules. Empty strings `""`, the number `0`, and `None` all evaluate to `False`. If `quantity = 0`, writing `if not quantity:` accidentally catches valid zero-quantity rows alongside actual nulls.
+</Callout>
+
+## Loops — for, while, break, continue
+
+Loops let you repeat logic across collections without copying code. A `for` loop iterates through a known collection (list, dict, file), while a `while` loop runs until a condition becomes `False`.
 
 <ConveyorSimulator />
 
-```python
-# ── GlobalMart: Inventory Row Processor ─────────────────
-
-inventory_rows = [
-    {"sku": "SKU-88821", "quantity": 120,  "unit_cost": 450.00},
-    {"sku": "SKU-32201", "quantity": 0,    "unit_cost": 85.00},
-    {"sku": "SKU-11043", "quantity": 45,   "unit_cost": -32.00},
-    {"sku": "SKU-55509", "quantity": 310,  "unit_cost": 78.00},
-    {"sku": "SKU-77732", "quantity": 0,    "unit_cost": 8.50},
-]
-
-clean_rows    = []
-reorder_flags = []
-corrupt_rows  = []
-
-for row in inventory_rows:
-    sku      = row["sku"]
-    quantity = row["quantity"]
-    cost     = row["unit_cost"]
-
-    if quantity == 0:
-        reorder_flags.append(sku)
-        print(f"⚠️  REORDER FLAG : {sku} — quantity is zero")
-
-    elif cost < 0:
-        corrupt_rows.append(sku)
-        print(f"❌ CORRUPT ROW  : {sku} — negative unit cost")
-
-    else:
-        clean_rows.append(row)
-        print(f"✅ CLEAN        : {sku} — qty={quantity}, cost=${cost}")
-```
+Looping is a warehouse worker pulling the next picking ticket off a stack of 5,000 — assembling the box, sealing it, then grabbing the next ticket. `break` lets them stop early if the truck is full. `continue` lets them skip damaged tickets.
 
 <Callout type="tip">
-  Always validate BEFORE you transform. In production pipelines, the order is: Read → Validate → Flag bad rows → Transform clean rows. Never transform first and validate after. Bad data that gets transformed becomes bad data that looks clean — the worst kind.
+Iterate directly over items: `for order in orders:` instead of `for i in range(len(orders)):`. It's more Pythonic, less error-prone, and reads like plain English.
 </Callout>
 
 <Callout type="warning">
-  Watch for off-by-one errors in loops. If you use range(len(rows)) instead of iterating directly over the list, you're writing harder-to-read code with more bugs. In Python: always iterate over the collection directly — for row in rows — not by index.
+A `while` loop without a reachable `break` or exit condition will run forever, locking up a CPU core on your server. Always test your exit conditions on edge cases before deploying.
 </Callout>
 
-## Writing Functions & Organizing Modules
+## List Comprehensions
 
-A function is a reusable block of logic with a name. Once written, you call it as many times as you need without rewriting the logic. In data engineering, functions are how you package transformations — clean_supplier_name(), calculate_lead_time(), validate_order_row() — so they can be tested independently and reused across pipelines.
+List comprehensions let you create new lists in a single line by combining a loop and a filter. Under the hood, they run faster than equivalent `for` loops because Python optimizes them at the C level.
 
-> A function is a stamping machine on a factory floor. You design it once, quality-test it once, and then run every unit through it. You don't redesign the stamp for every product — you call the same function for every row. This is the core of scalable pipeline design.
+Instead of a worker picking up each box individually, computing tax, and placing it on a new pallet — a list comprehension is a machine press that stamps tax onto every box on the pallet simultaneously.
+
+<Callout type="tip">
+Use comprehensions for extraction and simple transforms: `prices = [float(row['cost']) for row in data]` is clean, elegant, and fast.
+</Callout>
+
+<Callout type="warning">
+If your comprehension needs nested loops or complex `if/else` chains, stop. Refactor it into a standard `for` loop. Readability always wins over one-liner bragging rights.
+</Callout>
+
+## Defining and Calling Functions
+
+Functions wrap reusable logic into named blocks. In data engineering, your pipeline is a chain of functions — each one doing a specific job: read data, validate it, transform it, write it out.
 
 <FunctionFactory />
 
+A function is a specialized workstation on an assembly line. The `calculate_margin()` station takes raw inputs (cost, price), runs the exact same formula every time, and outputs the result. If the formula is wrong, you fix it in one place.
+
 <Callout type="tip">
-  Write functions that do ONE thing. calculate_margin() calculates margin. It does not print, it does not write to a file, it does not send an email. Single-responsibility functions are testable, reusable, and debuggable.
+Follow the single-responsibility principle. A function named `extract_supplier_data()` should only extract data — not also write to a CSV. One job per function makes testing and debugging trivial.
 </Callout>
 
 <Callout type="warning">
-  Always add type hints to your function signatures. def calculate_margin(unit_cost: float, unit_price: float) -&gt; float is infinitely better than def calculate_margin(a, b). Type hints are documentation.
+Never use mutable default arguments: `def add_item(sku, catalog=[])`. The list is created once at import time and shared across all calls — meaning data bleeds between function invocations.
 </Callout>
 
-## File Handling — Reading & Writing Data Files
+## Function Arguments — Positional, Keyword, Default, *args, **kwargs
 
-Before cloud storage and Delta Lake, data engineering started with files. CSVs, JSONs, and text logs are still the most common raw data formats you will receive from source systems. Python's built-in file handling lets you read any file, process every row, and write clean output.
+Python gives you flexible ways to pass data into functions. **Positional** args are required in order, **keyword** args are named explicitly, **defaults** provide fallback values, and `*args` / `**kwargs` handle variable-length inputs.
 
-> Reading a CSV in Python is like opening a filing cabinet drawer, pulling out one sheet at a time, reading it, and placing it in either the "keep" pile or the "shred" pile. Every pipeline on the planet does this at its core.
+Think of function arguments like shipping requirements. Some shipments need an exact `weight` (required positional arg), while `insurance_type` might default to "standard" if the client doesn't specify one.
+
+<Callout type="tip">
+Force keyword-only arguments for critical flags: `def process(sku, *, overwrite=False)`. The `*` prevents someone from accidentally passing `True` as a positional argument.
+</Callout>
+
+<Callout type="warning">
+Overusing `**kwargs` destroys readability. If a function secretly reads `kwargs['unit_cost']`, your IDE can't warn you when the key is missing — you'll only find out at runtime.
+</Callout>
+
+## Scope and Variable Lifetime
+
+**Scope** controls where a variable is visible. A variable created inside a function is **local** — it's born when the function runs and dies when it returns. A variable defined at the top level is **global** — it lives for the entire script.
+
+Scope is like clearance levels in a warehouse. A local variable is a sticky note on a supervisor's desk — discarded at end of shift. A global variable is the sign above the loading dock — visible to everyone, and dangerous if someone changes it without telling the team.
+
+<Callout type="tip">
+Pass data explicitly into functions instead of reading globals. If a function needs `TAX_RATE`, pass it as an argument. Functions that only depend on their inputs are trivial to test.
+</Callout>
+
+<Callout type="warning">
+Using the `global` keyword to mutate variables from inside a function creates "spooky action at a distance" — variables change without any obvious cause, making bugs nearly impossible to trace.
+</Callout>
+
+## File Handling — Reading and Writing CSV and JSON Files
+
+File handling is the most fundamental form of data ingestion. Python's built-in `open()`, `csv`, and `json` modules let you read multi-gigabyte files line-by-line without loading everything into memory at once.
 
 <IOFlowVisualizer />
 
+Reading a file is like unlocking a shipping container and inspecting each carton one at a time. Writing is stacking the vetted cartons into an outbound truck and sealing the doors.
+
 <Callout type="tip">
-  Always use 'with open()' — never open() without it. The 'with' statement guarantees the file is closed even if your code crashes mid-processing.
+Always use the `with open()` context manager. It guarantees the file handle is properly closed even if your code crashes midway through parsing — preventing data corruption and resource leaks.
 </Callout>
 
 <Callout type="warning">
-  Never hardcode file paths as strings in your pipeline logic. Use a config dictionary or environment variable at the top of the file.
+Hardcoding paths like `C:/Users/John/data.csv` guarantees your script crashes on any other machine. Use `pathlib.Path` or relative paths so your code works in dev, staging, and production.
 </Callout>
 
-## Git Fundamentals: Your Daily Work Routine
+## Exception Handling — try, except, finally
 
-Git is a version control system that tracks every change you make to every file in your project. It lets you rewind to any previous state, work on experimental features without breaking the main codebase, and collaborate with teammates without overwriting each other's work.
+Exceptions are Python's way of saying "something broke at runtime." Rather than letting your entire pipeline crash, `try/except` blocks let you catch specific errors, log them, and keep processing the remaining data.
 
-> Think of Git like a time machine for your code. Every commit is a checkpoint you can teleport back to. Every branch is a parallel timeline where you can experiment. Every merge is timelines reuniting.
+Think of exception handling as the emergency cord on a conveyor belt. If a corrupted pallet jams the gears, the system doesn't self-destruct — it diverts the jam, logs the incident, and keeps the line moving.
+
+<Callout type="tip">
+Catch the **narrowest** exception possible. Use `except KeyError:` when accessing dictionary keys, not a blanket `except:` that silently swallows every bug including ones you need to see.
+</Callout>
+
+<Callout type="warning">
+`except Exception: pass` is the most dangerous anti-pattern in Python. It silences every error, letting your pipeline chew through corrupted data without a single warning in your logs.
+</Callout>
+
+---
+
+### 📂 Part 2 — Git & GitHub
+
+## What is Version Control and Why It Matters
+
+Version control tracks every change to your code over time, creating a complete history you can rewind. For data engineers, it's how you safely collaborate, recover from disasters, and prove exactly what pipeline code was running at any point in time.
+
+Think of it as an immutable warehouse ledger. When someone changes inventory logic, they don't erase the old page — they write a new timestamped entry saying who changed what, and why.
+
+<Callout type="tip">
+Version-control everything text-based: Python scripts, SQL queries, YAML configs, Terraform files. Treat your entire data platform as a versioned artifact — not just application code.
+</Callout>
+
+<Callout type="warning">
+Git is not a backup drive for big files. Pushing a 2GB `.parquet` file into a repo will cripple clone times for your entire team and may hit repository size limits.
+</Callout>
+
+## Git vs GitHub — Local vs Remote
+
+**Git** is the tool that runs locally on your machine to track changes. **GitHub** is the cloud platform that hosts your repositories online, enabling pull requests, CI/CD pipelines, and team collaboration.
+
+Git is your personal clipboard for tracking route changes in the warehouse. GitHub is the central bulletin board in the cloud where everyone syncs up to agree on the official design.
+
+<Callout type="tip">
+Remember the boundary: `commit` and `checkout` happen locally and instantly. `push` and `fetch` communicate with GitHub's servers over the network.
+</Callout>
+
+<Callout type="warning">
+Confusing Git and GitHub leads to lost work. `git commit` saves locally, but until you `git push`, your teammates can't see your changes — and your code isn't backed up remotely.
+</Callout>
+
+## Setting Up Git — Config, Username, Email
+
+Before using Git, configure your identity. Every commit is signed with your name and email, creating an unambiguous audit trail across the entire codebase.
+
+This is like your badge ID in the warehouse. Every pallet you sign off on is traced back to you. Using a fake badge corrupts accountability and creates compliance problems.
+
+<Callout type="tip">
+Run `git config --list` to verify your setup. Make sure your email matches your GitHub profile email — otherwise your commits won't link to your profile avatar.
+</Callout>
+
+<Callout type="warning">
+Never use shared team emails like `eng-team@company.com`. Accountability requires individual attribution — when a bug is traced to a specific commit, the team needs to know who to ask.
+</Callout>
+
+## The Three Stages — Working Directory, Staging Area, Repository
+
+<GitStagesVisualizer />
+
+Git has three distinct zones your files move through. The **Working Directory** is where you edit files freely. The **Staging Area** (`git add`) is where you selectively queue changes for the next snapshot. The **Repository** (`git commit`) is the permanent, versioned history.
+
+It's like an outbound logistics process: editing code is tossing items into a bin (Working). Staging is placing selected items on a secured pallet. Committing is shrink-wrapping the pallet and storing it permanently in the archive.
+
+<Callout type="tip">
+Stage files selectively with `git add -p`. This lets you stage specific chunks within a single file, keeping each commit focused on one logical change.
+</Callout>
+
+<Callout type="warning">
+Running `git add .` blindly is risky. It sweeps everything into staging — including debug files, API keys, and temporary data you never intended to commit.
+</Callout>
+
+## Core Commands — init, add, commit, status, log
+
+The core Git loop: `init` creates a new repo. `status` shows what's changed. `add` stages files. `commit` saves the snapshot. `log` shows the history. You'll use these dozens of times per day.
+
+These are your warehouse inventory commands: `init` opens a new ledger, `add` highlights specific items, `commit` signs off on the count, and `log` lets auditors review the full history.
+
+<Callout type="tip">
+Make `git status` a reflex. Run it before staging, before committing, and before pushing. It takes one second and prevents most Git mistakes.
+</Callout>
+
+<Callout type="warning">
+Don't commit broken code just to "save progress." Each commit should represent a working, logical unit of change. Use `git stash` if you need to temporarily save unfinished work.
+</Callout>
+
+## Writing Good Commit Messages
+
+Commit messages are written for the **future** — for the engineer debugging a production issue at midnight. A good message explains *why* something changed, not just *what* changed, using clear semantic prefixes.
+
+A bad commit message: "Moved boxes." A good one: `fix(inventory): route corrupted SKUs to quarantine per GDP-12`. The difference is the one that saves someone 3 hours of detective work.
+
+<Callout type="tip">
+Use semantic prefixes: `feat:`, `fix:`, `refactor:`, `docs:`. This standardizes your history and lets CI/CD tools auto-generate changelogs and release notes.
+</Callout>
+
+<Callout type="warning">
+Messages like "fixed stuff" or "updated files" are useless. During a rollback, your team has to manually read every diff to understand what each commit did — wasting critical time.
+</Callout>
+
+## Branching — Creating, Switching, Merging Branches
+
+Branches let you develop features in isolation. You create a branch, build your feature, and merge it back when it's ready — without ever touching the main codebase.
 
 <InteractiveGitGraph />
 
+Branching is like building a test warehouse next door. You can tear down racks and rearrange the floor plan without disrupting live operations. Once the new layout is validated, you merge the blueprints back into the main facility.
+
 <Callout type="tip">
-  Commit early, commit often. A commit every 30–60 minutes of work is healthy. Small commits are easier to review, easier to revert, and create a clearer history.
+Name branches clearly: `feature/GDP-44-add-supplier-validation`. This tells everyone the type (feature), the ticket (GDP-44), and the scope (supplier validation) at a glance.
 </Callout>
 
 <Callout type="warning">
-  Never commit directly to main. Always work on a feature branch. In professional teams, main is protected — direct pushes are blocked at the GitHub level.
+Don't let branches live for weeks without merging. The longer a branch diverges from `main`, the more painful the merge conflict will be. Merge early and often.
 </Callout>
 
-## Jira — User Stories & Sprint Boards
+## Why You Never Work on Main
 
-A User Story is a one-sentence description of a feature from the perspective of the person who needs it. It forces you to answer three questions before writing a single line of code: Who needs this? What do they need? Why do they need it?
+The `main` branch is sacred. It represents the code that's actually running in production right now. Pushing directly to it bypasses code review, automated tests, and team oversight.
+
+This is like walking onto the live sorting floor during peak hours and swapping out conveyor sensors. You don't change production infrastructure on the fly — you go through structured review and testing first.
+
+<Callout type="tip">
+Enable **Branch Protection Rules** in your GitHub repo settings. Require at least one approving review before any PR can merge into `main`.
+</Callout>
+
+<Callout type="warning">
+If you accidentally start coding on `main`, don't panic. Run `git checkout -b my-feature-branch` immediately — it moves your uncommitted changes to a new branch without losing anything.
+</Callout>
+
+## Resolving Merge Conflicts
+
+Merge conflicts happen when two people edit the same lines in different branches. Git can't decide which version to keep, so it stops and asks you to choose manually by editing the conflict markers in the file.
+
+Two supervisors tried to assign aisle C4 to different suppliers at the same time. The system stops and rings a bell — a human has to step in and decide which assignment is correct.
+
+<Callout type="tip">
+Use your IDE's visual merge tool. Clicking "Accept Current" or "Accept Incoming" is far safer and faster than manually editing `<<<<<<` markers in raw text.
+</Callout>
+
+<Callout type="warning">
+Never resolve a conflict by blindly deleting one side's changes. If you don't understand what the other person's code does, ask them before resolving — otherwise you might silently delete working features.
+</Callout>
+
+## Remote Repositories — clone, push, pull, fetch
+
+Remote commands connect your local repo to the cloud. `clone` downloads a full copy. `fetch` checks for new changes without applying them. `pull` downloads and merges changes. `push` uploads your commits.
+
+`clone` is setting up your local workstation. `fetch` is checking the bulletin board for updates. `pull` is downloading and applying those updates. `push` is posting your completed work for the team.
+
+<Callout type="tip">
+Start each work session with `git fetch` to see what's changed upstream. This gives you full situational awareness before you start coding.
+</Callout>
+
+<Callout type="warning">
+`git push --force` on a shared branch rewrites history and breaks your teammates' local repos. Never force-push to `main` or any branch others are working on.
+</Callout>
+
+## Pull Requests — Opening, Reviewing, Merging
+
+Pull Requests (PRs) are the quality gate between your feature branch and `main`. They give teammates a chance to review your code, suggest improvements, and catch bugs before anything reaches production.
+
+A PR is like submitting your warehouse redesign to the engineering board. They review the blueprints, suggest wider forklift lanes, and give final approval before construction begins.
+
+<Callout type="tip">
+Write a thorough PR description: what changed, why, how to test it, and the Jira ticket link. A well-documented PR gets reviewed and merged faster.
+</Callout>
+
+<Callout type="warning">
+A 4,000-line PR guarantees a low-quality review. Break large changes into smaller, logical PRs that can each be understood and reviewed in under 30 minutes.
+</Callout>
+
+## .gitignore — What to Never Commit
+
+`.gitignore` tells Git which files to permanently exclude from tracking. Use it to keep large datasets, environment secrets, and build artifacts out of your repository.
+
+You wouldn't archive trash cans and personal items in your warehouse blueprints. The blueprints only document the permanent infrastructure — not temporary clutter.
+
+<Callout type="tip">
+Start with a Python `.gitignore` template from GitHub. It pre-blocks `.pyc` cache files, `venv/` directories, and IDE configs from ever being committed.
+</Callout>
+
+<Callout type="warning">
+If a file was already tracked before you added it to `.gitignore`, the ignore rule won't apply retroactively. Run `git rm --cached filename` to remove it from tracking.
+</Callout>
+
+## GitHub Profile Setup for Portfolio
+
+Your GitHub profile is your **living portfolio**. For data engineers, a contribution graph filled with consistent commits and 3–4 well-documented pinned repositories is more convincing to recruiters than a resume.
+
+Your profile is the glass-walled showroom of your logistics company. When clients (hiring managers) visit, they expect to see organized operations, clear documentation, and consistent activity.
+
+<Callout type="tip">
+Create polished `README.md` files for pinned repos. Include architecture diagrams, setup instructions, and sample output — proving you understand the full engineering lifecycle.
+</Callout>
+
+<Callout type="warning">
+50 half-finished forks look like chaos. Curate ruthlessly — keep 3–4 polished, production-grade repos that demonstrate end-to-end data pipelines.
+</Callout>
+
+---
+
+### 💻 Part 3 — Git Bash & Linux
+
+## What is a Terminal and Why Data Engineers Use It
+
+The terminal is a text-based interface that lets you interact with your computer without clicking anything. Data engineers live in the terminal because production servers don't have GUIs — you SSH into remote Linux machines and run commands directly.
+
+Using a mouse is like driving a forklift. Using a terminal is wiring directly into the warehouse mainframe — you can execute sweeping changes across the entire infrastructure in seconds.
+
+<Callout type="tip">
+Hit `TAB` constantly for autocomplete. It fills in long directory names and filenames for you, dramatically reducing typos during high-stress deployments.
+</Callout>
+
+<Callout type="warning">
+Never copy-paste terminal commands from random forums without understanding what they do. One wrong command can disable a firewall, delete a database, or wipe a disk — and there's no "Undo" button.
+</Callout>
+
+## Git Bash on Windows — Setup and Navigation
+
+Git Bash brings a Linux-like terminal to Windows. Since virtually all production data infrastructure runs on Linux, learning Linux commands now prevents a painful transition when you deploy your first pipeline to the cloud.
+
+If your local machine speaks Windows but every server in the world speaks Linux, Git Bash is the translator that lets you practice the real thing without switching operating systems.
+
+<Callout type="tip">
+Press the **up arrow** to cycle through previous commands. Re-typing long commands from scratch wastes time and introduces typos.
+</Callout>
+
+<Callout type="warning">
+Windows paths use backslashes (`C:\folder\file`), but Linux uses forward slashes (`/c/folder/file`). Inside Git Bash, always use Linux-style paths — backslashes will cause "file not found" errors.
+</Callout>
+
+## Essential Linux Commands — ls, cd, pwd, mkdir, rm, cp, mv
+
+These are the commands you'll use hundreds of times. `pwd` shows where you are. `ls` lists what's here. `cd` moves you around. `mkdir` creates folders. `cp` copies files. `mv` moves them. `rm` deletes them.
+
+`pwd` tells you which aisle you're standing in. `ls` shows what's on the shelves. `mkdir` builds a new shelf. `mv` physically relocates a pallet to the outbound dock.
+
+<Callout type="tip">
+Use `ls -la` to see **everything** — including hidden files like `.env` and `.git`, plus file permissions and sizes. It's the most useful flag you'll ever memorize.
+</Callout>
+
+<Callout type="warning">
+`rm -rf` permanently deletes directories and everything inside them with zero confirmation. There's no trash can, no undo. Triple-check the path before hitting Enter.
+</Callout>
+
+## File Permissions — chmod Basics
+
+Linux controls file access through three permission types: **read** (r), **write** (w), and **execute** (x). Every file has separate permissions for the owner, group, and everyone else. You need execute permission to run scripts.
+
+A regular worker can *read* the inventory ledger but can't *write* changes to it. Only supervisors have *write* access, and only managers can *execute* the emergency shutdown procedure.
+
+<Callout type="tip">
+Hitting "Permission denied" when running a script? Fix it with `chmod +x pipeline_script.sh`. This grants execute permission so the file can actually run.
+</Callout>
+
+<Callout type="warning">
+Never use `chmod 777` to fix permission errors. It gives read/write/execute access to everyone on the system — a massive security hole that could let anyone modify your data.
+</Callout>
+
+## Viewing and Editing Files — cat, nano, head, tail
+
+You often need to quickly inspect files on a remote server without downloading them. `cat` prints the entire file. `head` shows the first 10 lines. `tail` shows the last 10. `nano` opens a simple text editor.
+
+`cat` dumps the full manifest on the table. `head` checks the first few shipping headers. `tail` shows the most recent status updates streaming off the processing line.
+
+<Callout type="tip">
+Use `tail -f ingestion.log` while a pipeline is running. The `-f` flag streams new lines in real-time, so you can watch for errors as they happen.
+</Callout>
+
+<Callout type="warning">
+Running `cat` on a 60GB file will freeze your terminal by flooding the screen buffer. Use `head` or `less` to preview large files safely.
+</Callout>
+
+## Piping and Redirection — |, >, >>
+
+<LinuxPipingVisualizer />
+
+**Piping** (`|`) sends the output of one command directly into the input of another, creating a chain. **Redirection** (`>` and `>>`) writes output to files instead of the screen. Together, they let you build powerful data processing pipelines in a single line.
+
+Piping is connecting the output chute of one machine directly into the input hopper of the next. Redirection catches the final product and pours it into a storage silo instead of onto the floor.
+
+<Callout type="tip">
+Chain commands to find problems fast: `cat errors.log | grep "TIMEOUT"` instantly filters a log file to show only timeout-related lines.
+</Callout>
+
+<Callout type="warning">
+Know the difference: `>` **overwrites** the file completely. `>>` **appends** to the end. Using `>` when you meant `>>` will destroy all existing content in the file.
+</Callout>
+
+## Environment Variables and PATH
+
+Environment variables are system-level settings that programs can read. The most important one is `$PATH` — it tells your terminal where to find executable programs like `python3`, `git`, and `node`.
+
+Env vars are the facility-wide rules posted on every wall. `$PATH` is the master directory listing exactly where all the tools (executables) are stored across the building.
+
+<Callout type="tip">
+Store sensitive data (API keys, database passwords) in environment variables, not in your Python files. Use `os.environ['API_KEY']` to read them at runtime.
+</Callout>
+
+<Callout type="warning">
+If `python3` returns "command not found", it means Python's install directory isn't in your `$PATH`. This is the #1 cause of mysterious "it works on my machine" failures.
+</Callout>
+
+## Running Python Scripts from Terminal
+
+In production, nobody clicks "Run" in an IDE. Automated orchestrators (like Airflow or cron) trigger scripts via the command line. Learning to run Python from the terminal is essential for real-world deployment.
+
+This is flipping the ignition switch on the processing line. Passing command-line flags is setting the speed and output configuration before the engine starts.
+
+<Callout type="tip">
+Use CLI flags for environment-specific config: `python3 ingest_orders.py --env production`. This lets the same script run differently across dev, staging, and prod without code changes.
+</Callout>
+
+<Callout type="warning">
+Forgetting to activate your virtual environment (`source venv/bin/activate`) before running a script means Python uses system-wide packages instead of your project's dependencies — causing import errors and version mismatches.
+</Callout>
+
 
 <Week1Quiz />
 

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deep Data Academy | Master Data Engineering</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#060e20",
+                        "surface-container-low": "#131b2e",
+                        "surface-deep": "#020617",
+                        "secondary": "#adc6ff",
+                        "tertiary-container": "#46d89d",
+                        "stroke-subtle": "#334155",
+                        "on-primary-fixed-variant": "#004e5a",
+                        "on-tertiary-fixed": "#002113",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-primary": "#00363e",
+                        "error-container": "#93000a",
+                        "surface-bright": "#31394d",
+                        "surface-container": "#171f33",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-tertiary": "#003824",
+                        "error": "#ffb4ab",
+                        "outline": "#859397",
+                        "on-background": "#dae2fd",
+                        "on-secondary": "#002e6a",
+                        "on-error": "#690005",
+                        "inverse-surface": "#dae2fd",
+                        "terminal-gray": "#94A3B8",
+                        "surface-dim": "#0b1326",
+                        "on-secondary-fixed": "#001a42",
+                        "primary-fixed-dim": "#2fd9f4",
+                        "secondary-container": "#0566d9",
+                        "surface-container-high": "#222a3d",
+                        "surface": "#0b1326",
+                        "tertiary-fixed": "#6ffbbe",
+                        "primary-fixed": "#a2eeff",
+                        "electric-cyan": "#06B6D4",
+                        "inverse-on-surface": "#283044",
+                        "surface-tint": "#2fd9f4",
+                        "on-primary-fixed": "#001f25",
+                        "tertiary": "#68f5b8",
+                        "primary": "#8aebff",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#2d3449",
+                        "on-surface-variant": "#bbc9cd",
+                        "inverse-primary": "#006877",
+                        "surface-elevated": "#1E293B",
+                        "outline-variant": "#3c494c",
+                        "on-tertiary-container": "#005a3d",
+                        "on-primary-container": "#005763",
+                        "on-secondary-container": "#e6ecff",
+                        "primary-container": "#22d3ee",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-variant": "#2d3449",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "background": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap": "120px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-desktop": "48px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "code-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "code-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+        }
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: subtle-float 6s ease-in-out infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-deep text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-margin-mobile py-4 bg-background/80 backdrop-blur-md border-b border-stroke-subtle md:px-margin-desktop">
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-lg font-bold text-on-surface dark:text-on-surface">Deep Data Academy</span>
+</div>
+<!-- Mobile Navigation Trigger (Visual Only) -->
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Desktop Links (Hidden on Mobile) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="text-electric-cyan font-bold border-b-2 border-electric-cyan pb-1 font-body-md" href="#">Curriculum</a>
+<a class="text-terminal-gray font-medium hover:text-on-surface transition-colors font-body-md" href="#">Playground</a>
+<a class="text-terminal-gray font-medium hover:text-on-surface transition-colors font-body-md" href="#">Projects</a>
+<a class="text-terminal-gray font-medium hover:text-on-surface transition-colors font-body-md" href="#">Community</a>
+</div>
+<div class="hidden md:flex items-center gap-4">
+<button class="text-terminal-gray hover:text-on-surface transition-colors font-body-md">Log In</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-bold hover:scale-95 duration-150 transition-all font-body-md">Sign Up</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-12 px-margin-mobile overflow-hidden">
+<!-- WebGL Background Layer -->
+<div class="absolute inset-0 z-0">
+<!-- STITCH_SHADER_START:ANIMATION_7 class="absolute inset-0 w-full h-full opacity-60" -->
+<div class="absolute inset-0 w-full h-full opacity-60" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_7" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_7');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+varying vec2 v_texCoord;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create a subtle moving grid/data stream effect
+    float grid = sin(uv.x * 40.0 + u_time * 0.5) * sin(uv.y * 40.0 + u_time * 0.5);
+    grid = smoothstep(0.95, 1.0, grid);
+    
+    // Add some flowing "data" lines
+    float flow = sin(uv.y * 20.0 - u_time * 2.0 + sin(uv.x * 5.0));
+    flow = smoothstep(0.98, 1.0, flow) * 0.3;
+    
+    // Base dark color
+    vec3 color = vec3(0.02, 0.04, 0.08); // Deep dark navy/black
+    
+    // Cyan glow
+    vec3 accent = vec3(0.13, 0.83, 0.93); // Electric Cyan
+    color += grid * accent * 0.15;
+    color += flow * accent * 0.4;
+    
+    // Add a vignette effect
+    float vignette = 1.0 - length(uv - 0.5) * 1.5;
+    color *= vignette;
+
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_7 -->
+<div class="absolute inset-0 bg-gradient-to-b from-surface-deep/20 via-transparent to-surface-deep"></div>
+</div>
+<!-- Content Container -->
+<div class="relative z-10 w-full max-w-[600px] text-center md:max-w-container-max flex flex-col md:flex-row items-center gap-12 md:text-left">
+<!-- Headline & CTAs -->
+<div class="flex-1 space-y-8">
+<div class="space-y-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full border border-electric-cyan/30 bg-electric-cyan/5 text-electric-cyan font-label-caps text-label-caps tracking-widest uppercase">
+                        New for 2024
+                    </span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-white leading-tight">
+                        Master Data <br/>Engineering. <span class="text-electric-cyan">For Free.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-terminal-gray max-w-[500px]">
+                        Interactive SQL playgrounds, animated visualizers, and real-world projects — everything you need to become a data engineer.
+                    </p>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="bg-electric-cyan text-black px-8 py-4 rounded-lg font-bold text-lg hover:brightness-110 transition-all duration-200 shadow-lg shadow-electric-cyan/20 active:scale-95">
+                        Start Learning Free
+                    </button>
+<button class="border border-stroke-subtle bg-white/5 hover:bg-white/10 text-on-surface px-8 py-4 rounded-lg font-medium text-lg backdrop-blur-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
+                        Explore Playground
+                        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Trust Badges -->
+<div class="pt-8 flex flex-wrap justify-center md:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-electric-cyan">terminal</span>
+<span class="font-code-sm text-code-sm">Open Source</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-electric-cyan">database</span>
+<span class="font-code-sm text-code-sm">SQL Built-in</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-electric-cyan">school</span>
+<span class="font-code-sm text-code-sm">Expert Led</span>
+</div>
+</div>
+</div>
+<!-- Glassmorphic IDE Mockup -->
+<div class="flex-1 w-full max-w-[500px] animate-float">
+<div class="glass-effect rounded-xl overflow-hidden shadow-2xl glow-cyan">
+<!-- Window Header -->
+<div class="bg-surface-container/50 px-4 py-3 flex items-center justify-between border-b border-stroke-subtle">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-error opacity-50"></div>
+<div class="w-3 h-3 rounded-full bg-secondary opacity-50"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary opacity-50"></div>
+</div>
+<div class="text-terminal-gray font-code-sm text-xs flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">table_chart</span>
+                            revenue_dashboard.sql
+                        </div>
+<div class="w-8"></div>
+</div>
+<!-- Code Content -->
+<div class="p-6 font-code-sm text-code-sm overflow-x-auto">
+<pre class="leading-relaxed"><span class="text-electric-cyan">WITH</span> monthly_revenue <span class="text-electric-cyan">AS</span> (
+  <span class="text-electric-cyan">SELECT</span>
+    <span class="text-tertiary">DATE_TRUNC</span>(<span class="text-on-surface-variant">'month'</span>, created_at) <span class="text-electric-cyan">AS</span> month,
+    <span class="text-tertiary">SUM</span>(amount) <span class="text-electric-cyan">AS</span> revenue
+  <span class="text-electric-cyan">FROM</span> production.orders
+  <span class="text-electric-cyan">WHERE</span> status = <span class="text-on-surface-variant">'completed'</span>
+  <span class="text-electric-cyan">GROUP BY</span> 1
+)
+<span class="text-electric-cyan">SELECT</span>
+  month,
+  revenue,
+  <span class="text-tertiary">LAG</span>(revenue) <span class="text-electric-cyan">OVER</span> (<span class="text-electric-cyan">ORDER BY</span> month) <span class="text-electric-cyan">AS</span> prev_month
+<span class="text-electric-cyan">FROM</span> monthly_revenue
+<span class="text-electric-cyan">ORDER BY</span> month <span class="text-electric-cyan">DESC</span>;</pre>
+</div>
+<!-- Bottom Status Bar -->
+<div class="bg-surface-container-high/40 px-4 py-2 flex items-center justify-between border-t border-stroke-subtle">
+<div class="flex items-center gap-4 text-terminal-gray text-[10px] font-code-sm">
+<span class="text-electric-cyan flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">check_circle</span>
+                                Success
+                            </span>
+<span>Ln 12, Col 24</span>
+<span>UTF-8</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-electric-cyan animate-pulse"></div>
+<span class="text-terminal-gray text-[10px] font-code-sm">PostgreSQL</span>
+</div>
+</div>
+</div>
+<!-- Floating Detail Card -->
+<div class="absolute -bottom-6 -left-6 glass-effect p-4 rounded-lg hidden sm:block">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-electric-cyan/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-electric-cyan">insights</span>
+</div>
+<div>
+<p class="text-white text-sm font-bold">Query Optimized</p>
+<p class="text-terminal-gray text-xs">Cost: 0.04s Execution Time</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+<span class="text-[10px] uppercase font-label-caps tracking-[0.2em]">Scroll to explore</span>
+<div class="w-[1px] h-12 bg-gradient-to-b from-electric-cyan to-transparent"></div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full bg-surface-deep border-t border-stroke-subtle pt-24 pb-12">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-16">
+<div class="col-span-1 md:col-span-1">
+<span class="text-headline-md font-headline-lg font-bold text-electric-cyan block mb-4">Deep Data Academy</span>
+<p class="text-terminal-gray font-body-md text-sm leading-relaxed max-w-[240px]">
+                        Empowering the next generation of engineers through free, high-fidelity technical education.
+                    </p>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-6 uppercase tracking-wider">Curriculum</h4>
+<ul class="space-y-3">
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Fundamentals of SQL</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Data Modeling</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">ETL Pipelines</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Modern Data Stack</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-6 uppercase tracking-wider">Resources</h4>
+<ul class="space-y-3">
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">SQL Playground</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Engineering Blog</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Open Projects</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Discord Server</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-6 uppercase tracking-wider">Legal</h4>
+<ul class="space-y-3">
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Terms of Service</a></li>
+<li><a class="text-terminal-gray hover:text-electric-cyan transition-colors font-body-md text-sm" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-stroke-subtle flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-terminal-gray font-body-md text-xs">
+                    © 2024 Deep Data Academy. Built for the next generation of data engineers.
+                </p>
+<div class="flex gap-6">
+<a class="text-terminal-gray hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">public</span>
+</a>
+<a class="text-terminal-gray hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">code</span>
+</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        // Apply to elements that should animate in
+        document.querySelectorAll('section, footer').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000');
+        });
+    </script>
+</body></html>

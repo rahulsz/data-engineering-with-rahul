@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Command Center | Deep Data Academy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#002e6a",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container-low": "#131b2e",
+                    "on-background": "#dae2fd",
+                    "on-secondary-fixed-variant": "#004395",
+                    "primary-container": "#22d3ee",
+                    "on-primary-fixed": "#001f25",
+                    "on-error": "#690005",
+                    "inverse-on-surface": "#283044",
+                    "surface-container-lowest": "#060e20",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-primary-container": "#005763",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "surface-container": "#171f33",
+                    "error-container": "#93000a",
+                    "secondary-container": "#0566d9",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed": "#001a42",
+                    "surface-tint": "#2fd9f4",
+                    "surface-deep": "#020617",
+                    "outline-variant": "#3c494c",
+                    "on-tertiary-container": "#005a3d",
+                    "surface-bright": "#31394d",
+                    "surface-variant": "#2d3449",
+                    "outline": "#859397",
+                    "surface": "#0b1326",
+                    "secondary-fixed": "#d8e2ff",
+                    "primary-fixed-dim": "#2fd9f4",
+                    "on-primary-fixed-variant": "#004e5a",
+                    "stroke-subtle": "#334155",
+                    "tertiary-fixed": "#6ffbbe",
+                    "primary-fixed": "#a2eeff",
+                    "primary": "#8aebff",
+                    "inverse-primary": "#006877",
+                    "surface-elevated": "#1E293B",
+                    "on-tertiary": "#003824",
+                    "on-surface": "#dae2fd",
+                    "error": "#ffb4ab",
+                    "background": "#0b1326",
+                    "surface-container-high": "#222a3d",
+                    "on-error-container": "#ffdad6",
+                    "secondary": "#adc6ff",
+                    "surface-container-highest": "#2d3449",
+                    "tertiary": "#68f5b8",
+                    "tertiary-container": "#46d89d",
+                    "electric-cyan": "#06B6D4",
+                    "on-secondary-container": "#e6ecff",
+                    "inverse-surface": "#dae2fd",
+                    "surface-dim": "#0b1326",
+                    "on-surface-variant": "#bbc9cd",
+                    "on-primary": "#00363e",
+                    "terminal-gray": "#94A3B8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "section-gap": "120px",
+                    "unit": "4px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "48px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "code-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "code-sm": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #020617;
+            color: #dae2fd;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            background: rgba(23, 31, 51, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glow-cyan { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+        .glow-emerald { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .glow-orange { box-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
+        
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.95); }
+        }
+        .animate-pulse-soft { animation: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-margin-mobile py-4 bg-background/80 backdrop-blur-md border-b border-stroke-subtle">
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-lg font-bold text-on-surface">Deep Data Academy</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-electric-cyan">menu</button>
+</div>
+</header>
+<main class="pt-24 pb-12 px-margin-mobile space-y-8 max-w-md mx-auto">
+<!-- Hero Header -->
+<section class="space-y-2">
+<div class="flex items-center gap-2 mb-1">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+</span>
+<span class="font-label-caps text-label-caps text-emerald-400 tracking-widest uppercase">System Online</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Welcome back, <span class="text-electric-cyan">Engineer</span></h1>
+<p class="text-terminal-gray font-body-md">Your neural sync is at 98%. 3 modules pending review.</p>
+</section>
+<!-- System Load Widget -->
+<section class="glass-panel rounded-xl p-6 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-electric-cyan/10 rounded-full blur-2xl group-hover:bg-electric-cyan/20 transition-colors"></div>
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-electric-cyan">memory</span>
+                    System Load
+                </h2>
+<span class="font-label-caps text-label-caps text-terminal-gray">NODE: US-EAST-1</span>
+</div>
+<div class="flex items-center gap-8">
+<div class="relative w-24 h-24">
+<svg class="w-full h-full">
+<circle class="text-surface-container stroke-current" cx="48" cy="48" fill="transparent" r="40" stroke-width="6"></circle>
+<circle class="text-electric-cyan stroke-current progress-ring__circle" cx="48" cy="48" fill="transparent" r="40" stroke-linecap="round" stroke-width="6" style="stroke-dasharray: 251.2; stroke-dashoffset: 138.16;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-on-surface">45%</span>
+<span class="text-[10px] font-label-caps text-terminal-gray">CPU</span>
+</div>
+</div>
+<div class="flex-1 space-y-4">
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-label-caps text-terminal-gray">
+<span>MEMORY</span>
+<span class="text-on-surface">2.1GB / 16GB</span>
+</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[15%] glow-cyan"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs font-medium text-on-surface italic">Optimal Performance</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Gamification Matrix Widget -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    Gamification Matrix
+                </h2>
+<button class="text-electric-cyan text-xs font-label-caps underline underline-offset-4">VIEW ALL</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Streak Badge -->
+<div class="glass-panel rounded-xl p-4 flex flex-col items-center text-center space-y-3 group hover:border-orange-500/50 transition-all">
+<div class="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center glow-orange group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-orange-400" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div>
+<div class="text-[10px] font-label-caps text-orange-400">UNLOCKED</div>
+<div class="font-headline-md text-base text-on-surface leading-tight">14 Day Streak</div>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 w-full"></div>
+</div>
+</div>
+<!-- Speed Badge -->
+<div class="glass-panel rounded-xl p-4 flex flex-col items-center text-center space-y-3 group hover:border-electric-cyan/50 transition-all">
+<div class="w-12 h-12 rounded-full bg-electric-cyan/10 flex items-center justify-center glow-cyan group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-electric-cyan" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div>
+<div class="text-[10px] font-label-caps text-electric-cyan">UNLOCKED</div>
+<div class="font-headline-md text-base text-on-surface leading-tight">Fast Loader</div>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-electric-cyan w-full"></div>
+</div>
+</div>
+<!-- Quiz Badge -->
+<div class="glass-panel rounded-xl p-4 flex flex-col items-center text-center space-y-3 group hover:border-emerald-500/50 transition-all">
+<div class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center glow-emerald group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-emerald-400" style="font-variation-settings: 'FILL' 1;">quiz</span>
+</div>
+<div>
+<div class="text-[10px] font-label-caps text-emerald-400">UNLOCKED</div>
+<div class="font-headline-md text-base text-on-surface leading-tight">SQL Master</div>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-full"></div>
+</div>
+</div>
+<!-- Locked Badge -->
+<div class="glass-panel rounded-xl p-4 flex flex-col items-center text-center space-y-3 opacity-60 grayscale">
+<div class="w-12 h-12 rounded-full bg-terminal-gray/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-terminal-gray">lock</span>
+</div>
+<div>
+<div class="text-[10px] font-label-caps text-terminal-gray">LOCKED</div>
+<div class="font-headline-md text-base text-on-surface leading-tight">ETL Architect</div>
+</div>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-terminal-gray w-[40%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Learning Progress -->
+<section class="space-y-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">data_object</span>
+                Active Learning Flux
+            </h2>
+<div class="glass-panel rounded-xl p-6 space-y-6">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-caps text-label-caps text-electric-cyan">MODULE 04</span>
+<h3 class="font-headline-md text-xl text-on-surface">ETL Pipelines with Airflow</h3>
+</div>
+<button class="w-10 h-10 rounded-full bg-electric-cyan flex items-center justify-center text-surface-deep shadow-lg shadow-electric-cyan/20">
+<span class="material-symbols-outlined font-bold">play_arrow</span>
+</button>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-label-caps">
+<span class="text-terminal-gray">PROGRESS</span>
+<span class="text-on-surface">68%</span>
+</div>
+<div class="relative h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-electric-cyan w-[68%] glow-cyan"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 border-t border-stroke-subtle pt-4">
+<div class="space-y-1">
+<div class="text-[10px] font-label-caps text-terminal-gray">TIME SPENT</div>
+<div class="font-code-sm text-sm text-on-surface">12h 45m</div>
+</div>
+<div class="space-y-1">
+<div class="text-[10px] font-label-caps text-terminal-gray">NEXT UP</div>
+<div class="font-code-sm text-sm text-on-surface">DAG Orchestration</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-surface-deep border-t border-stroke-subtle mt-12 pb-24">
+<div class="px-margin-mobile py-10 space-y-8">
+<div class="space-y-4">
+<span class="text-headline-md font-headline-lg font-bold text-electric-cyan">Deep Data Academy</span>
+<p class="text-terminal-gray font-body-md leading-relaxed">Training the next generation of infrastructure pioneers and data architects.</p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-4">
+<span class="font-label-caps text-label-caps text-on-surface">PLATFORM</span>
+<ul class="space-y-3 text-terminal-gray text-sm">
+<li><a class="hover:text-electric-cyan transition-colors" href="#">Curriculum</a></li>
+<li><a class="hover:text-electric-cyan transition-colors" href="#">SQL Playground</a></li>
+<li><a class="hover:text-electric-cyan transition-colors" href="#">Real Projects</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<span class="font-label-caps text-label-caps text-on-surface">COMMUNITY</span>
+<ul class="space-y-3 text-terminal-gray text-sm">
+<li><a class="hover:text-electric-cyan transition-colors" href="#">Engineering Blog</a></li>
+<li><a class="hover:text-electric-cyan transition-colors" href="#">Discord Server</a></li>
+<li><a class="hover:text-electric-cyan transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-stroke-subtle/50 text-center">
+<p class="text-[10px] font-label-caps text-terminal-gray tracking-widest">
+                    © 2024 DEEP DATA ACADEMY. ALL RIGHTS RESERVED.
+                </p>
+</div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation (Floating Command Bar) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass-panel rounded-full px-6 py-3 flex items-center justify-between z-50">
+<button class="flex flex-col items-center gap-1 text-electric-cyan">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[9px] font-label-caps">HOME</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-terminal-gray hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-2xl">terminal</span>
+<span class="text-[9px] font-label-caps">CODE</span>
+</button>
+<div class="relative -top-8">
+<button class="w-14 h-14 bg-electric-cyan text-surface-deep rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.5)] border-4 border-surface-deep active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 text-terminal-gray hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-2xl">groups</span>
+<span class="text-[9px] font-label-caps">HUB</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-terminal-gray hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+<span class="text-[9px] font-label-caps">PROFILE</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for the progress circle and randomizing metrics
+        document.addEventListener('DOMContentLoaded', () => {
+            const cpuText = document.querySelector('span.font-headline-md.text-on-surface');
+            const progressCircle = document.querySelector('.progress-ring__circle');
+            
+            function updateCPU() {
+                const newValue = Math.floor(Math.random() * (52 - 40 + 1)) + 40;
+                cpuText.innerText = `${newValue}%`;
+                
+                const radius = 40;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (newValue / 100) * circumference;
+                progressCircle.style.strokeDashoffset = offset;
+            }
+
+            setInterval(updateCPU, 3000);
+        });
+    </script>
+</body></html>

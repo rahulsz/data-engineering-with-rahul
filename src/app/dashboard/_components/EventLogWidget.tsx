@@ -57,7 +57,7 @@ export default function EventLogWidget() {
           <div className="text-xs font-mono text-[#6B7280] pl-6">No recent communications.</div>
         ) : (
           activities.map((activity) => (
-            <div key={activity._id as string} className="relative pl-6">
+            <div key={activity._id as unknown as string} className="relative pl-6">
               <div 
                 className={cn(
                   "absolute w-[11px] h-[11px] rounded-full -left-[6px] top-1",

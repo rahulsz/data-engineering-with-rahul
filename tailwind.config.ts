@@ -31,7 +31,18 @@ const config: Config = {
           "syntax-green": "#3FB950",
           "syntax-blue": "#58A6FF",
           "syntax-purple": "#BC8CFF"
-        }
+        },
+        "electric-cyan": "#06B6D4",
+        "surface-deep": "#020617",
+        "stroke-subtle": "#334155",
+        "terminal-gray": "#94A3B8",
+        "primary-container": "#22d3ee",
+        "on-primary-container": "#005763",
+        "surface-container": "#171f33",
+        "surface-container-high": "#222a3d",
+        "secondary-fixed": "#d8e2ff",
+        "on-secondary-fixed": "#001a42",
+        "error": "#ffb4ab",
       },
       fontFamily: {
         sans: ["var(--font-dm-sans)", "var(--font-geist-sans)", "system-ui", "sans-serif"],

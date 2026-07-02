@@ -9,7 +9,7 @@ import CodeBlock from "@/components/mdx/CodeBlock";
 import Callout from "@/components/mdx/Callout";
 import BottomNavPipeline from "./_components/BottomNavPipeline";
 import { CURRICULUM } from "@/config/site-config";
-import { Clock, CalendarDays, Tag, ChevronLeft, ChevronRight, BookOpen, Layers, Map, Brain, Code2, Factory, Target, Rocket, Wrench, CheckSquare, Lightbulb, type LucideIcon } from "lucide-react";
+import { Clock, CalendarDays, Tag, ChevronLeft, ChevronRight, Layers } from "lucide-react";
 
 import LivePythonBlock from "@/components/mdx/LivePythonBlock";
 import LiveSqlBlock from "@/components/mdx/LiveSqlBlock";
@@ -28,6 +28,9 @@ import ConveyorSimulator from "@/components/interactive/week-1/ConveyorSimulator
 import FunctionFactory from "@/components/interactive/week-1/FunctionFactory";
 import IOFlowVisualizer from "@/components/interactive/week-1/IOFlowVisualizer";
 import InteractiveGitGraph from "@/components/interactive/week-1/InteractiveGitGraph";
+import TypeCastingVisualizer from "@/components/interactive/week-1/TypeCastingVisualizer";
+import GitStagesVisualizer from "@/components/interactive/week-1/GitStagesVisualizer";
+import LinuxPipingVisualizer from "@/components/interactive/week-1/LinuxPipingVisualizer";
 import Week1Quiz from "@/components/mdx/week-1/Week1Quiz";
 
 import CurriculumHero from "@/components/curriculum/CurriculumHero";
@@ -128,6 +131,7 @@ export default async function NotePage({
             Week0CoreConcepts, Week0CaseStudy, Week0Setup, Week0Capstone, Week0Quiz,
             MemoryInspector, ConveyorSimulator, FunctionFactory,
             IOFlowVisualizer, InteractiveGitGraph, Week1Quiz,
+            TypeCastingVisualizer, GitStagesVisualizer, LinuxPipingVisualizer,
             CurriculumHero, CurriculumNavigation, CurriculumQuiz,
             CurriculumLab, CurriculumConceptMap, CurriculumResources,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -180,42 +184,37 @@ export default async function NotePage({
               return <code className={className}>{children}</code>;
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            h2: (props: any) => {
-              const text = typeof props.children === 'string' ? props.children : '';
-              const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
-              const lower = text.toLowerCase();
-              const iconMap: [string[], LucideIcon][] = [
-                [['overview', 'welcome'], Map],
-                [['concept', 'key'], Brain],
-                [['code', 'example', 'verify', 'environment'], Code2],
-                [['real-world', 'application', 'context'], Factory],
-                [['practice', 'exercise'], Target],
-                [['setup', 'local', 'install'], Wrench],
-                [['checklist', 'check'], CheckSquare],
-                [['architecture', 'core'], Lightbulb],
-                [['what is', 'data engineering'], Rocket],
-              ];
-              let HeadingIcon: LucideIcon = BookOpen;
-              for (const [keywords, icon] of iconMap) {
-                if (keywords.some(k => lower.includes(k))) { HeadingIcon = icon; break; }
-              }
-              return (
-                <h2 id={id} className="flex items-center gap-3 text-[22px] font-bold mt-14 mb-6 text-[#F97316] tracking-tight scroll-mt-20">
-                  <HeadingIcon className="w-5 h-5 text-[#F97316]/70 shrink-0" />
-                  {props.children}
-                </h2>
-              );
-            },
+            h2: (() => {
+              let h2Counter = 0;
+              return (props: any) => {
+                h2Counter++;
+                const text = typeof props.children === 'string' ? props.children : '';
+                const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+                const num = String(h2Counter).padStart(2, '0');
+                return (
+                  <>
+                    <div className="h-px bg-gradient-to-r from-[#253141] via-[#253141] to-transparent mt-16 mb-10" />
+                    <h2 id={id} className="text-[28px] sm:text-[32px] font-bold mb-6 text-white tracking-tight scroll-mt-20 leading-tight">
+                      <span className="text-[#F97316]/80 font-mono">{num}</span>
+                      <span className="text-[#555] mx-3">&mdash;</span>
+                      {props.children}
+                    </h2>
+                  </>
+                );
+              };
+            })(),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            h3: (props: any) => <h3 className="text-lg font-bold mt-10 mb-4 text-white" {...props} />,
+            h3: (props: any) => (
+              <h3 className="text-xl font-bold mt-10 mb-4 text-white tracking-tight" {...props} />
+            ),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            p: (props: any) => <p className="text-[#D1D5DB] leading-relaxed mb-6" {...props} />,
+            p: (props: any) => <p className="text-[#C9CDD3] text-[16px] leading-[1.85] mb-6" {...props} />,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ul: (props: any) => <ul className="space-y-3 mb-6 list-disc list-outside ml-5 text-[#D1D5DB]" {...props} />,
+            ul: (props: any) => <ul className="space-y-3 mb-8 list-disc list-outside ml-5 text-[#C9CDD3] text-[16px] leading-[1.85]" {...props} />,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ol: (props: any) => <ol className="space-y-3 mb-6 list-decimal list-outside ml-5 text-[#D1D5DB]" {...props} />,
+            ol: (props: any) => <ol className="space-y-4 mb-8 list-decimal list-outside ml-5 text-[#C9CDD3] text-[16px] leading-[1.85]" {...props} />,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            li: (props: any) => <li className="pl-2" {...props} />,
+            li: (props: any) => <li className="pl-2 marker:text-[#F97316]/50" {...props} />,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             blockquote: (props: any) => (
               <blockquote className="border-l-4 border-[#F97316]/50 bg-[#F97316]/5 pl-6 pr-4 py-4 my-8 rounded-r-lg text-[#D1D5DB] italic" {...props} />

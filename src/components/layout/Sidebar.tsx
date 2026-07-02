@@ -134,10 +134,10 @@ export default function Sidebar({ isMobileOpen, onMobileClose }: { isMobileOpen?
                 key={heading.id}
                 href={`#${heading.id}`}
                 onClick={onMobileClose}
-                className="flex items-center gap-3.5 px-7 py-[9px] text-[13px] font-medium text-[#9CA3AF] border-l-[3px] border-transparent hover:text-[#E5E7EB] hover:bg-[#141B23] transition-all group"
+                className="flex items-start gap-3.5 px-7 py-[9px] text-[13px] font-medium text-[#9CA3AF] border-l-[3px] border-transparent hover:text-[#E5E7EB] hover:bg-[#141B23] transition-all group"
               >
-                <ChevronRight className="w-[14px] h-[14px] shrink-0 text-[#556070] group-hover:text-[#F97316]" />
-                <span className="truncate tracking-wide">{heading.title}</span>
+                <ChevronRight className="w-[14px] h-[14px] mt-0.5 shrink-0 text-[#556070] group-hover:text-[#F97316]" />
+                <span className="leading-normal tracking-wide">{heading.title}</span>
               </a>
             ))}
             <div className="mt-6 pt-6 border-t border-[#1C2532] mx-7">

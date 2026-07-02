@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useAuth, SignInButton, UserButton } from "@clerk/nextjs";
 import {
   Code2, ArrowRight, Compass, Database, GitBranch, BarChart3, Rocket,
-  Search, FileText, CheckCircle2, Check
+  Search, FileText, CheckCircle2, Check, Menu, X, ChevronDown,
+  Zap, Package, Flame, Users, GraduationCap, Timer, Cpu, Braces,
+  Sparkles, LayoutDashboard
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useProgressStore } from "@/store/progressStore";
 import CommandPalette from "@/components/search/CommandPalette";
+import HeroSection from "@/components/ui/HeroSection";
 
 import { stagger, slideDown, slideLeft, fadeUp, scaleIn } from "@/lib/animations/variants";
 
@@ -286,10 +289,10 @@ function TerminalCard() {
         {/* Footer stat pills */}
         <div className="flex items-center gap-3 px-5 py-3 border-t border-[#21262D] shrink-0">
           {[
-            { icon: "⚡", label: "15 Weeks" },
-            { icon: "📦", label: "4 Phases" },
-            { icon: "🔥", label: "60+ Topics" },
-          ].map(({ icon, label }) => (
+            { Icon: Zap, label: "15 Weeks" },
+            { Icon: Package, label: "4 Phases" },
+            { Icon: Flame, label: "60+ Topics" },
+          ].map(({ Icon, label }) => (
             <span
               key={label}
               className={cn(
@@ -298,7 +301,7 @@ function TerminalCard() {
                 "border border-[#21262D] text-[#8B949E]"
               )}
             >
-              <span className="text-[#F97316]">{icon}</span>
+              <Icon className="w-3 h-3 text-[#F97316]" />
               {label}
             </span>
           ))}
@@ -497,12 +500,35 @@ const FEATURES = [
     title: "Progress Tracking",
     body: "Mark weeks complete, track your streak, and see your mastery visually map across all phases backed by robust state.",
   },
+  {
+    icon: Sparkles,
+    accent: "#A855F7",
+    title: "Interactive Animations",
+    body: "Hands-on Framer Motion visualizers for memory inspection, pipeline simulation, Git staging, and type casting.",
+  },
+  {
+    icon: LayoutDashboard,
+    accent: "#F59E0B",
+    title: "Hacker Dashboard",
+    body: "A premium dark-terminal dashboard with event logs, phase progress arcs, and personalized learning analytics.",
+  },
+  {
+    icon: Users,
+    accent: "#EC4899",
+    title: "Secure Authentication",
+    body: "Sign in with Google, GitHub, or email. Your progress syncs across devices seamlessly via Clerk.",
+  },
 ];
 
 function FeatureHighlights() {
   return (
     <section className="w-full max-w-7xl mx-auto py-24 px-6 relative z-10">
-      <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid md:grid-cols-3 gap-6">
+      <div className="flex flex-col items-center mb-16 text-center">
+        <p className="text-[#8B949E] font-mono tracking-widest text-sm mb-4">PLATFORM FEATURES</p>
+        <h2 className="font-display text-4xl lg:text-5xl text-[#E6EDF3] font-bold">Built for Serious Learners.</h2>
+      </div>
+
+      <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {FEATURES.map((f) => (
           <motion.div
@@ -514,25 +540,24 @@ function FeatureHighlights() {
               "bg-[#0D1117] border border-[#21262D]",
               "hover:border-[#21262D]/0",
               "transition-all duration-300",
-              "before:absolute before:inset-0 before:rounded-xl before:p-[1px]",
-              "before:bg-gradient-to-br before:from-transparent before:via-transparent",
-              "before:to-transparent before:opacity-0",
-              "hover:before:opacity-100",
               "overflow-hidden shadow-xl"
             )}
-            style={{
-              "--accent": f.accent,
-            } as React.CSSProperties}
           >
+            {/* Hover background glow */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: `radial-gradient(circle at top left, ${f.accent}08, transparent 60%)` }}
+            />
+
             {/* Icon circle */}
             <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110"
-              style={{ background: `${f.accent}18`, border: `1px solid ${f.accent}30` }}
+              className="relative z-10 w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110"
+              style={{ background: `${f.accent}12`, border: `1px solid ${f.accent}25` }}
             >
               <f.icon className="w-5 h-5" style={{ color: f.accent }} />
             </div>
 
-            <h3 className="font-syne font-semibold text-[#E6EDF3] mb-2 flex items-center gap-2">
+            <h3 className="relative z-10 font-syne font-semibold text-[#E6EDF3] mb-2 flex items-center gap-2">
               {f.title}
               {f.shortcut && (
                 <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-[#21262D] text-[#8B949E]">
@@ -540,7 +565,7 @@ function FeatureHighlights() {
                 </kbd>
               )}
             </h3>
-            <p className="text-sm text-[#8B949E] leading-relaxed">{f.body}</p>
+            <p className="relative z-10 text-sm text-[#8B949E] leading-relaxed">{f.body}</p>
 
             {/* Hover glow accent */}
             <div
@@ -550,6 +575,176 @@ function FeatureHighlights() {
           </motion.div>
         ))}
 
+      </motion.div>
+    </section>
+  );
+}
+
+// ─── SCROLL INDICATOR ───
+function ScrollIndicator() {
+  return (
+    <motion.div
+      className="flex justify-center pb-8 relative z-10"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.8 }}
+    >
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="flex flex-col items-center gap-2 text-[#8B949E] cursor-pointer"
+        onClick={() => document.getElementById('social-proof')?.scrollIntoView({ behavior: 'smooth' })}
+      >
+        <span className="text-[10px] font-mono tracking-[0.3em] uppercase">Scroll to explore</span>
+        <ChevronDown className="w-4 h-4" />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ─── ANIMATED COUNTER ───
+function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let start = 0;
+          const duration = 2000;
+          const increment = target / (duration / 16);
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+              setCount(target);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target, hasAnimated]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+// ─── SOCIAL PROOF ───
+const STATS = [
+  { icon: GraduationCap, value: 60, suffix: "+", label: "Topics Covered", accent: "#F97316" },
+  { icon: Timer, value: 15, suffix: "", label: "Weeks of Content", accent: "#22D3EE" },
+  { icon: Cpu, value: 5, suffix: "", label: "Hands-on Projects", accent: "#A855F7" },
+  { icon: Braces, value: 500, suffix: "+", label: "Code Examples", accent: "#4ADE80" },
+];
+
+function SocialProof() {
+  return (
+    <section id="social-proof" className="w-full max-w-7xl mx-auto py-20 px-6 relative z-10">
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        {STATS.map((stat) => (
+          <motion.div
+            key={stat.label}
+            variants={fadeUp}
+            className="group relative text-center p-6 rounded-xl bg-[#0D1117] border border-[#21262D] hover:border-opacity-0 transition-all duration-300 overflow-hidden"
+          >
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: `radial-gradient(circle at center, ${stat.accent}08, transparent 70%)` }}
+            />
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform duration-500 group-hover:scale-110 relative z-10"
+              style={{ background: `${stat.accent}12`, border: `1px solid ${stat.accent}25` }}
+            >
+              <stat.icon className="w-6 h-6" style={{ color: stat.accent }} />
+            </div>
+            <div className="font-display text-4xl font-bold text-[#E6EDF3] mb-1 relative z-10">
+              <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+            </div>
+            <p className="font-mono text-xs text-[#8B949E] relative z-10">{stat.label}</p>
+            <div
+              className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: `linear-gradient(90deg, transparent, ${stat.accent}60, transparent)` }}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
+    </section>
+  );
+}
+
+// ─── CTA SECTION ───
+function CTASection() {
+  return (
+    <section className="w-full max-w-4xl mx-auto py-24 px-6 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="relative rounded-2xl overflow-hidden"
+      >
+        {/* Gradient border effect */}
+        <div className="absolute -inset-[1px] bg-gradient-to-r from-[#F97316] via-[#A855F7] to-[#22D3EE] rounded-2xl opacity-30" />
+
+        <div className="relative bg-[#0D1117] rounded-2xl p-10 lg:p-14 text-center">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F97316]/5 to-transparent rounded-2xl" />
+
+          <div className="relative z-10">
+            <div className="w-14 h-14 rounded-2xl bg-[#F97316]/10 border border-[#F97316]/20 flex items-center justify-center mx-auto mb-6">
+              <Rocket className="w-7 h-7 text-[#F97316]" />
+            </div>
+
+            <h2 className="font-display text-3xl lg:text-4xl font-bold text-[#E6EDF3] mb-4">
+              Ready to Build Your Pipeline?
+            </h2>
+            <p className="font-ui text-[#8B949E] max-w-lg mx-auto mb-8 leading-relaxed">
+              Join the 2025 cohort and master Python, SQL, PySpark, Azure, and Power BI through
+              hands-on supply chain projects. Start from Week 0 — no prerequisites.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/curriculum"
+                className={cn(
+                  "group flex items-center gap-2 px-8 py-3.5 rounded-xl",
+                  "bg-[#F97316] text-[#080C10] font-medium text-sm",
+                  "hover:bg-[#fb923c] transition-all duration-150",
+                  "shadow-[0_0_30px_rgba(249,115,22,0.3)]",
+                  "hover:shadow-[0_0_40px_rgba(249,115,22,0.45)]",
+                  "hover:scale-[1.02]"
+                )}
+              >
+                Start Week 0 — Free
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              <Link
+                href="#curriculum"
+                className={cn(
+                  "flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm",
+                  "border border-[#21262D] text-[#8B949E]",
+                  "hover:border-[#F97316]/30 hover:text-[#E6EDF3]",
+                  "transition-all duration-150"
+                )}
+              >
+                Browse Curriculum
+              </Link>
+            </div>
+          </div>
+        </div>
       </motion.div>
     </section>
   );
@@ -603,7 +798,7 @@ function Footer() {
 
       <div className="max-w-7xl mx-auto border-t border-[#21262D] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-mono text-xs text-[#8B949E]">Built for data engineers</p>
-        <p className="font-mono text-xs text-[#8B949E]">© 2025 Data Engineering Notes</p>
+        <p className="font-mono text-xs text-[#8B949E]">© {new Date().getFullYear()} Data Engineering Notes</p>
       </div>
     </footer>
   );
@@ -612,6 +807,7 @@ function Footer() {
 // ─── MAIN PAGE ───
 export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userId, isLoaded } = useAuth();
 
   return (
@@ -684,124 +880,95 @@ export default function Home() {
               <UserButton />
             </>
           )}
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-[#8B949E] hover:text-white transition-colors cursor-pointer"
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </motion.nav>
 
-      <CommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      {/* Mobile menu drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-16 left-0 right-0 z-40 bg-[#0D1117]/98 backdrop-blur-xl border-b border-[#21262D] md:hidden"
+          >
+            <div className="flex flex-col p-6 gap-1">
+              <Link href="/curriculum" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#8B949E] hover:text-white hover:bg-white/5 transition-all">
+                <Database className="w-4 h-4" />
+                <span className="text-sm font-ui">Curriculum</span>
+              </Link>
+              <Link href="#curriculum" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#8B949E] hover:text-white hover:bg-white/5 transition-all">
+                <Compass className="w-4 h-4" />
+                <span className="text-sm font-ui">Phases</span>
+              </Link>
+              <Link href="/dashboard/progress" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#8B949E] hover:text-white hover:bg-white/5 transition-all">
+                <BarChart3 className="w-4 h-4" />
+                <span className="text-sm font-ui">Progress</span>
+              </Link>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#8B949E] hover:text-white hover:bg-white/5 transition-all cursor-pointer w-full"
+              >
+                <Search className="w-4 h-4" />
+                <span className="text-sm font-ui">Search</span>
+                <kbd className="ml-auto px-1.5 py-0.5 rounded bg-[#21262D] text-[10px] font-mono text-[#8B949E] border border-zinc-700">⌘K</kbd>
+              </button>
 
-      {/* Hero */}
-      <section className="relative z-10 w-full max-w-7xl mx-auto pt-40 pb-20 px-6 min-h-[90vh] flex flex-col justify-center">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-
-          <div className="flex flex-col items-start max-w-2xl">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-2 h-2 rounded-full bg-[#3FB950] animate-[ping_2s_infinite]" />
-              <p className="font-mono text-xs tracking-[0.2em] text-[#F97316]">
-                [ COHORT 2025 · 15 WEEKS ]
-              </p>
-            </div>
-
-            <motion.h1
-              className="flex flex-wrap gap-x-[0.25em] leading-[1.05] font-display font-[800] text-[52px] lg:text-[80px] mb-6"
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-            >
-              {["Master", "Data", "Engineering."].map((word) => (
-                <motion.span
-                  key={word}
-                  variants={fadeInUp}
-                  className={cn(
-                    "inline-block",
-                    word === "Engineering." ? "text-[#F97316] drop-shadow-[0_0_15px_rgba(249,115,22,0.3)]" : "text-[#E6EDF3]"
-                  )}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className="font-ui text-lg text-[#8B949E] max-w-md mb-10 leading-relaxed font-light"
-            >
-              A structured 15-week curriculum covering Python, SQL, PySpark, Databricks, dbt, Azure, and Power BI — with interactive notes, progress tracking, and real supply chain capstone projects.
-            </motion.p>
-
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-4 w-full"
-            >
-              {!isLoaded ? null : !userId ? (
-                <SignInButton mode="modal">
-                  <button
+              <div className="border-t border-[#21262D] mt-3 pt-4">
+                {!isLoaded ? null : !userId ? (
+                  <SignInButton mode="modal">
+                    <button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl",
+                        "bg-[#F97316] text-[#080C10] font-medium text-sm",
+                        "hover:bg-[#fb923c] transition-all duration-150 cursor-pointer",
+                        "shadow-[0_0_20px_rgba(249,115,22,0.25)]"
+                      )}
+                    >
+                      Start Learning
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </SignInButton>
+                ) : (
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className={cn(
-                      "group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 rounded-xl",
-                      "bg-[#F97316] text-[#080C10] font-medium text-sm border-transparent",
-                      "hover:bg-[#fb923c] transition-all duration-150",
-                      "shadow-[0_0_30px_rgba(249,115,22,0.3)]",
-                      "hover:shadow-[0_0_40px_rgba(249,115,22,0.45)]",
-                      "hover:scale-[1.02] cursor-pointer w-full sm:w-auto text-center"
+                      "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl",
+                      "bg-[#F97316] text-[#080C10] font-medium text-sm",
+                      "hover:bg-[#fb923c] transition-all duration-150"
                     )}
                   >
-                    Begin Week 0
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                  </button>
-                </SignInButton>
-              ) : (
-                <Link
-                  href="/dashboard"
-                  className={cn(
-                    "group flex items-center justify-center sm:justify-start gap-2 px-6 py-3 rounded-xl",
-                    "bg-[#F97316] text-[#080C10] font-medium text-sm border-transparent",
-                    "hover:bg-[#fb923c] transition-all duration-150",
-                    "shadow-[0_0_30px_rgba(249,115,22,0.3)] cursor-pointer w-full sm:w-auto text-center"
-                  )}
-                >
-                  Continue Learning
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              )}
-
-              <Link
-                href="#curriculum"
-                className={cn(
-                  "flex items-center justify-center sm:justify-start gap-2 px-5 py-3 rounded-xl text-sm",
-                  "border border-[#21262D] text-[#8B949E]",
-                  "hover:border-[#F97316]/30 hover:text-[#E6EDF3]",
-                  "transition-all duration-150 w-full sm:w-auto text-center"
+                    Go to Dashboard
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
                 )}
-              >
-                View Curriculum
-              </Link>
-            </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <motion.p
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className="flex items-center gap-2 text-xs font-mono text-[#8B949E] mt-6"
-            >
-              <span>15 weeks</span>
-              <span className="text-[#F97316]">·</span>
-              <span>4 phases</span>
-              <span className="text-[#F97316]">·</span>
-              <span>60+ topics covered</span>
-            </motion.p>
-          </div>
+      <CommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-          <TerminalCard />
+      <HeroSection />
 
-        </div>
-      </section>
-
+      <SocialProof />
       <PhaseOverview />
       <WeekProgressStrip />
       <FeatureHighlights />
+      <CTASection />
       <Footer />
 
     </main>

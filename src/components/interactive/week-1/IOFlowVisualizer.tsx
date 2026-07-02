@@ -53,7 +53,7 @@ export default function IOFlowVisualizer() {
             <React.Fragment key={step.key}>
               <div className="flex flex-col items-center gap-3 relative">
                 <motion.div 
-                  className={`w-20 h-20 rounded-2xl border-2 flex items-center justify-center transition-all duration-300 ${isActive ? `${step.border} ${step.bg} shadow-[0_0_20px_rgba(255,255,255,0.1)] scale-110` : "border-[#253141] bg-[#141B23] grayscale opacity-50"}`}
+                  className={`w-20 h-20 rounded-2xl border-2 flex items-center justify-center transition-all duration-300 ${isActive ? `${step.color} ${step.bg} shadow-[0_0_20px_rgba(255,255,255,0.1)] scale-110` : "border-[#253141] bg-[#141B23] grayscale opacity-50"}`}
                   animate={{ 
                     borderColor: isActive ? step.color.split("-")[1] : "#253141",
                     scale: isActive ? 1.05 : 1
